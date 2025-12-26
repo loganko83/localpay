@@ -29,7 +29,21 @@ const Profile: React.FC = () => {
     navigator.clipboard.writeText('0x3f8a...8a9b');
   };
 
-  const menuSections = [
+  interface MenuItem {
+    icon: string;
+    label: string;
+    color: string;
+    toggle?: boolean;
+    badge?: string;
+    value?: string;
+  }
+
+  interface MenuSection {
+    title: string;
+    items: MenuItem[];
+  }
+
+  const menuSections: MenuSection[] = [
     {
       title: 'Account & Security',
       items: [

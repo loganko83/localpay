@@ -25,7 +25,7 @@ const filterOptions: { label: string; value: TransactionType | 'all' }[] = [
 
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const { wallet } = useWalletStore();
+  useWalletStore();
   const { transactions, setFilters } = useTransactionStore();
   const [activeFilter, setActiveFilter] = useState<TransactionType | 'all'>('all');
 
@@ -77,8 +77,8 @@ const History: React.FC = () => {
     .filter(tx => tx.type === 'topup' || tx.type === 'refund')
     .reduce((sum, tx) => sum + tx.amount, 0);
 
-  const getTransactionIcon = (type: string, merchantName: string) => {
-    const name = merchantName.toLowerCase();
+  const getTransactionIcon = (type: string, merchantName?: string) => {
+    const name = (merchantName || '').toLowerCase();
     if (name.includes('starbucks') || name.includes('coffee') || name.includes('cafe')) {
       return 'local_cafe';
     }

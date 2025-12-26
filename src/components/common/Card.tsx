@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CardProps {
-  variant?: 'default' | 'glass' | 'gradient' | 'outline';
+  variant?: 'default' | 'glass' | 'gradient' | 'outline' | 'stat' | 'transaction' | 'balance';
   padding?: 'sm' | 'md' | 'lg' | 'none';
   className?: string;
   onClick?: () => void;
@@ -33,6 +33,18 @@ const Card: React.FC<CardProps> = ({
     outline: `
       bg-transparent
       border border-slate-700 hover:border-slate-600
+    `,
+    stat: `
+      bg-slate-800/60 backdrop-blur-sm
+      border border-slate-700/50
+    `,
+    transaction: `
+      bg-slate-800/60 backdrop-blur-sm
+      border border-slate-700/50
+    `,
+    balance: `
+      bg-slate-800/60 backdrop-blur-sm
+      border border-slate-700/50
     `,
   };
 

@@ -120,11 +120,12 @@ const CarbonPoints: React.FC = () => {
     return '#a855f7';
   };
 
-  const getActionCategory = (type: string) => {
+  const _getActionCategory = (type: string) => {
     if (type.includes('TRANSPORT') || type.includes('BUS') || type.includes('SUBWAY')) return 'Transportation';
     if (type.includes('RECYCLING')) return 'Recycling';
     return 'Shopping';
   };
+  void _getActionCategory;
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);

@@ -20,7 +20,7 @@ const Wallet: React.FC = () => {
   const navigate = useNavigate();
   const { wallet, cards } = useWalletStore();
   const { transactions } = useTransactionStore();
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [, setActiveCardIndex] = useState(0);
   const [programmableTokens, setProgrammableTokens] = useState<ProgrammableToken[]>([]);
 
   const recentTransactions = transactions.slice(0, 4);

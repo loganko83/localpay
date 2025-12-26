@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Voucher Issuance &amp; Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b8cee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl border-x border-gray-100 dark:border-gray-800">
+<!-- Top App Bar -->
+<div class="flex items-center sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-gray-200 dark:border-gray-800">
+<div class="text-[#111418] dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Busan B-Pass Admin</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex size-12 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent text-[#111418] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+<!-- Stats Section -->
+<div class="flex flex-wrap gap-3 p-4">
+<div class="flex min-w-[140px] flex-1 flex-col gap-2 rounded-xl p-5 bg-white dark:bg-[#1a2632] shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">account_balance_wallet</span>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal">Total Issued</p>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-2xl font-bold leading-tight">₩12.5B</p>
+<div class="flex items-center gap-1 text-green-600 dark:text-green-400 text-xs font-medium">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% this month</span>
+</div>
+</div>
+<div class="flex min-w-[140px] flex-1 flex-col gap-2 rounded-xl p-5 bg-white dark:bg-[#1a2632] shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">redeem</span>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-medium leading-normal">Redemption</p>
+</div>
+<p class="text-[#111418] dark:text-white tracking-tight text-2xl font-bold leading-tight">82%</p>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-1">
+<div class="bg-primary h-1.5 rounded-full" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<!-- Blockchain Status Chip -->
+<div class="px-4 pb-2">
+<div class="flex items-center gap-2 py-2 px-3 bg-primary/10 rounded-lg w-fit border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm animate-pulse">sync</span>
+<p class="text-primary text-xs font-semibold">Blockchain Ledger Synced: 2m ago</p>
+</div>
+</div>
+<!-- Filters / Segmented Button -->
+<div class="flex px-4 py-2">
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#1a2632] has-[:checked]:shadow-sm has-[:checked]:text-primary text-gray-500 dark:text-gray-400 text-sm font-bold leading-normal transition-all">
+<span class="truncate">All Districts</span>
+<input checked="" class="invisible w-0" name="district-filter" type="radio" value="All Districts"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#1a2632] has-[:checked]:shadow-sm has-[:checked]:text-primary text-gray-500 dark:text-gray-400 text-sm font-bold leading-normal transition-all">
+<span class="truncate">City-wide Only</span>
+<input class="invisible w-0" name="district-filter" type="radio" value="City-wide Only"/>
+</label>
+</div>
+</div>
+<!-- Status Chips -->
+<div class="flex gap-2 px-4 py-2 overflow-x-auto no-scrollbar">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-primary text-white px-4 shadow-sm shadow-primary/30">
+<p class="text-sm font-medium leading-normal">All</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 px-4 text-[#111418] dark:text-white">
+<span class="material-symbols-outlined text-[18px]">play_circle</span>
+<p class="text-sm font-medium leading-normal">Active</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 px-4 text-[#111418] dark:text-white">
+<span class="material-symbols-outlined text-[18px]">calendar_clock</span>
+<p class="text-sm font-medium leading-normal">Scheduled</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 px-4 text-[#111418] dark:text-white">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<p class="text-sm font-medium leading-normal">Ended</p>
+</button>
+</div>
+<!-- Section Header -->
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pt-4 pb-2">Active Programs</h3>
+<!-- Active Program Cards -->
+<div class="flex flex-col gap-4 px-4 pb-24">
+<!-- Card 1 -->
+<div class="flex flex-col rounded-xl bg-white dark:bg-[#1a2632] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+<div class="p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Yeongdo-gu</span>
+</div>
+<h4 class="text-lg font-bold text-[#111418] dark:text-white">Tourism Boost 2024</h4>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Budget Utilized</span>
+<span class="font-bold text-[#111418] dark:text-white">50%</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 50%"></div>
+</div>
+<div class="flex justify-between text-xs mt-1">
+<span class="text-gray-500 dark:text-gray-400">₩500M Issued</span>
+<span class="text-gray-500 dark:text-gray-400">Total: ₩1B</span>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-[#15202b] px-4 py-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Ends Dec 31, 2024</span>
+</div>
+<button class="text-primary text-sm font-bold hover:underline">Manage</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col rounded-xl bg-white dark:bg-[#1a2632] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+<div class="p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">City-wide</span>
+</div>
+<h4 class="text-lg font-bold text-[#111418] dark:text-white">Busan Youth Support</h4>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Budget Utilized</span>
+<span class="font-bold text-[#111418] dark:text-white">75%</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 75%"></div>
+</div>
+<div class="flex justify-between text-xs mt-1">
+<span class="text-gray-500 dark:text-gray-400">₩7.5B Issued</span>
+<span class="text-gray-500 dark:text-gray-400">Total: ₩10B</span>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-[#15202b] px-4 py-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Ends Nov 15, 2024</span>
+</div>
+<button class="text-primary text-sm font-bold hover:underline">Manage</button>
+</div>
+</div>
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] pt-4 pb-2">Recently Ended</h3>
+<!-- Card 3 (Ended) -->
+<div class="flex flex-col rounded-xl bg-white dark:bg-[#1a2632] shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden opacity-90">
+<div class="p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 uppercase tracking-wide">Ended</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Busanjin-gu</span>
+</div>
+<h4 class="text-lg font-bold text-[#111418] dark:text-white">Chuseok Holiday Special</h4>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500 dark:text-gray-400">Fully Distributed</span>
+<span class="font-bold text-[#111418] dark:text-white">100%</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
+<div class="bg-gray-400 dark:bg-gray-500 h-2 rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between text-xs mt-1">
+<span class="text-gray-500 dark:text-gray-400">₩2B Issued</span>
+<span class="text-gray-500 dark:text-gray-400">Total: ₩2B</span>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-[#15202b] px-4 py-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700">
+<div class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-sm">event_busy</span>
+<span>Ended Sep 30, 2024</span>
+</div>
+<button class="text-gray-600 dark:text-gray-300 text-sm font-bold hover:underline">View Report</button>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-6 right-6 lg:absolute lg:bottom-6 lg:right-6 size-14 rounded-full bg-primary text-white shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-105 transition-transform hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-primary/30 z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</body></html>
