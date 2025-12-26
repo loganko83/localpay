@@ -4,6 +4,18 @@ import { Card, Badge, Input, Button } from '../../components/common';
 import { useTransactionStore } from '../../store';
 import { TransactionStatus } from '../../types';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const statusFilters: { label: string; value: TransactionStatus | 'all' }[] = [
   { label: 'All', value: 'all' },
   { label: 'Completed', value: 'completed' },
@@ -56,24 +68,58 @@ const Payments: React.FC = () => {
       </div>
 
       {/* Date Filter */}
-      <div className="px-4 mb-4">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+      <div style={{ padding: '0 1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto' }} className="no-scrollbar">
           {['today', 'yesterday', 'week', 'month'].map((range) => (
             <button
               key={range}
               onClick={() => setDateRange(range)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                dateRange === range
-                  ? 'bg-primary text-background'
-                  : 'bg-surface-highlight text-text-secondary hover:text-white'
-              }`}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '9999px',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s',
+                backgroundColor: dateRange === range ? theme.accent : theme.card,
+                color: dateRange === range ? theme.bg : theme.textSecondary,
+                border: 'none',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                if (dateRange !== range) {
+                  e.currentTarget.style.color = theme.text;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (dateRange !== range) {
+                  e.currentTarget.style.color = theme.textSecondary;
+                }
+              }}
             >
               {range === 'today' ? 'Today' :
                range === 'yesterday' ? 'Yesterday' :
                range === 'week' ? 'This Week' : 'This Month'}
             </button>
           ))}
-          <button className="px-4 py-2 rounded-full text-sm font-medium bg-surface-highlight text-text-secondary hover:text-white flex items-center gap-1">
+          <button
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '9999px',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              backgroundColor: theme.card,
+              color: theme.textSecondary,
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = theme.text}
+            onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+          >
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
             Custom
           </button>
@@ -81,33 +127,49 @@ const Payments: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="px-4 mb-4">
-        <div className="grid grid-cols-2 gap-3">
+      <div style={{ padding: '0 1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
           <Card padding="md">
-            <p className="text-xs text-text-secondary mb-1">Total Received</p>
-            <p className="text-xl font-bold text-primary">₩{formatAmount(totalAmount)}</p>
-            <p className="text-xs text-text-muted mt-1">{filteredTransactions.filter(t => t.type === 'payment').length} transactions</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Total Received</p>
+            <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.accent }}>₩{formatAmount(totalAmount)}</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'payment').length} transactions</p>
           </Card>
           <Card padding="md">
-            <p className="text-xs text-text-secondary mb-1">Refunds</p>
-            <p className="text-xl font-bold text-red-500">₩{formatAmount(refundAmount)}</p>
-            <p className="text-xs text-text-muted mt-1">{filteredTransactions.filter(t => t.type === 'refund').length} transactions</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Refunds</p>
+            <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ef4444' }}>₩{formatAmount(refundAmount)}</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'refund').length} transactions</p>
           </Card>
         </div>
       </div>
 
       {/* Status Filters */}
-      <div className="px-4 mb-4">
-        <div className="flex gap-2">
+      <div style={{ padding: '0 1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           {statusFilters.map((filter) => (
             <button
               key={filter.value}
               onClick={() => setActiveStatus(filter.value)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                activeStatus === filter.value
-                  ? 'bg-surface-highlight text-white'
-                  : 'text-text-secondary hover:text-white'
-              }`}
+              style={{
+                padding: '0.375rem 0.75rem',
+                borderRadius: '0.5rem',
+                fontSize: '0.75rem',
+                fontWeight: '500',
+                transition: 'all 0.2s',
+                backgroundColor: activeStatus === filter.value ? theme.cardHover : 'transparent',
+                color: activeStatus === filter.value ? theme.text : theme.textSecondary,
+                border: 'none',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                if (activeStatus !== filter.value) {
+                  e.currentTarget.style.color = theme.text;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeStatus !== filter.value) {
+                  e.currentTarget.style.color = theme.textSecondary;
+                }
+              }}
             >
               {filter.label}
             </button>
@@ -116,21 +178,28 @@ const Payments: React.FC = () => {
       </div>
 
       {/* Transaction List */}
-      <div className="px-4 space-y-3">
+      <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {filteredTransactions.map((tx) => (
           <Card key={tx.id} variant="transaction" padding="md">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                  tx.type === 'payment' ? 'bg-primary/10 text-primary' : 'bg-red-500/10 text-red-500'
-                }`}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{
+                  height: '2.5rem',
+                  width: '2.5rem',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: tx.type === 'payment' ? theme.accentSoft : 'rgba(239,68,68,0.15)',
+                  color: tx.type === 'payment' ? theme.accent : '#ef4444',
+                }}>
                   <span className="material-symbols-outlined text-[20px]">
                     {tx.type === 'payment' ? 'arrow_downward' : 'undo'}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{tx.customerName || 'Customer'}</p>
-                  <p className="text-xs text-text-secondary">
+                  <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{tx.customerName || 'Customer'}</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
                     {new Date(tx.createdAt).toLocaleString('ko-KR', {
                       month: 'short',
                       day: 'numeric',
@@ -140,13 +209,15 @@ const Payments: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <span className={`text-sm font-bold ${
-                  tx.type === 'payment' ? 'text-primary' : 'text-red-500'
-                }`}>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{
+                  fontSize: '0.875rem',
+                  fontWeight: 'bold',
+                  color: tx.type === 'payment' ? theme.accent : '#ef4444',
+                }}>
                   {tx.type === 'payment' ? '+' : '-'} ₩{formatAmount(tx.amount)}
                 </span>
-                <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.375rem', marginTop: '0.125rem' }}>
                   <Badge
                     variant={tx.status === 'completed' ? 'success' : tx.status === 'pending' ? 'warning' : 'error'}
                     size="sm"
@@ -157,11 +228,22 @@ const Payments: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-surface-highlight">
-              <div className="flex items-center gap-2 text-xs text-text-muted">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: `1px solid ${theme.border}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: theme.textMuted }}>
                 <span className="material-symbols-outlined text-[14px]">tag</span>
-                <span className="font-mono">{tx.txId}</span>
-                <button className="text-text-secondary hover:text-white">
+                <span style={{ fontFamily: 'monospace' }}>{tx.txId}</span>
+                <button
+                  style={{
+                    color: theme.textSecondary,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.text}
+                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                >
                   <span className="material-symbols-outlined text-[14px]">content_copy</span>
                 </button>
               </div>
@@ -177,7 +259,7 @@ const Payments: React.FC = () => {
       </div>
 
       {/* Export Button */}
-      <div className="px-4 mt-6">
+      <div style={{ padding: '0 1rem', marginTop: '1.5rem' }}>
         <Button variant="secondary" fullWidth>
           <span className="material-symbols-outlined mr-2">download</span>
           Export Report

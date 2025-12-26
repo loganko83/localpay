@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
@@ -18,20 +30,20 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pb-24" style={{ background: '#0f1a14' }}>
+    <div className="flex flex-col min-h-screen pb-24" style={{ background: theme.bg }}>
       {/* Header */}
       <header
         className="sticky top-0 z-50 px-4 py-3 flex items-center"
-        style={{ background: '#0f1a14', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
       >
         <button
           onClick={() => navigate(-1)}
           className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
-          style={{ color: 'white' }}
+          style={{ color: theme.text }}
         >
           <span className="material-symbols-outlined text-2xl">arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold text-white flex-1 text-center pr-10">Profile Settings</h1>
+        <h1 className="text-lg font-bold flex-1 text-center pr-10" style={{ color: theme.text }}>Profile Settings</h1>
       </header>
 
       <div className="flex-1 overflow-y-auto">
@@ -42,31 +54,31 @@ const Settings: React.FC = () => {
               className="w-28 h-28 rounded-full bg-cover bg-center"
               style={{
                 backgroundImage: 'url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop")',
-                border: '4px solid rgba(16,185,129,0.2)',
+                border: `4px solid ${theme.border}`,
               }}
             />
             <button
               className="absolute bottom-0 right-0 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
-              style={{ background: '#10b981' }}
+              style={{ background: theme.accent }}
             >
-              <span className="material-symbols-outlined text-white text-[18px]">edit</span>
+              <span className="material-symbols-outlined text-[18px]" style={{ color: theme.text }}>edit</span>
             </button>
           </div>
-          <h2 className="text-2xl font-bold text-white text-center">Busan Seafood House</h2>
+          <h2 className="text-2xl font-bold text-center" style={{ color: theme.text }}>Busan Seafood House</h2>
           <div className="flex items-center gap-1 mt-1">
-            <span className="material-symbols-outlined text-[16px]" style={{ color: '#10b981' }}>verified</span>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>ID: 0x8F...2A | Verified Merchant</p>
+            <span className="material-symbols-outlined text-[16px]" style={{ color: theme.accent }}>verified</span>
+            <p className="text-sm" style={{ color: theme.textSecondary }}>ID: 0x8F...2A | Verified Merchant</p>
           </div>
         </div>
 
         {/* Segmented Tabs */}
         <div
           className="sticky top-[56px] z-40 px-4 py-3"
-          style={{ background: 'rgba(15,26,20,0.95)', backdropFilter: 'blur(8px)' }}
+          style={{ background: `${theme.bg}F2`, backdropFilter: 'blur(8px)' }}
         >
           <div
             className="flex h-10 items-center justify-center rounded-lg p-1"
-            style={{ background: '#1c271f' }}
+            style={{ background: theme.card }}
           >
             {(['info', 'operations', 'finance'] as const).map((tab) => (
               <button
@@ -74,8 +86,8 @@ const Settings: React.FC = () => {
                 onClick={() => setActiveTab(tab)}
                 className="flex-1 h-full rounded-md text-sm font-medium transition-all"
                 style={{
-                  background: activeTab === tab ? '#0f1a14' : 'transparent',
-                  color: activeTab === tab ? '#10b981' : 'rgba(255,255,255,0.5)',
+                  background: activeTab === tab ? theme.bg : 'transparent',
+                  color: activeTab === tab ? theme.accent : theme.textSecondary,
                   boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
                 }}
               >
@@ -87,26 +99,27 @@ const Settings: React.FC = () => {
 
         {/* Business Details Section */}
         <div className="px-4 pt-4 pb-2">
-          <h3 className="text-lg font-bold text-white">Business Details</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Business Details</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-4">
           {/* Business Name */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Business Name</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Business Name</p>
             <div className="relative">
               <input
                 type="text"
                 defaultValue="Busan Seafood House"
-                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                className="w-full h-12 rounded-xl px-4 pr-10 focus:outline-none focus:ring-2 transition-all"
                 style={{
-                  background: '#1c271f',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: theme.card,
+                  border: `1px solid ${theme.border}`,
+                  color: theme.text,
                 }}
               />
               <span
                 className="material-symbols-outlined absolute right-3 top-3"
-                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+                style={{ color: theme.textMuted, fontSize: '20px' }}
               >
                 storefront
               </span>
@@ -115,20 +128,21 @@ const Settings: React.FC = () => {
 
           {/* Store Address */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Store Address</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Store Address</p>
             <div className="relative">
               <input
                 type="text"
                 defaultValue="123 Gwangan-ro, Suyeong-gu, Busan"
-                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                className="w-full h-12 rounded-xl px-4 pr-10 focus:outline-none focus:ring-2 transition-all"
                 style={{
-                  background: '#1c271f',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: theme.card,
+                  border: `1px solid ${theme.border}`,
+                  color: theme.text,
                 }}
               />
               <span
                 className="material-symbols-outlined absolute right-3 top-3 cursor-pointer transition-colors"
-                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+                style={{ color: theme.textMuted, fontSize: '20px' }}
               >
                 map
               </span>
@@ -138,7 +152,7 @@ const Settings: React.FC = () => {
           {/* Map Preview */}
           <div
             className="h-32 w-full rounded-xl overflow-hidden relative"
-            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ border: `1px solid ${theme.border}` }}
           >
             <img
               src="https://maps.googleapis.com/maps/api/staticmap?center=Busan,Korea&zoom=14&size=400x200&maptype=roadmap&style=feature:all|element:labels|visibility:on&style=feature:all|element:geometry|color:0x242f3e"
@@ -148,7 +162,7 @@ const Settings: React.FC = () => {
             <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
               <button
                 className="px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm flex items-center gap-1"
-                style={{ background: 'rgba(255,255,255,0.9)', color: '#0f1a14' }}
+                style={{ background: 'rgba(255,255,255,0.9)', color: theme.bg }}
               >
                 <span className="material-symbols-outlined text-sm">edit_location</span>
                 Edit Location
@@ -158,20 +172,21 @@ const Settings: React.FC = () => {
 
           {/* Contact Number */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Contact Number</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Contact Number</p>
             <div className="relative">
               <input
                 type="tel"
                 defaultValue="051-123-4567"
-                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                className="w-full h-12 rounded-xl px-4 pr-10 focus:outline-none focus:ring-2 transition-all"
                 style={{
-                  background: '#1c271f',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: theme.card,
+                  border: `1px solid ${theme.border}`,
+                  color: theme.text,
                 }}
               />
               <span
                 className="material-symbols-outlined absolute right-3 top-3"
-                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+                style={{ color: theme.textMuted, fontSize: '20px' }}
               >
                 call
               </span>
@@ -181,51 +196,51 @@ const Settings: React.FC = () => {
 
         {/* Operations Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold text-white">Operations</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Operations</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-3">
           {/* Operating Hours */}
           <div
             className="flex items-center justify-between p-4 rounded-xl"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(16,185,129,0.1)' }}
+                style={{ background: theme.accentSoft }}
               >
-                <span className="material-symbols-outlined" style={{ color: '#10b981' }}>schedule</span>
+                <span className="material-symbols-outlined" style={{ color: theme.accent }}>schedule</span>
               </div>
               <div>
-                <span className="text-white font-medium">Operating Hours</span>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Mon-Sun: 10:00 AM - 10:00 PM</p>
+                <span className="font-medium" style={{ color: theme.text }}>Operating Hours</span>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>Mon-Sun: 10:00 AM - 10:00 PM</p>
               </div>
             </div>
-            <span className="material-symbols-outlined" style={{ color: 'rgba(255,255,255,0.4)' }}>chevron_right</span>
+            <span className="material-symbols-outlined" style={{ color: theme.textMuted }}>chevron_right</span>
           </div>
 
           {/* Currently Open Toggle */}
           <div
             className="flex items-center justify-between p-4 rounded-xl"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(34,197,94,0.1)' }}
+                style={{ background: theme.accentSoft }}
               >
-                <span className="material-symbols-outlined" style={{ color: '#22c55e' }}>door_open</span>
+                <span className="material-symbols-outlined" style={{ color: theme.accent }}>door_open</span>
               </div>
               <div>
-                <span className="text-white font-medium">Currently Open</span>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Visible on map</p>
+                <span className="font-medium" style={{ color: theme.text }}>Currently Open</span>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>Visible on map</p>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="relative w-11 h-6 rounded-full transition-colors"
-              style={{ background: isOpen ? '#10b981' : '#3a4a3f' }}
+              style={{ background: isOpen ? theme.accent : theme.border }}
             >
               <div
                 className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
@@ -237,35 +252,35 @@ const Settings: React.FC = () => {
 
         {/* Financials Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold text-white">Financials & Settlement</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Financials & Settlement</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-3">
           {/* Settlement Account */}
           <div
             className="p-4 rounded-xl"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined" style={{ color: 'rgba(255,255,255,0.4)' }}>account_balance</span>
-                <span className="text-white font-medium text-sm">Settlement Account</span>
+                <span className="material-symbols-outlined" style={{ color: theme.textMuted }}>account_balance</span>
+                <span className="font-medium text-sm" style={{ color: theme.text }}>Settlement Account</span>
               </div>
-              <button className="text-xs font-bold uppercase tracking-wide" style={{ color: '#10b981' }}>Change</button>
+              <button className="text-xs font-bold uppercase tracking-wide" style={{ color: theme.accent }}>Change</button>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white font-bold text-lg">Busan Bank</p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>**** **** **** 8821</p>
+                <p className="font-bold text-lg" style={{ color: theme.text }}>Busan Bank</p>
+                <p className="text-sm" style={{ color: theme.textSecondary }}>**** **** **** 8821</p>
               </div>
               <span
                 className="text-xs px-2 py-1 rounded"
-                style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+                style={{ background: theme.accentSoft, color: theme.accent, border: `1px solid ${theme.accent}` }}
               >
                 Active
               </span>
             </div>
-            <p className="text-xs mt-3 flex items-center gap-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-xs mt-3 flex items-center gap-1" style={{ color: theme.textMuted }}>
               <span className="material-symbols-outlined text-[14px]">lock</span>
               Secured by blockchain ledger
             </p>
@@ -274,29 +289,29 @@ const Settings: React.FC = () => {
           {/* Payment Methods */}
           <div
             className="rounded-xl overflow-hidden"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             {/* Busan Coin */}
             <div
               className="p-4 flex items-center justify-between"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ borderBottom: `1px solid ${theme.border}` }}
             >
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(59,130,246,0.1)' }}
+                  style={{ background: theme.accentSoft }}
                 >
-                  <span className="material-symbols-outlined" style={{ color: '#3b82f6' }}>currency_bitcoin</span>
+                  <span className="material-symbols-outlined" style={{ color: theme.accent }}>currency_bitcoin</span>
                 </div>
                 <div>
-                  <p className="text-white font-medium">Busan Coin</p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Zero fees</p>
+                  <p className="font-medium" style={{ color: theme.text }}>Busan Coin</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>Zero fees</p>
                 </div>
               </div>
               <button
                 onClick={() => setBusanCoinEnabled(!busanCoinEnabled)}
                 className="relative w-11 h-6 rounded-full transition-colors"
-                style={{ background: busanCoinEnabled ? '#10b981' : '#3a4a3f' }}
+                style={{ background: busanCoinEnabled ? theme.accent : theme.border }}
               >
                 <div
                   className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
@@ -310,19 +325,19 @@ const Settings: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(99,102,241,0.1)' }}
+                  style={{ background: theme.accentSoft }}
                 >
-                  <span className="material-symbols-outlined" style={{ color: '#6366f1' }}>qr_code_scanner</span>
+                  <span className="material-symbols-outlined" style={{ color: theme.accent }}>qr_code_scanner</span>
                 </div>
                 <div>
-                  <p className="text-white font-medium">QR Pay</p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Standard rate</p>
+                  <p className="font-medium" style={{ color: theme.text }}>QR Pay</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>Standard rate</p>
                 </div>
               </div>
               <button
                 onClick={() => setQrPayEnabled(!qrPayEnabled)}
                 className="relative w-11 h-6 rounded-full transition-colors"
-                style={{ background: qrPayEnabled ? '#10b981' : '#3a4a3f' }}
+                style={{ background: qrPayEnabled ? theme.accent : theme.border }}
               >
                 <div
                   className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
@@ -335,23 +350,23 @@ const Settings: React.FC = () => {
 
         {/* Notifications Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold text-white">Notifications</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Notifications</h3>
         </div>
 
         <div className="px-4 pb-4">
           <div
             className="rounded-xl overflow-hidden"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div
               className="p-4 flex items-center justify-between"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ borderBottom: `1px solid ${theme.border}` }}
             >
-              <span className="text-white font-medium">Push Notifications</span>
+              <span className="font-medium" style={{ color: theme.text }}>Push Notifications</span>
               <button
                 onClick={() => setPushNotifications(!pushNotifications)}
                 className="relative w-11 h-6 rounded-full transition-colors"
-                style={{ background: pushNotifications ? '#10b981' : '#3a4a3f' }}
+                style={{ background: pushNotifications ? theme.accent : theme.border }}
               >
                 <div
                   className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
@@ -360,11 +375,11 @@ const Settings: React.FC = () => {
               </button>
             </div>
             <div className="p-4 flex items-center justify-between">
-              <span className="text-white font-medium">Daily Sales Report</span>
+              <span className="font-medium" style={{ color: theme.text }}>Daily Sales Report</span>
               <button
                 onClick={() => setDailyReport(!dailyReport)}
                 className="relative w-11 h-6 rounded-full transition-colors"
-                style={{ background: dailyReport ? '#10b981' : '#3a4a3f' }}
+                style={{ background: dailyReport ? theme.accent : theme.border }}
               >
                 <div
                   className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
@@ -380,7 +395,7 @@ const Settings: React.FC = () => {
           <button
             onClick={handleLogout}
             className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
-            style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}
+            style={{ background: theme.accentSoft, color: theme.accent, border: `1px solid ${theme.accent}` }}
           >
             <span className="material-symbols-outlined text-[20px]">logout</span>
             Logout
@@ -392,17 +407,17 @@ const Settings: React.FC = () => {
       <div
         className="fixed bottom-0 left-0 right-0 p-4 z-50 max-w-md mx-auto"
         style={{
-          background: 'rgba(15,26,20,0.8)',
+          background: `${theme.bg}CC`,
           backdropFilter: 'blur(12px)',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: `1px solid ${theme.border}`,
         }}
       >
         <button
           className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
           style={{
-            background: '#10b981',
-            color: '#0f1a14',
-            boxShadow: '0 8px 20px -4px rgba(16,185,129,0.4)',
+            background: theme.accent,
+            color: theme.text,
+            boxShadow: `0 8px 20px -4px ${theme.accentSoft}`,
           }}
         >
           Save Changes

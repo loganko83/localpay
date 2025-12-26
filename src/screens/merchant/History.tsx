@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 type FilterType = 'all' | 'completed' | 'refunded' | 'pending';
 
 const History: React.FC = () => {
@@ -40,13 +52,13 @@ const History: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen pb-28" style={{ background: '#0f1a14' }}>
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
       {/* Header */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md px-4 py-3 flex items-center justify-between"
         style={{
-          background: 'rgba(15,26,20,0.95)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          background: 'rgba(17,17,17,0.95)',
+          borderBottom: `1px solid ${theme.border}`,
         }}
       >
         <div className="flex items-center gap-3">
@@ -54,17 +66,17 @@ const History: React.FC = () => {
             onClick={() => navigate(-1)}
             className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
           >
-            <span className="material-symbols-outlined text-white text-2xl">arrow_back</span>
+            <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
           </button>
-          <h1 className="text-xl font-bold text-white">Transactions</h1>
+          <h1 className="text-xl font-bold" style={{ color: theme.text }}>Transactions</h1>
         </div>
         <button
           onClick={() => navigate('/merchant/scan')}
           className="flex items-center gap-2 px-4 py-2 rounded-full transition-all"
-          style={{ background: 'rgba(16,185,129,0.1)' }}
+          style={{ background: theme.accentSoft }}
         >
-          <span className="material-symbols-outlined text-[20px]" style={{ color: '#10b981' }}>qr_code_scanner</span>
-          <span className="text-sm font-bold" style={{ color: '#10b981' }}>Scan</span>
+          <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>qr_code_scanner</span>
+          <span className="text-sm font-bold" style={{ color: theme.accent }}>Scan</span>
         </button>
       </header>
 
@@ -73,26 +85,26 @@ const History: React.FC = () => {
         <div className="px-4 py-4">
           <div
             className="relative rounded-xl p-5 overflow-hidden"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             {/* Background gradient */}
             <div
               className="absolute right-0 top-0 h-full w-1/3"
-              style={{ background: 'linear-gradient(to left, rgba(16,185,129,0.1), transparent)' }}
+              style={{ background: `linear-gradient(to left, ${theme.accentSoft}, transparent)` }}
             />
 
             <div className="relative z-10">
               <div className="flex flex-col gap-1 mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[20px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textSecondary }}>
                     account_balance_wallet
                   </span>
-                  <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>Today's Revenue</p>
+                  <p className="text-sm font-medium" style={{ color: theme.textSecondary }}>Today's Revenue</p>
                 </div>
-                <h2 className="text-3xl font-extrabold text-white tracking-tight">₩{formatAmount(todayRevenue)}</h2>
+                <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: theme.text }}>₩{formatAmount(todayRevenue)}</h2>
                 <div className="flex items-center gap-1 mt-1">
-                  <span className="material-symbols-outlined text-[16px]" style={{ color: '#10b981' }}>trending_up</span>
-                  <p className="text-xs font-bold" style={{ color: '#10b981' }}>+{revenueChange}% from yesterday</p>
+                  <span className="material-symbols-outlined text-[16px]" style={{ color: theme.accent }}>trending_up</span>
+                  <p className="text-xs font-bold" style={{ color: theme.accent }}>+{revenueChange}% from yesterday</p>
                 </div>
               </div>
 
@@ -100,16 +112,16 @@ const History: React.FC = () => {
                 <button
                   className="flex-1 h-10 px-4 rounded-lg font-bold text-sm transition-all"
                   style={{
-                    background: '#10b981',
-                    color: '#0f1a14',
-                    boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                    background: theme.accent,
+                    color: theme.text,
+                    boxShadow: `0 4px 12px ${theme.accentSoft}`,
                   }}
                 >
                   View Analytics
                 </button>
                 <button
                   className="h-10 w-10 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: '#2a3830', color: 'white' }}
+                  style={{ background: theme.cardHover, color: theme.text }}
                 >
                   <span className="material-symbols-outlined text-[20px]">download</span>
                 </button>
@@ -123,7 +135,7 @@ const History: React.FC = () => {
           <div className="relative">
             <span
               className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined"
-              style={{ color: 'rgba(255,255,255,0.4)', fontSize: '24px' }}
+              style={{ color: theme.textSecondary, fontSize: '24px' }}
             >
               search
             </span>
@@ -132,15 +144,16 @@ const History: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by ID, amount or customer..."
-              className="w-full h-12 rounded-xl pl-12 pr-12 text-white focus:outline-none focus:ring-2 transition-all"
+              className="w-full h-12 rounded-xl pl-12 pr-12 focus:outline-none focus:ring-2 transition-all"
               style={{
-                background: '#1c271f',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: theme.card,
+                border: `1px solid ${theme.border}`,
+                color: theme.text,
               }}
             />
             <button
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors"
-              style={{ color: 'rgba(255,255,255,0.4)' }}
+              style={{ color: theme.textSecondary }}
             >
               <span className="material-symbols-outlined text-[20px]">tune</span>
             </button>
@@ -156,10 +169,10 @@ const History: React.FC = () => {
                 onClick={() => setActiveFilter(filter.value)}
                 className="flex h-9 shrink-0 items-center justify-center px-4 rounded-full text-sm font-medium transition-all"
                 style={{
-                  background: activeFilter === filter.value ? '#10b981' : '#1c271f',
-                  color: activeFilter === filter.value ? '#0f1a14' : 'white',
-                  border: activeFilter === filter.value ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                  boxShadow: activeFilter === filter.value ? '0 4px 12px rgba(16,185,129,0.3)' : 'none',
+                  background: activeFilter === filter.value ? theme.accent : theme.card,
+                  color: activeFilter === filter.value ? theme.text : theme.text,
+                  border: activeFilter === filter.value ? 'none' : `1px solid ${theme.border}`,
+                  boxShadow: activeFilter === filter.value ? `0 4px 12px ${theme.accentSoft}` : 'none',
                 }}
               >
                 {filter.label}
@@ -170,8 +183,8 @@ const History: React.FC = () => {
 
         {/* Section Header */}
         <div className="px-4 pb-3 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-white">Recent Activity</h3>
-          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>Updated 1m ago</span>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Recent Activity</h3>
+          <span className="text-xs font-medium" style={{ color: theme.textSecondary }}>Updated 1m ago</span>
         </div>
 
         {/* Transaction List */}
@@ -181,8 +194,8 @@ const History: React.FC = () => {
               key={tx.id}
               className="flex items-center justify-between gap-4 p-4 rounded-xl transition-all cursor-pointer"
               style={{
-                background: '#1c271f',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: theme.card,
+                border: `1px solid ${theme.border}`,
               }}
             >
               <div className="flex items-center gap-4">
@@ -191,10 +204,10 @@ const History: React.FC = () => {
                   style={{
                     background:
                       tx.status === 'success'
-                        ? 'rgba(16,185,129,0.1)'
+                        ? theme.accentSoft
                         : tx.status === 'pending'
-                        ? 'rgba(245,158,11,0.1)'
-                        : 'rgba(107,114,128,0.1)',
+                        ? 'rgba(245,158,11,0.15)'
+                        : 'rgba(107,114,128,0.15)',
                   }}
                 >
                   <span
@@ -202,10 +215,10 @@ const History: React.FC = () => {
                     style={{
                       color:
                         tx.status === 'success'
-                          ? '#10b981'
+                          ? theme.accent
                           : tx.status === 'pending'
                           ? '#f59e0b'
-                          : '#6b7280',
+                          : theme.textMuted,
                       fontSize: '24px',
                     }}
                   >
@@ -213,8 +226,8 @@ const History: React.FC = () => {
                   </span>
                 </div>
                 <div>
-                  <p className="text-base font-bold text-white">{tx.txId}</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <p className="text-base font-bold" style={{ color: theme.text }}>{tx.txId}</p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
                     {tx.time} • {tx.customer}
                   </p>
                 </div>
@@ -224,7 +237,7 @@ const History: React.FC = () => {
                 <p
                   className="text-base font-bold"
                   style={{
-                    color: tx.status === 'refunded' ? 'rgba(255,255,255,0.5)' : 'white',
+                    color: tx.status === 'refunded' ? theme.textSecondary : theme.text,
                     textDecoration: tx.status === 'refunded' ? 'line-through' : 'none',
                   }}
                 >
@@ -235,10 +248,10 @@ const History: React.FC = () => {
                   style={{
                     background:
                       tx.status === 'success'
-                        ? 'rgba(16,185,129,0.1)'
+                        ? theme.accentSoft
                         : tx.status === 'pending'
-                        ? 'rgba(245,158,11,0.1)'
-                        : 'rgba(107,114,128,0.2)',
+                        ? 'rgba(245,158,11,0.15)'
+                        : 'rgba(107,114,128,0.15)',
                   }}
                 >
                   <p
@@ -246,10 +259,10 @@ const History: React.FC = () => {
                     style={{
                       color:
                         tx.status === 'success'
-                          ? '#10b981'
+                          ? theme.accent
                           : tx.status === 'pending'
                           ? '#f59e0b'
-                          : '#9ca3af',
+                          : theme.textSecondary,
                     }}
                   >
                     {tx.status === 'success' ? 'Success' : tx.status === 'pending' ? 'Pending' : 'Refunded'}
@@ -264,7 +277,7 @@ const History: React.FC = () => {
         <div className="flex justify-center pb-8">
           <button
             className="flex items-center gap-1 text-sm font-medium transition-colors"
-            style={{ color: 'rgba(255,255,255,0.5)' }}
+            style={{ color: theme.textSecondary }}
           >
             Load More
             <span className="material-symbols-outlined text-[16px]">expand_more</span>

@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const Scan: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'scan' | 'myqr'>('myqr');
@@ -26,10 +38,10 @@ const Scan: React.FC = () => {
   return (
     <div
       className="relative flex h-screen w-full flex-col overflow-hidden select-none"
-      style={{ background: '#0f1a14' }}
+      style={{ background: theme.bg }}
     >
       {/* Simulated Camera Feed Background */}
-      <div className="absolute inset-0 z-0" style={{ background: '#1a1a1a' }}>
+      <div className="absolute inset-0 z-0" style={{ background: theme.card }}>
         <img
           src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800&auto=format&fit=crop"
           alt="Camera Feed"
@@ -56,18 +68,19 @@ const Scan: React.FC = () => {
           <div className="flex items-center p-4 justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="flex w-12 h-12 shrink-0 items-center justify-center rounded-full transition-colors text-white"
-              style={{ background: 'transparent' }}
+              className="flex w-12 h-12 shrink-0 items-center justify-center rounded-full transition-colors"
+              style={{ background: 'transparent', color: theme.text }}
             >
               <span className="material-symbols-outlined text-3xl">close</span>
             </button>
-            <h2 className="text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">
+            <h2 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center" style={{ color: theme.text }}>
               Receive Payment
             </h2>
             <div className="flex w-12 items-center justify-end">
               <button
                 onClick={() => setFlashOn(!flashOn)}
-                className="flex w-12 h-12 cursor-pointer items-center justify-center rounded-full transition-colors text-white"
+                className="flex w-12 h-12 cursor-pointer items-center justify-center rounded-full transition-colors"
+                style={{ color: theme.text }}
               >
                 <span className="material-symbols-outlined text-2xl">
                   {flashOn ? 'flashlight_on' : 'flashlight_off'}
@@ -84,12 +97,12 @@ const Scan: React.FC = () => {
                 className="flex flex-col items-center justify-center gap-2 px-4"
                 style={{ opacity: activeTab === 'myqr' ? 1 : 0.5 }}
               >
-                <span className="text-white text-sm font-bold tracking-wide">Show QR</span>
+                <span className="text-sm font-bold tracking-wide" style={{ color: theme.text }}>Show QR</span>
                 <div
                   className="h-1 w-1 rounded-full"
                   style={{
-                    background: activeTab === 'myqr' ? '#10b981' : 'transparent',
-                    boxShadow: activeTab === 'myqr' ? '0 0 8px #10b981' : 'none',
+                    background: activeTab === 'myqr' ? theme.accent : 'transparent',
+                    boxShadow: activeTab === 'myqr' ? `0 0 8px ${theme.accent}` : 'none',
                   }}
                 />
               </button>
@@ -98,12 +111,12 @@ const Scan: React.FC = () => {
                 className="flex flex-col items-center justify-center gap-2 px-4 transition-opacity"
                 style={{ opacity: activeTab === 'scan' ? 1 : 0.5 }}
               >
-                <span className="text-white text-sm font-medium tracking-wide">Scan QR</span>
+                <span className="text-sm font-medium tracking-wide" style={{ color: theme.text }}>Scan QR</span>
                 <div
                   className="h-1 w-1 rounded-full"
                   style={{
-                    background: activeTab === 'scan' ? '#10b981' : 'transparent',
-                    boxShadow: activeTab === 'scan' ? '0 0 8px #10b981' : 'none',
+                    background: activeTab === 'scan' ? theme.accent : 'transparent',
+                    boxShadow: activeTab === 'scan' ? `0 0 8px ${theme.accent}` : 'none',
                   }}
                 />
               </button>
@@ -116,8 +129,8 @@ const Scan: React.FC = () => {
           <div className="flex-1 flex flex-col items-center justify-center -mt-10">
             {/* Instruction Text */}
             <h3
-              className="tracking-wide text-lg font-medium text-center mb-8 text-white"
-              style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+              className="tracking-wide text-lg font-medium text-center mb-8"
+              style={{ color: theme.text, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
             >
               Scan customer's QR code
             </h3>
@@ -127,15 +140,15 @@ const Scan: React.FC = () => {
               {/* Frame Border */}
               <div
                 className="absolute inset-0 rounded-3xl"
-                style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+                style={{ border: `1px solid ${theme.border}` }}
               />
 
               {/* Animated Scan Line */}
               <div
                 className="absolute left-0 right-0 h-0.5"
                 style={{
-                  background: 'linear-gradient(to right, transparent, #10b981, transparent)',
-                  boxShadow: '0 0 15px #10b981',
+                  background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)`,
+                  boxShadow: `0 0 15px ${theme.accent}`,
                   opacity: 0.8,
                   animation: 'scanLine 2.5s linear infinite',
                 }}
@@ -144,19 +157,19 @@ const Scan: React.FC = () => {
               {/* Corner Markers */}
               <div
                 className="absolute top-0 left-0 w-8 h-8 rounded-tl-xl"
-                style={{ borderLeft: '4px solid #10b981', borderTop: '4px solid #10b981' }}
+                style={{ borderLeft: `4px solid ${theme.accent}`, borderTop: `4px solid ${theme.accent}` }}
               />
               <div
                 className="absolute top-0 right-0 w-8 h-8 rounded-tr-xl"
-                style={{ borderRight: '4px solid #10b981', borderTop: '4px solid #10b981' }}
+                style={{ borderRight: `4px solid ${theme.accent}`, borderTop: `4px solid ${theme.accent}` }}
               />
               <div
                 className="absolute bottom-0 left-0 w-8 h-8 rounded-bl-xl"
-                style={{ borderLeft: '4px solid #10b981', borderBottom: '4px solid #10b981' }}
+                style={{ borderLeft: `4px solid ${theme.accent}`, borderBottom: `4px solid ${theme.accent}` }}
               />
               <div
                 className="absolute bottom-0 right-0 w-8 h-8 rounded-br-xl"
-                style={{ borderRight: '4px solid #10b981', borderBottom: '4px solid #10b981' }}
+                style={{ borderRight: `4px solid ${theme.accent}`, borderBottom: `4px solid ${theme.accent}` }}
               />
             </div>
 
@@ -166,21 +179,21 @@ const Scan: React.FC = () => {
               style={{
                 background: 'rgba(0,0,0,0.4)',
                 backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                border: `1px solid ${theme.border}`,
               }}
             >
               <button
                 onClick={() => setZoom('1x')}
                 className="text-xs font-bold"
-                style={{ color: zoom === '1x' ? 'white' : 'rgba(255,255,255,0.6)' }}
+                style={{ color: zoom === '1x' ? theme.text : theme.textSecondary }}
               >
                 1x
               </button>
-              <div className="w-px h-3" style={{ background: 'rgba(255,255,255,0.2)' }} />
+              <div className="w-px h-3" style={{ background: theme.border }} />
               <button
                 onClick={() => setZoom('2x')}
                 className="text-xs font-bold"
-                style={{ color: zoom === '2x' ? 'white' : 'rgba(255,255,255,0.6)' }}
+                style={{ color: zoom === '2x' ? theme.text : theme.textSecondary }}
               >
                 2x
               </button>
@@ -192,30 +205,30 @@ const Scan: React.FC = () => {
             <div
               className="w-full max-w-sm rounded-3xl p-6 flex flex-col items-center"
               style={{
-                background: 'rgba(15,26,20,0.95)',
+                background: theme.card,
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                border: `1px solid ${theme.border}`,
               }}
             >
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                style={{ background: 'rgba(16,185,129,0.2)' }}
+                style={{ background: theme.accentSoft }}
               >
-                <span className="material-symbols-outlined text-3xl" style={{ color: '#10b981' }}>storefront</span>
+                <span className="material-symbols-outlined text-3xl" style={{ color: theme.accent }}>storefront</span>
               </div>
 
-              <h2 className="text-xl font-bold text-white">Busan Store #42</h2>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <h2 className="text-xl font-bold" style={{ color: theme.text }}>Busan Store #42</h2>
+              <p className="text-sm mb-4" style={{ color: theme.textMuted }}>
                 ID: 8821-4402
               </p>
 
               {/* Amount Input */}
               <div className="w-full mb-4">
-                <label className="block text-xs font-medium mb-2 text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <label className="block text-xs font-medium mb-2 text-center" style={{ color: theme.textMuted }}>
                   Enter Amount (Optional)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: theme.textMuted }}>
                     ₩
                   </span>
                   <input
@@ -223,10 +236,11 @@ const Scan: React.FC = () => {
                     value={amount}
                     onChange={(e) => handleAmountChange(e.target.value)}
                     placeholder="0"
-                    className="w-full h-12 rounded-xl text-white text-xl font-bold text-center px-10 focus:outline-none focus:ring-2 transition-all"
+                    className="w-full h-12 rounded-xl text-xl font-bold text-center px-10 focus:outline-none focus:ring-2 transition-all"
                     style={{
-                      background: '#1c271f',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: theme.cardHover,
+                      border: `1px solid ${theme.border}`,
+                      color: theme.text,
                     }}
                   />
                 </div>
@@ -234,10 +248,10 @@ const Scan: React.FC = () => {
 
               <div
                 className="p-4 rounded-2xl mb-4"
-                style={{ background: 'white', boxShadow: '0 0 30px rgba(16,185,129,0.2)' }}
+                style={{ background: 'white', boxShadow: `0 0 30px ${theme.accentSoft}` }}
               >
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}&color=0f1a14&bgcolor=ffffff&margin=10`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}&color=111111&bgcolor=ffffff&margin=10`}
                   alt="My QR Code"
                   className="w-48 h-48"
                 />
@@ -246,29 +260,29 @@ const Scan: React.FC = () => {
               {numericAmount > 0 && (
                 <div
                   className="px-4 py-2 rounded-full mb-4"
-                  style={{ background: 'rgba(16,185,129,0.1)' }}
+                  style={{ background: theme.accentSoft }}
                 >
-                  <span className="text-sm font-bold" style={{ color: '#10b981' }}>
+                  <span className="text-sm font-bold" style={{ color: theme.accent }}>
                     Amount: ₩{formatAmount(amount)}
                   </span>
                 </div>
               )}
 
-              <p className="text-sm text-center px-4 mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-sm text-center px-4 mb-4" style={{ color: theme.textMuted }}>
                 Customer scans this code to pay you
               </p>
 
               <div className="flex gap-3 w-full">
                 <button
-                  className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors text-white"
-                  style={{ background: '#1c271f' }}
+                  className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                  style={{ background: theme.cardHover, color: theme.text }}
                 >
                   <span className="material-symbols-outlined text-[18px]">share</span>
                   Share
                 </button>
                 <button
-                  className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors text-white"
-                  style={{ background: '#1c271f' }}
+                  className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                  style={{ background: theme.cardHover, color: theme.text }}
                 >
                   <span className="material-symbols-outlined text-[18px]">download</span>
                   Save
@@ -285,11 +299,12 @@ const Scan: React.FC = () => {
         >
           {/* Manual Entry Button */}
           <button
-            className="flex w-full max-w-sm cursor-pointer items-center justify-center gap-2 rounded-xl h-12 text-white transition-all active:scale-95"
+            className="flex w-full max-w-sm cursor-pointer items-center justify-center gap-2 rounded-xl h-12 transition-all active:scale-95"
             style={{
               background: 'rgba(255,255,255,0.1)',
               backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              border: `1px solid ${theme.border}`,
+              color: theme.text,
             }}
           >
             <span className="material-symbols-outlined text-xl">keyboard</span>
@@ -303,22 +318,22 @@ const Scan: React.FC = () => {
               className="flex flex-col items-center gap-1 group"
             >
               <div
-                className="flex items-center justify-center rounded-full w-12 h-12 text-white transition-colors"
-                style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+                className="flex items-center justify-center rounded-full w-12 h-12 transition-colors"
+                style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${theme.border}`, color: theme.text }}
               >
                 <span className="material-symbols-outlined text-2xl">photo_library</span>
               </div>
-              <span className="text-[10px] font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>Gallery</span>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>Gallery</span>
             </button>
 
             {/* Shutter Button */}
             <div
               className="relative w-16 h-16 rounded-full flex items-center justify-center"
-              style={{ border: '3px solid #10b981' }}
+              style={{ border: `3px solid ${theme.accent}` }}
             >
               <div
                 className="w-14 h-14 rounded-full cursor-pointer transition-transform active:scale-90"
-                style={{ background: '#10b981' }}
+                style={{ background: theme.accent }}
               />
             </div>
 
@@ -327,12 +342,12 @@ const Scan: React.FC = () => {
               className="flex flex-col items-center gap-1 group"
             >
               <div
-                className="flex items-center justify-center rounded-full w-12 h-12 text-white transition-colors"
-                style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+                className="flex items-center justify-center rounded-full w-12 h-12 transition-colors"
+                style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${theme.border}`, color: theme.text }}
               >
                 <span className="material-symbols-outlined text-2xl">history</span>
               </div>
-              <span className="text-[10px] font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>History</span>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>History</span>
             </button>
           </div>
         </div>

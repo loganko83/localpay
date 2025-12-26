@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Input, Button, Badge } from '../../components/common';
+import { Input, Button, Badge } from '../../components/common';
 import { sharedLoyaltyService, PointTransaction } from '../../services/sharedLoyalty';
+
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 const LoyaltyRedeem: React.FC = () => {
   const navigate = useNavigate();
@@ -106,53 +118,93 @@ const LoyaltyRedeem: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pb-4">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: '1rem', backgroundColor: theme.bg }}>
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md px-4 py-4 border-b border-surface">
-        <div className="flex items-center gap-3">
+      <div style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: `${theme.bg}cc`, backdropFilter: 'blur(12px)', padding: '1rem', borderBottom: `1px solid ${theme.border}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 rounded-full hover:bg-surface transition-colors"
+            style={{
+              padding: '0.5rem',
+              marginLeft: '-0.5rem',
+              borderRadius: '9999px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.card}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <span className="material-symbols-outlined text-white">arrow_back</span>
+            <span className="material-symbols-outlined" style={{ color: theme.text }}>arrow_back</span>
           </button>
           <div>
-            <h1 className="text-lg font-bold text-white">Loyalty Point Redemption</h1>
-            <p className="text-xs text-text-secondary">Redeem customer loyalty points</p>
+            <h1 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.text }}>Loyalty Point Redemption</h1>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Redeem customer loyalty points</p>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 px-4 pt-6">
+      <div style={{ flex: 1, padding: '0 1rem', paddingTop: '1.5rem' }}>
         {/* QR Scanner Section */}
-        <Card className="mb-6" padding="lg">
-          <div className="flex items-center justify-between mb-4">
+        <div style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', border: `1px solid ${theme.border}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <div>
-              <h3 className="text-sm font-bold text-white mb-1">Customer QR Code</h3>
-              <p className="text-xs text-text-secondary">Scan customer's loyalty QR code</p>
+              <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '0.25rem' }}>Customer QR Code</h3>
+              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Scan customer's loyalty QR code</p>
             </div>
-            <span className="material-symbols-outlined text-[#13ec5b] text-3xl">
+            <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.875rem' }}>
               qr_code_scanner
             </span>
           </div>
 
-          <div className="relative mb-4">
+          <div style={{ position: 'relative', marginBottom: '1rem' }}>
             {scannerActive ? (
-              <div className="aspect-square w-full bg-surface-highlight rounded-xl flex items-center justify-center border-2 border-[#13ec5b] animate-pulse">
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[#13ec5b] text-6xl mb-2 animate-spin">
+              <div style={{
+                aspectRatio: '1',
+                width: '100%',
+                backgroundColor: theme.bg,
+                borderRadius: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: `2px solid ${theme.accent}`,
+                animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <span className="material-symbols-outlined" style={{
+                    color: theme.accent,
+                    fontSize: '3.75rem',
+                    marginBottom: '0.5rem',
+                    display: 'inline-block',
+                    animation: 'spin 1s linear infinite'
+                  }}>
                     qr_code_scanner
                   </span>
-                  <p className="text-sm text-white font-medium">Scanning QR Code...</p>
+                  <p style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>Scanning QR Code...</p>
                 </div>
               </div>
             ) : (
-              <div className="aspect-square w-full bg-surface-highlight rounded-xl flex items-center justify-center border-2 border-dashed border-surface">
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-text-muted text-6xl mb-2">
+              <div style={{
+                aspectRatio: '1',
+                width: '100%',
+                backgroundColor: theme.bg,
+                borderRadius: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: `2px dashed ${theme.border}`
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <span className="material-symbols-outlined" style={{
+                    color: theme.textMuted,
+                    fontSize: '3.75rem',
+                    marginBottom: '0.5rem',
+                    display: 'inline-block'
+                  }}>
                     qr_code_2
                   </span>
-                  <p className="text-xs text-text-secondary">Tap to scan customer QR code</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Tap to scan customer QR code</p>
                 </div>
               </div>
             )}
@@ -163,20 +215,20 @@ const LoyaltyRedeem: React.FC = () => {
             fullWidth
             onClick={handleScanQR}
             disabled={scannerActive}
-            className="bg-[#13ec5b] hover:bg-[#0fd350]"
+            style={{ backgroundColor: theme.accent, borderColor: theme.accent }}
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
               qr_code_scanner
             </span>
             {scannerActive ? 'Scanning...' : 'Scan QR Code'}
           </Button>
-        </Card>
+        </div>
 
         {/* Redemption Form */}
-        <Card className="mb-6" padding="lg">
-          <h3 className="text-sm font-bold text-white mb-4">Redemption Details</h3>
+        <div style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', border: `1px solid ${theme.border}` }}>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>Redemption Details</h3>
 
-          <div className="space-y-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <Input
               label="Customer ID"
               placeholder="Enter customer ID"
@@ -204,41 +256,41 @@ const LoyaltyRedeem: React.FC = () => {
             />
 
             {/* Conversion Rate Display */}
-            <div className="bg-surface-highlight rounded-xl p-4 border border-surface">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#13ec5b] text-[20px]">
+            <div style={{ backgroundColor: theme.bg, borderRadius: '0.75rem', padding: '1rem', border: `1px solid ${theme.border}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.25rem' }}>
                     swap_horiz
                   </span>
-                  <span className="text-sm text-white font-medium">Conversion Rate</span>
+                  <span style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>Conversion Rate</span>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-[#13ec5b]">
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>
                     {CONVERSION_RATE} points = {CONVERSION_RATE} KRW
                   </p>
-                  <p className="text-xs text-text-secondary">1 point = 1 KRW</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>1 point = 1 KRW</p>
                 </div>
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-red-500 text-[20px]">
+              <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '0.75rem', padding: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span className="material-symbols-outlined" style={{ color: '#ef4444', fontSize: '1.25rem' }}>
                     error
                   </span>
-                  <p className="text-sm text-red-500">{error}</p>
+                  <p style={{ fontSize: '0.875rem', color: '#ef4444' }}>{error}</p>
                 </div>
               </div>
             )}
 
             {success && (
-              <div className="bg-[#13ec5b]/10 border border-[#13ec5b]/30 rounded-xl p-3">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#13ec5b] text-[20px]">
+              <div style={{ backgroundColor: theme.accentSoft, border: `1px solid ${theme.accent}40`, borderRadius: '0.75rem', padding: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.25rem' }}>
                     check_circle
                   </span>
-                  <p className="text-sm text-[#13ec5b]">{success}</p>
+                  <p style={{ fontSize: '0.875rem', color: theme.accent }}>{success}</p>
                 </div>
               </div>
             )}
@@ -249,64 +301,74 @@ const LoyaltyRedeem: React.FC = () => {
               size="lg"
               onClick={handleRedeem}
               loading={loading}
-              className="bg-[#13ec5b] hover:bg-[#0fd350] mt-2"
+              style={{ backgroundColor: theme.accent, borderColor: theme.accent, marginTop: '0.5rem' }}
             >
-              <span className="material-symbols-outlined text-[20px]">
+              <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
                 redeem
               </span>
               Redeem Points
             </Button>
           </div>
-        </Card>
+        </div>
 
         {/* Recent Redemptions */}
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-white">Recent Redemptions</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>Recent Redemptions</h3>
             <Badge variant="default" size="sm">
               {recentRedemptions.length}
             </Badge>
           </div>
 
           {recentRedemptions.length === 0 ? (
-            <Card padding="lg">
-              <div className="text-center py-8">
-                <span className="material-symbols-outlined text-text-muted text-5xl mb-3">
+            <div style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1.5rem', border: `1px solid ${theme.border}` }}>
+              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                <span className="material-symbols-outlined" style={{ color: theme.textMuted, fontSize: '3rem', marginBottom: '0.75rem', display: 'inline-block' }}>
                   receipt_long
                 </span>
-                <p className="text-sm text-text-secondary">No redemptions yet</p>
-                <p className="text-xs text-text-muted mt-1">
+                <p style={{ fontSize: '0.875rem', color: theme.textSecondary }}>No redemptions yet</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>
                   Recent redemptions will appear here
                 </p>
               </div>
-            </Card>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {recentRedemptions.map((redemption) => (
-                <Card key={redemption.id} variant="transaction" padding="md">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3 flex-1">
-                      <div className="h-10 w-10 rounded-full bg-[#13ec5b]/10 border border-[#13ec5b]/30 flex items-center justify-center flex-shrink-0">
-                        <span className="material-symbols-outlined text-[#13ec5b] text-[20px]">
+                <div key={redemption.id} style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1rem', border: `1px solid ${theme.border}` }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', flex: 1 }}>
+                      <div style={{
+                        height: '2.5rem',
+                        width: '2.5rem',
+                        borderRadius: '9999px',
+                        backgroundColor: theme.accentSoft,
+                        border: `1px solid ${theme.accent}40`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.25rem' }}>
                           redeem
                         </span>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-white truncate">
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {redemption.merchantName || 'Point Redemption'}
                         </p>
-                        <p className="text-xs text-text-secondary">
+                        <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
                           {formatDateTime(redemption.timestamp)}
                         </p>
                         {redemption.description && (
-                          <p className="text-xs text-text-muted mt-1">
+                          <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>
                             {redemption.description}
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="text-right ml-3 flex-shrink-0">
-                      <p className="text-sm font-bold text-red-500">
+                    <div style={{ textAlign: 'right', marginLeft: '0.75rem', flexShrink: 0 }}>
+                      <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#ef4444' }}>
                         {redemption.points} pts
                       </p>
                       <Badge variant="success" size="sm" className="mt-1">
@@ -314,7 +376,7 @@ const LoyaltyRedeem: React.FC = () => {
                       </Badge>
                     </div>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
           )}

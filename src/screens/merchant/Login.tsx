@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Toggle } from '../../components/common';
 import { useAuthStore } from '../../store';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login, setUserType } = useAuthStore();
@@ -47,11 +59,26 @@ const Login: React.FC = () => {
     <div className="flex-1 flex flex-col justify-center p-6">
       {/* Logo */}
       <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-primary-dark mb-4">
-          <span className="material-symbols-outlined text-background text-4xl">storefront</span>
+        <div
+          className="inline-flex items-center justify-center h-20 w-20 rounded-2xl mb-4"
+          style={{
+            background: `linear-gradient(135deg, ${theme.accent}, #d63447)`
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-4xl"
+            style={{ color: theme.text }}
+          >
+            storefront
+          </span>
         </div>
-        <h1 className="text-2xl font-bold text-white mb-1">Merchant Portal</h1>
-        <p className="text-text-secondary">Manage your store with LocalPay</p>
+        <h1
+          className="text-2xl font-bold mb-1"
+          style={{ color: theme.text }}
+        >
+          Merchant Portal
+        </h1>
+        <p style={{ color: theme.textSecondary }}>Manage your store with LocalPay</p>
       </div>
 
       {/* Login Form */}
@@ -79,15 +106,19 @@ const Login: React.FC = () => {
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
             <Toggle checked={rememberMe} onChange={setRememberMe} size="sm" />
-            <span className="text-sm text-text-secondary">Keep me logged in</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Keep me logged in</span>
           </label>
-          <button type="button" className="text-sm text-primary hover:underline">
+          <button
+            type="button"
+            className="text-sm hover:underline"
+            style={{ color: theme.accent }}
+          >
             Forgot Password?
           </button>
         </div>
 
         {error && (
-          <p className="text-sm text-red-500 text-center">{error}</p>
+          <p className="text-sm text-center" style={{ color: theme.accent }}>{error}</p>
         )}
 
         <Button
@@ -103,7 +134,12 @@ const Login: React.FC = () => {
 
       {/* Biometric Login */}
       <div className="mt-6 text-center">
-        <button className="inline-flex items-center gap-2 text-text-secondary hover:text-white transition-colors">
+        <button
+          className="inline-flex items-center gap-2 transition-colors"
+          style={{ color: theme.textSecondary }}
+          onMouseEnter={(e) => e.currentTarget.style.color = theme.text}
+          onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+        >
           <span className="material-symbols-outlined">fingerprint</span>
           <span className="text-sm">Login with Biometrics</span>
         </button>
@@ -111,9 +147,12 @@ const Login: React.FC = () => {
 
       {/* Register Link */}
       <div className="mt-8 text-center">
-        <p className="text-text-secondary text-sm">
+        <p className="text-sm" style={{ color: theme.textSecondary }}>
           Don't have an account?{' '}
-          <button className="text-primary hover:underline">
+          <button
+            className="hover:underline"
+            style={{ color: theme.accent }}
+          >
             Apply for Merchant Account
           </button>
         </p>
@@ -122,7 +161,10 @@ const Login: React.FC = () => {
       {/* Back to App Selector */}
       <button
         onClick={() => navigate('/')}
-        className="mt-6 text-center text-text-muted text-sm hover:text-text-secondary transition-colors"
+        className="mt-6 text-center text-sm transition-colors"
+        style={{ color: theme.textMuted }}
+        onMouseEnter={(e) => e.currentTarget.style.color = theme.textSecondary}
+        onMouseLeave={(e) => e.currentTarget.style.color = theme.textMuted}
       >
         ← Back to App Selection
       </button>

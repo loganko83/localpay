@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const Wallet: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'all' | 'income' | 'withdraw'>('all');
@@ -29,24 +41,24 @@ const Wallet: React.FC = () => {
     : recentTransactions.filter((tx) => tx.type === activeTab);
 
   return (
-    <div className="flex flex-col min-h-screen pb-28" style={{ background: '#0f1a14' }}>
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
       {/* Header */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md px-4 py-3 flex items-center justify-between"
         style={{
-          background: 'rgba(15,26,20,0.95)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          background: theme.bg,
+          borderBottom: `1px solid ${theme.border}`,
         }}
       >
         <button
           onClick={() => navigate(-1)}
           className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
         >
-          <span className="material-symbols-outlined text-white text-2xl">arrow_back</span>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold text-white">Merchant Wallet</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Merchant Wallet</h1>
         <button className="flex items-center justify-center w-10 h-10 rounded-full transition-colors">
-          <span className="material-symbols-outlined text-white text-2xl">more_vert</span>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>more_vert</span>
         </button>
       </header>
 
@@ -56,8 +68,8 @@ const Wallet: React.FC = () => {
           <div
             className="relative rounded-2xl p-6 overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              boxShadow: '0 20px 40px -12px rgba(16,185,129,0.35)',
+              background: `linear-gradient(135deg, ${theme.accent} 0%, ${theme.accent} 100%)`,
+              boxShadow: `0 20px 40px -12px ${theme.accentSoft}`,
             }}
           >
             {/* Background decoration */}
@@ -78,22 +90,22 @@ const Wallet: React.FC = () => {
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-white/80">Available Balance</span>
+                <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>Available Balance</span>
                 <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }}>
-                  <span className="material-symbols-outlined text-white text-[14px]">verified</span>
-                  <span className="text-xs font-medium text-white">Verified</span>
+                  <span className="material-symbols-outlined text-[14px]" style={{ color: theme.text }}>verified</span>
+                  <span className="text-xs font-medium" style={{ color: theme.text }}>Verified</span>
                 </div>
               </div>
-              <h2 className="text-4xl font-bold text-white tracking-tight mb-6">
+              <h2 className="text-4xl font-bold tracking-tight mb-6" style={{ color: theme.text }}>
                 ₩ {formatAmount(walletData.balance)}
               </h2>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-white/80">Busan Store #42</p>
-                  <p className="text-xs text-white/60">Business Account</p>
+                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>Busan Store #42</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Business Account</p>
                 </div>
-                <span className="material-symbols-outlined text-white/40 text-3xl">account_balance_wallet</span>
+                <span className="material-symbols-outlined text-3xl" style={{ color: 'rgba(255,255,255,0.4)' }}>account_balance_wallet</span>
               </div>
             </div>
           </div>
@@ -105,26 +117,26 @@ const Wallet: React.FC = () => {
             {/* Today Sales */}
             <div
               className="p-4 rounded-xl"
-              style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ background: theme.card, border: `1px solid ${theme.border}` }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#10b981' }}>trending_up</span>
-                <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>Today</span>
+                <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>trending_up</span>
+                <span className="text-xs font-medium" style={{ color: theme.textMuted }}>Today</span>
               </div>
-              <p className="text-xl font-bold text-white">₩ {formatAmount(walletData.todaySales)}</p>
-              <p className="text-xs mt-1" style={{ color: '#10b981' }}>+12% vs yesterday</p>
+              <p className="text-xl font-bold" style={{ color: theme.text }}>₩ {formatAmount(walletData.todaySales)}</p>
+              <p className="text-xs mt-1" style={{ color: theme.accent }}>+12% vs yesterday</p>
             </div>
 
             {/* Pending Settlement */}
             <div
               className="p-4 rounded-xl"
-              style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ background: theme.card, border: `1px solid ${theme.border}` }}
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="material-symbols-outlined text-[20px]" style={{ color: '#f59e0b' }}>schedule</span>
-                <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>Pending</span>
+                <span className="text-xs font-medium" style={{ color: theme.textMuted }}>Pending</span>
               </div>
-              <p className="text-xl font-bold text-white">₩ {formatAmount(walletData.pendingSettlement)}</p>
+              <p className="text-xl font-bold" style={{ color: theme.text }}>₩ {formatAmount(walletData.pendingSettlement)}</p>
               <p className="text-xs mt-1" style={{ color: '#f59e0b' }}>Processing</p>
             </div>
           </div>
@@ -136,9 +148,9 @@ const Wallet: React.FC = () => {
             <button
               className="py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95"
               style={{
-                background: '#10b981',
-                color: '#0f1a14',
-                boxShadow: '0 8px 20px -4px rgba(16,185,129,0.3)',
+                background: theme.accent,
+                color: theme.text,
+                boxShadow: `0 8px 20px -4px ${theme.accentSoft}`,
               }}
             >
               <span className="material-symbols-outlined text-[20px]">arrow_outward</span>
@@ -148,9 +160,9 @@ const Wallet: React.FC = () => {
               onClick={() => navigate('/merchant/history')}
               className="py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95"
               style={{
-                background: '#1c271f',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: theme.card,
+                color: theme.text,
+                border: `1px solid ${theme.border}`,
               }}
             >
               <span className="material-symbols-outlined text-[20px]">history</span>
@@ -163,7 +175,7 @@ const Wallet: React.FC = () => {
         <div className="px-4 pb-4">
           <div
             className="p-4 rounded-xl flex items-center gap-4"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center"
@@ -172,8 +184,8 @@ const Wallet: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: '#3b82f6' }}>account_balance</span>
             </div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-white">Busan Bank</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>**** **** **** 8821</p>
+              <p className="text-sm font-bold" style={{ color: theme.text }}>Busan Bank</p>
+              <p className="text-xs" style={{ color: theme.textMuted }}>**** **** **** 8821</p>
             </div>
             <div className="flex items-center gap-2">
               <span
@@ -182,7 +194,7 @@ const Wallet: React.FC = () => {
               >
                 Active
               </span>
-              <button className="p-2 rounded-full transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <button className="p-2 rounded-full transition-colors" style={{ color: theme.textSecondary }}>
                 <span className="material-symbols-outlined text-[20px]">edit</span>
               </button>
             </div>
@@ -192,11 +204,11 @@ const Wallet: React.FC = () => {
         {/* Transaction Filter Tabs */}
         <div className="px-4 pb-3">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-bold text-white">Transactions</h3>
+            <h3 className="text-lg font-bold" style={{ color: theme.text }}>Transactions</h3>
             <button
               onClick={() => navigate('/merchant/history')}
               className="text-sm font-medium"
-              style={{ color: '#10b981' }}
+              style={{ color: theme.accent }}
             >
               See All
             </button>
@@ -208,9 +220,9 @@ const Wallet: React.FC = () => {
                 onClick={() => setActiveTab(tab)}
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all"
                 style={{
-                  background: activeTab === tab ? '#10b981' : '#1c271f',
-                  color: activeTab === tab ? '#0f1a14' : 'rgba(255,255,255,0.6)',
-                  border: activeTab === tab ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                  background: activeTab === tab ? theme.accent : theme.card,
+                  color: activeTab === tab ? theme.text : theme.textSecondary,
+                  border: activeTab === tab ? 'none' : `1px solid ${theme.border}`,
                 }}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -225,38 +237,38 @@ const Wallet: React.FC = () => {
             <div
               key={tx.id}
               className="flex items-center gap-3 p-4 rounded-xl"
-              style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ background: theme.card, border: `1px solid ${theme.border}` }}
             >
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{
-                  background: tx.type === 'income' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                  background: tx.type === 'income' ? theme.accentSoft : 'rgba(239,68,68,0.1)',
                 }}
               >
                 <span
                   className="material-symbols-outlined text-[20px]"
-                  style={{ color: tx.type === 'income' ? '#10b981' : '#ef4444' }}
+                  style={{ color: tx.type === 'income' ? theme.accent : '#ef4444' }}
                 >
                   {tx.type === 'income' ? 'arrow_downward' : 'arrow_upward'}
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-white">{tx.customer}</p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{tx.time}</p>
+                <p className="text-sm font-bold" style={{ color: theme.text }}>{tx.customer}</p>
+                <p className="text-xs" style={{ color: theme.textMuted }}>{tx.time}</p>
               </div>
               <div className="text-right">
                 <p
                   className="text-sm font-bold"
-                  style={{ color: tx.type === 'income' ? '#10b981' : '#ef4444' }}
+                  style={{ color: tx.type === 'income' ? theme.accent : '#ef4444' }}
                 >
                   {tx.type === 'income' ? '+' : '-'} ₩{formatAmount(tx.amount)}
                 </p>
                 <div className="flex items-center justify-end gap-1 mt-0.5">
                   <span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: tx.status === 'confirmed' ? '#10b981' : '#3b82f6' }}
+                    style={{ background: tx.status === 'confirmed' ? theme.accent : '#3b82f6' }}
                   />
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <span className="text-[10px]" style={{ color: theme.textMuted }}>
                     {tx.status === 'confirmed' ? 'Confirmed' : 'Completed'}
                   </span>
                 </div>
@@ -269,16 +281,16 @@ const Wallet: React.FC = () => {
         <div className="px-4 pb-8">
           <div
             className="p-5 rounded-xl"
-            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Weekly Summary</h3>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Last 7 days</p>
+                <h3 className="text-sm font-bold" style={{ color: theme.text }}>Weekly Summary</h3>
+                <p className="text-xs" style={{ color: theme.textMuted }}>Last 7 days</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-bold text-white">₩ {formatAmount(walletData.weeklyTotal)}</p>
-                <p className="text-xs font-medium" style={{ color: '#10b981' }}>+8.5%</p>
+                <p className="text-lg font-bold" style={{ color: theme.text }}>₩ {formatAmount(walletData.weeklyTotal)}</p>
+                <p className="text-xs font-medium" style={{ color: theme.accent }}>+8.5%</p>
               </div>
             </div>
 
@@ -290,10 +302,10 @@ const Wallet: React.FC = () => {
                     className="w-full rounded-t transition-all"
                     style={{
                       height: `${height}%`,
-                      background: index === 5 ? '#10b981' : 'rgba(16,185,129,0.3)',
+                      background: index === 5 ? theme.accent : theme.accentSoft,
                     }}
                   />
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <span className="text-[10px]" style={{ color: theme.textMuted }}>
                     {['M', 'T', 'W', 'T', 'F', 'S', 'S'][index]}
                   </span>
                 </div>
@@ -304,8 +316,8 @@ const Wallet: React.FC = () => {
 
         {/* Blockchain Security Badge */}
         <div className="flex flex-col items-center justify-center pb-8 gap-2 opacity-50">
-          <span className="material-symbols-outlined text-[20px]" style={{ color: 'rgba(255,255,255,0.5)' }}>lock</span>
-          <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textMuted }}>lock</span>
+          <p className="text-xs text-center" style={{ color: theme.textMuted }}>
             Secured by Busan BlockchainNet<br />
             Wallet ID: 0x8F...2A
           </p>

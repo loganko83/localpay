@@ -3,6 +3,18 @@ import { Header } from '../../components/layout';
 import { Card, Badge, Button, Input, Modal } from '../../components/common';
 import { Employee } from '../../types';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const mockEmployees: Employee[] = [
   {
     id: '1',
@@ -124,11 +136,21 @@ const Employees: React.FC = () => {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeFilter === filter
-                  ? 'bg-primary text-background'
-                  : 'bg-surface-highlight text-text-secondary hover:text-white'
-              }`}
+              className="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: activeFilter === filter ? theme.accent : theme.card,
+                color: activeFilter === filter ? theme.bg : theme.textSecondary,
+              }}
+              onMouseEnter={(e) => {
+                if (activeFilter !== filter) {
+                  e.currentTarget.style.color = theme.text;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeFilter !== filter) {
+                  e.currentTarget.style.color = theme.textSecondary;
+                }
+              }}
             >
               {filter}
             </button>
@@ -140,22 +162,22 @@ const Employees: React.FC = () => {
       <div className="px-4 mb-4">
         <div className="grid grid-cols-3 gap-3">
           <Card padding="sm" className="text-center">
-            <p className="text-2xl font-bold text-primary">
+            <p className="text-2xl font-bold" style={{ color: theme.accent }}>
               {employees.filter((e) => e.status === 'active').length}
             </p>
-            <p className="text-xs text-text-secondary">Active</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>Active</p>
           </Card>
           <Card padding="sm" className="text-center">
-            <p className="text-2xl font-bold text-yellow-500">
+            <p className="text-2xl font-bold" style={{ color: '#ffa502' }}>
               {employees.filter((e) => e.status === 'pending').length}
             </p>
-            <p className="text-xs text-text-secondary">Pending</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>Pending</p>
           </Card>
           <Card padding="sm" className="text-center">
-            <p className="text-2xl font-bold text-text-muted">
+            <p className="text-2xl font-bold" style={{ color: theme.textMuted }}>
               {employees.filter((e) => e.status === 'revoked').length}
             </p>
-            <p className="text-xs text-text-secondary">Revoked</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>Revoked</p>
           </Card>
         </div>
       </div>
@@ -173,32 +195,43 @@ const Employees: React.FC = () => {
                     className="h-12 w-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-12 w-12 rounded-full bg-surface-highlight flex items-center justify-center">
-                    <span className="material-symbols-outlined text-text-secondary">person</span>
+                  <div
+                    className="h-12 w-12 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: theme.card }}
+                  >
+                    <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>person</span>
                   </div>
                 )}
                 {emp.status === 'active' && emp.lastActiveAt && (
-                  <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-surface" />
+                  <span
+                    className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2"
+                    style={{ backgroundColor: theme.accent, borderColor: theme.card }}
+                  />
                 )}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-bold text-white truncate">{emp.name}</p>
+                  <p className="text-sm font-bold truncate" style={{ color: theme.text }}>{emp.name}</p>
                   <Badge variant={getStatusColor(emp.status)} size="sm">
                     {emp.status}
                   </Badge>
                 </div>
-                <p className="text-xs text-text-secondary truncate">{emp.email}</p>
+                <p className="text-xs truncate" style={{ color: theme.textSecondary }}>{emp.email}</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-text-muted">{getRoleLabel(emp.role)}</span>
-                  <span className="text-text-muted">•</span>
-                  <span className="text-xs text-text-muted">{getPermissionLabel(emp.permissions)}</span>
+                  <span className="text-xs" style={{ color: theme.textMuted }}>{getRoleLabel(emp.role)}</span>
+                  <span style={{ color: theme.textMuted }}>•</span>
+                  <span className="text-xs" style={{ color: theme.textMuted }}>{getPermissionLabel(emp.permissions)}</span>
                 </div>
               </div>
 
-              <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">
-                <span className="material-symbols-outlined text-text-secondary">more_vert</span>
+              <button
+                className="p-2 rounded-full transition-colors"
+                style={{ backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.card}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>more_vert</span>
               </button>
             </div>
           </Card>
@@ -208,9 +241,10 @@ const Employees: React.FC = () => {
       {/* Add Employee FAB */}
       <button
         onClick={() => setShowAddModal(true)}
-        className="fixed bottom-24 right-4 h-14 w-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform"
+        className="fixed bottom-24 right-4 h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform"
+        style={{ backgroundColor: theme.accent }}
       >
-        <span className="material-symbols-outlined text-background text-2xl">person_add</span>
+        <span className="material-symbols-outlined text-2xl" style={{ color: theme.bg }}>person_add</span>
       </button>
 
       {/* Add Employee Modal */}
@@ -225,12 +259,25 @@ const Employees: React.FC = () => {
           <Input label="Phone" placeholder="010-0000-0000" />
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Role</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Role</label>
             <div className="grid grid-cols-2 gap-2">
               {['Manager', 'Cashier'].map((role) => (
                 <button
                   key={role}
-                  className="p-3 rounded-xl bg-surface-highlight text-white text-sm font-medium hover:bg-surface transition-colors border border-transparent hover:border-primary"
+                  className="p-3 rounded-xl text-sm font-medium transition-colors border"
+                  style={{
+                    backgroundColor: theme.card,
+                    color: theme.text,
+                    borderColor: 'transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = theme.cardHover;
+                    e.currentTarget.style.borderColor = theme.accent;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = theme.card;
+                    e.currentTarget.style.borderColor = 'transparent';
+                  }}
                 >
                   {role}
                 </button>
@@ -239,12 +286,20 @@ const Employees: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Permissions</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Permissions</label>
             <div className="space-y-2">
               {['POS Only', 'View Reports', 'Full Access'].map((perm) => (
-                <label key={perm} className="flex items-center gap-3 p-3 bg-surface-highlight rounded-xl cursor-pointer">
-                  <input type="checkbox" className="h-4 w-4 accent-primary" />
-                  <span className="text-sm text-white">{perm}</span>
+                <label
+                  key={perm}
+                  className="flex items-center gap-3 p-3 rounded-xl cursor-pointer"
+                  style={{ backgroundColor: theme.card }}
+                >
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    style={{ accentColor: theme.accent }}
+                  />
+                  <span className="text-sm" style={{ color: theme.text }}>{perm}</span>
                 </label>
               ))}
             </div>

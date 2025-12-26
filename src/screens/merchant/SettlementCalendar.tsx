@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button, Badge } from '../../components/common';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 interface Settlement {
   id: string;
   date: Date;
@@ -67,9 +79,21 @@ const SettlementCalendar: React.FC = () => {
 
   const getStatusColor = (status: 'settled' | 'pending' | 'scheduled') => {
     switch (status) {
-      case 'settled': return 'bg-primary/20 text-primary border-primary/30';
-      case 'pending': return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
-      case 'scheduled': return 'bg-blue-500/20 text-blue-500 border-blue-500/30';
+      case 'settled': return {
+        backgroundColor: theme.accentSoft,
+        color: theme.accent,
+        borderColor: theme.accent + '4D'
+      };
+      case 'pending': return {
+        backgroundColor: 'rgba(234,179,8,0.15)',
+        color: '#eab308',
+        borderColor: 'rgba(234,179,8,0.3)'
+      };
+      case 'scheduled': return {
+        backgroundColor: 'rgba(59,130,246,0.15)',
+        color: '#3b82f6',
+        borderColor: 'rgba(59,130,246,0.3)'
+      };
     }
   };
 
@@ -113,18 +137,36 @@ const SettlementCalendar: React.FC = () => {
       days.push(
         <div
           key={day}
-          className={`
-            aspect-square p-1 flex flex-col items-center justify-center rounded-lg
-            ${isToday ? 'bg-surface-highlight border border-primary/30' : ''}
-            ${settlement ? 'cursor-pointer hover:bg-surface-highlight transition-colors' : ''}
-          `}
+          className="aspect-square p-1 flex flex-col items-center justify-center rounded-lg"
+          style={{
+            backgroundColor: isToday ? theme.cardHover : 'transparent',
+            border: isToday ? `1px solid ${theme.accent}4D` : 'none',
+            cursor: settlement ? 'pointer' : 'default',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            if (settlement) {
+              e.currentTarget.style.backgroundColor = theme.cardHover;
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isToday && settlement) {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }
+          }}
         >
-          <div className={`text-xs font-medium ${isToday ? 'text-primary' : 'text-white'}`}>
+          <div
+            className="text-xs font-medium"
+            style={{ color: isToday ? theme.accent : theme.text }}
+          >
             {day}
           </div>
           {settlement && (
-            <div className={`mt-1 w-full text-center`}>
-              <div className={`text-[8px] font-bold px-1 py-0.5 rounded ${getStatusColor(settlement.status)} border`}>
+            <div className="mt-1 w-full text-center">
+              <div
+                className="text-[8px] font-bold px-1 py-0.5 rounded border"
+                style={getStatusColor(settlement.status)}
+              >
                 {settlement.amount > 0 ? `₩${(settlement.amount / 10000).toFixed(0)}만` : 'TBD'}
               </div>
             </div>
@@ -137,24 +179,39 @@ const SettlementCalendar: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col pb-4 min-h-screen bg-background">
+    <div className="flex flex-col pb-4 min-h-screen" style={{ backgroundColor: theme.bg }}>
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md px-4 py-4 border-b border-surface">
+      <div
+        className="sticky top-0 z-20 px-4 py-4"
+        style={{
+          backgroundColor: theme.bg + 'CC',
+          backdropFilter: 'blur(12px)',
+          borderBottom: `1px solid ${theme.border}`
+        }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="h-10 w-10 rounded-full bg-surface flex items-center justify-center hover:bg-surface-highlight transition-colors"
+              className="h-10 w-10 rounded-full flex items-center justify-center transition-colors"
+              style={{ backgroundColor: theme.card }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.cardHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = theme.card}
             >
-              <span className="material-symbols-outlined text-white">arrow_back</span>
+              <span className="material-symbols-outlined" style={{ color: theme.text }}>arrow_back</span>
             </button>
             <div>
-              <h1 className="text-lg font-bold text-white">Settlement Calendar</h1>
-              <p className="text-xs text-text-secondary">Track your settlement schedule</p>
+              <h1 className="text-lg font-bold" style={{ color: theme.text }}>Settlement Calendar</h1>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>Track your settlement schedule</p>
             </div>
           </div>
-          <button className="p-2 rounded-full hover:bg-surface transition-colors">
-            <span className="material-symbols-outlined text-primary">calendar_today</span>
+          <button
+            className="p-2 rounded-full transition-colors"
+            style={{ backgroundColor: 'transparent' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.card}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <span className="material-symbols-outlined" style={{ color: theme.accent }}>calendar_today</span>
           </button>
         </div>
       </div>
@@ -163,26 +220,26 @@ const SettlementCalendar: React.FC = () => {
       <div className="px-4 pt-6 pb-4">
         <div className="grid grid-cols-3 gap-3 mb-4">
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px] text-text-secondary">This Month</span>
-            <span className="text-sm font-bold text-white">₩{formatAmount(thisMonthTotal)}</span>
-            <div className="flex items-center gap-0.5 text-primary">
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>This Month</span>
+            <span className="text-sm font-bold" style={{ color: theme.text }}>₩{formatAmount(thisMonthTotal)}</span>
+            <div className="flex items-center gap-0.5" style={{ color: theme.accent }}>
               <span className="material-symbols-outlined text-[10px]">trending_up</span>
               <span className="text-[9px] font-medium">+8.2%</span>
             </div>
           </Card>
 
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px] text-text-secondary">Pending</span>
-            <span className="text-sm font-bold text-yellow-500">₩{formatAmount(pendingAmount)}</span>
-            <span className="text-[9px] text-text-muted">{currentMonthSettlements.filter(s => s.status === 'pending').length} items</span>
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>Pending</span>
+            <span className="text-sm font-bold" style={{ color: '#eab308' }}>₩{formatAmount(pendingAmount)}</span>
+            <span className="text-[9px]" style={{ color: theme.textMuted }}>{currentMonthSettlements.filter(s => s.status === 'pending').length} items</span>
           </Card>
 
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px] text-text-secondary">Next</span>
-            <span className="text-sm font-bold text-blue-500">
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>Next</span>
+            <span className="text-sm font-bold" style={{ color: '#3b82f6' }}>
               {nextSettlement ? nextSettlement.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}
             </span>
-            <span className="text-[9px] text-text-muted">
+            <span className="text-[9px]" style={{ color: theme.textMuted }}>
               {nextSettlement ? `${Math.ceil((nextSettlement.date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days` : 'No schedule'}
             </span>
           </Card>
@@ -205,19 +262,25 @@ const SettlementCalendar: React.FC = () => {
       {/* Month Selector */}
       <div className="px-4 pb-4">
         <Card padding="none">
-          <div className="flex items-center justify-between p-4 border-b border-surface-highlight">
+          <div className="flex items-center justify-between p-4" style={{ borderBottom: `1px solid ${theme.border}` }}>
             <button
               onClick={() => changeMonth('prev')}
-              className="h-8 w-8 rounded-full bg-surface-highlight flex items-center justify-center hover:bg-surface transition-colors"
+              className="h-8 w-8 rounded-full flex items-center justify-center transition-colors"
+              style={{ backgroundColor: theme.cardHover }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.border}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = theme.cardHover}
             >
-              <span className="material-symbols-outlined text-white text-[20px]">chevron_left</span>
+              <span className="material-symbols-outlined text-[20px]" style={{ color: theme.text }}>chevron_left</span>
             </button>
-            <h2 className="text-base font-bold text-white">{getMonthName(currentDate)}</h2>
+            <h2 className="text-base font-bold" style={{ color: theme.text }}>{getMonthName(currentDate)}</h2>
             <button
               onClick={() => changeMonth('next')}
-              className="h-8 w-8 rounded-full bg-surface-highlight flex items-center justify-center hover:bg-surface transition-colors"
+              className="h-8 w-8 rounded-full flex items-center justify-center transition-colors"
+              style={{ backgroundColor: theme.cardHover }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.border}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = theme.cardHover}
             >
-              <span className="material-symbols-outlined text-white text-[20px]">chevron_right</span>
+              <span className="material-symbols-outlined text-[20px]" style={{ color: theme.text }}>chevron_right</span>
             </button>
           </div>
 
@@ -225,7 +288,7 @@ const SettlementCalendar: React.FC = () => {
           <div className="p-4">
             <div className="grid grid-cols-7 gap-1 mb-2">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="text-[10px] text-text-secondary text-center font-medium py-1">
+                <div key={day} className="text-[10px] text-center font-medium py-1" style={{ color: theme.textSecondary }}>
                   {day}
                 </div>
               ))}
@@ -240,46 +303,51 @@ const SettlementCalendar: React.FC = () => {
       {/* Recent Settlements */}
       <div className="px-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-white">Recent Settlements</h3>
-          <span className="text-xs text-text-secondary">{recentSettlements.length} items</span>
+          <h3 className="text-sm font-bold" style={{ color: theme.text }}>Recent Settlements</h3>
+          <span className="text-xs" style={{ color: theme.textSecondary }}>{recentSettlements.length} items</span>
         </div>
 
         <div className="space-y-3">
           {recentSettlements.map((settlement) => (
-            <Card key={settlement.id} padding="md" className="hover:bg-surface-highlight transition-colors cursor-pointer">
+            <Card key={settlement.id} padding="md" className="transition-colors cursor-pointer">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-bold text-white">
+                    <span className="text-sm font-bold" style={{ color: theme.text }}>
                       {settlement.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                     <Badge variant={settlement.status === 'settled' ? 'success' : settlement.status === 'pending' ? 'warning' : 'info'} size="sm">
                       {settlement.status}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-text-secondary">
+                  <div className="flex items-center gap-2 text-xs" style={{ color: theme.textSecondary }}>
                     <span>{settlement.transactionCount} transactions</span>
                     <span>•</span>
                     <span>ID: {settlement.id}</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-lg font-bold text-primary">₩{formatAmount(settlement.amount)}</span>
+                  <span className="text-lg font-bold" style={{ color: theme.accent }}>₩{formatAmount(settlement.amount)}</span>
                 </div>
               </div>
 
               {/* Blockchain Verification */}
               {settlement.blockchainHash && (
-                <div className="pt-3 border-t border-surface-highlight">
+                <div className="pt-3" style={{ borderTop: `1px solid ${theme.border}` }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[16px] filled">verified</span>
+                      <span className="material-symbols-outlined text-[16px] filled" style={{ color: theme.accent }}>verified</span>
                       <div>
-                        <p className="text-xs font-medium text-white">Blockchain Verified</p>
-                        <p className="text-[10px] text-text-secondary font-mono">{settlement.blockchainHash}</p>
+                        <p className="text-xs font-medium" style={{ color: theme.text }}>Blockchain Verified</p>
+                        <p className="text-[10px] font-mono" style={{ color: theme.textSecondary }}>{settlement.blockchainHash}</p>
                       </div>
                     </div>
-                    <button className="text-xs text-primary hover:text-white transition-colors flex items-center gap-1">
+                    <button
+                      className="text-xs flex items-center gap-1 transition-colors"
+                      style={{ color: theme.accent }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = theme.text}
+                      onMouseLeave={(e) => e.currentTarget.style.color = theme.accent}
+                    >
                       <span>View</span>
                       <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                     </button>
@@ -288,12 +356,12 @@ const SettlementCalendar: React.FC = () => {
               )}
 
               {settlement.status === 'pending' && (
-                <div className="pt-3 border-t border-surface-highlight">
+                <div className="pt-3" style={{ borderTop: `1px solid ${theme.border}` }}>
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-yellow-500 text-[16px]">pending</span>
+                    <span className="material-symbols-outlined text-[16px]" style={{ color: '#eab308' }}>pending</span>
                     <div>
-                      <p className="text-xs font-medium text-yellow-500">Processing Settlement</p>
-                      <p className="text-[10px] text-text-secondary">Expected completion in 1-2 business days</p>
+                      <p className="text-xs font-medium" style={{ color: '#eab308' }}>Processing Settlement</p>
+                      <p className="text-[10px]" style={{ color: theme.textSecondary }}>Expected completion in 1-2 business days</p>
                     </div>
                   </div>
                 </div>

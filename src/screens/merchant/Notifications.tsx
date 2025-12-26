@@ -12,6 +12,18 @@ import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Button } from '../../components/common';
 
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 interface Notification {
   id: string;
   type: 'payment' | 'settlement' | 'system' | 'promo';
@@ -107,13 +119,13 @@ const Notifications: React.FC = () => {
     }
   };
 
-  const getTypeColor = (type: string) => {
+  const getTypeStyle = (type: string) => {
     switch (type) {
-      case 'payment': return 'text-green-500 bg-green-500/20';
-      case 'settlement': return 'text-blue-500 bg-blue-500/20';
-      case 'system': return 'text-yellow-500 bg-yellow-500/20';
-      case 'promo': return 'text-purple-500 bg-purple-500/20';
-      default: return 'text-text-secondary bg-surface-highlight';
+      case 'payment': return { color: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)' };
+      case 'settlement': return { color: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.2)' };
+      case 'system': return { color: '#eab308', backgroundColor: 'rgba(234,179,8,0.2)' };
+      case 'promo': return { color: '#a855f7', backgroundColor: 'rgba(168,85,247,0.2)' };
+      default: return { color: theme.textSecondary, backgroundColor: theme.cardHover };
     }
   };
 
@@ -146,7 +158,7 @@ const Notifications: React.FC = () => {
       {/* Summary */}
       <div className="px-4 py-4 flex items-center justify-between">
         <div>
-          <p className="text-text-secondary text-sm">
+          <p style={{ color: theme.textSecondary, fontSize: '0.875rem' }}>
             {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
           </p>
         </div>
@@ -164,11 +176,26 @@ const Notifications: React.FC = () => {
             <button
               key={filter.id}
               onClick={() => setSelectedFilter(filter.id as any)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                selectedFilter === filter.id
-                  ? 'bg-primary text-background'
-                  : 'bg-surface text-text-secondary hover:text-white'
-              }`}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '9999px',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s',
+                backgroundColor: selectedFilter === filter.id ? theme.accent : theme.card,
+                color: selectedFilter === filter.id ? theme.bg : theme.textSecondary,
+              }}
+              onMouseEnter={(e) => {
+                if (selectedFilter !== filter.id) {
+                  e.currentTarget.style.color = theme.text;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedFilter !== filter.id) {
+                  e.currentTarget.style.color = theme.textSecondary;
+                }
+              }}
             >
               {filter.label}
             </button>
@@ -180,41 +207,100 @@ const Notifications: React.FC = () => {
       <div className="px-4 space-y-2">
         {filteredNotifications.length === 0 ? (
           <div className="text-center py-12">
-            <span className="material-symbols-outlined text-text-secondary text-5xl mb-4">
+            <span
+              className="material-symbols-outlined mb-4"
+              style={{ color: theme.textSecondary, fontSize: '3rem' }}
+            >
               notifications_off
             </span>
-            <p className="text-text-secondary">No notifications</p>
+            <p style={{ color: theme.textSecondary }}>No notifications</p>
           </div>
         ) : (
           filteredNotifications.map((notification) => (
             <button
               key={notification.id}
               onClick={() => markAsRead(notification.id)}
-              className={`w-full text-left bg-surface rounded-xl p-4 transition-colors hover:bg-surface-highlight ${
-                !notification.read ? 'border-l-4 border-primary' : ''
-              }`}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                backgroundColor: theme.card,
+                borderRadius: '0.75rem',
+                padding: '1rem',
+                transition: 'all 0.2s',
+                borderLeft: !notification.read ? `4px solid ${theme.accent}` : undefined,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = theme.cardHover;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = theme.card;
+              }}
             >
               <div className="flex items-start gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${getTypeColor(notification.type)}`}>
-                  <span className="material-symbols-outlined text-lg">
+                <div
+                  style={{
+                    height: '2.5rem',
+                    width: '2.5rem',
+                    borderRadius: '9999px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    ...getTypeStyle(notification.type),
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '1.125rem' }}>
                     {getTypeIcon(notification.type)}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className={`font-medium truncate ${notification.read ? 'text-text-secondary' : 'text-white'}`}>
+                    <h4
+                      style={{
+                        fontWeight: '500',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        color: notification.read ? theme.textSecondary : theme.text,
+                      }}
+                    >
                       {notification.title}
                     </h4>
-                    <span className="text-xs text-text-muted whitespace-nowrap">
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        color: theme.textMuted,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {formatTime(notification.timestamp)}
                     </span>
                   </div>
-                  <p className={`text-sm mt-1 line-clamp-2 ${notification.read ? 'text-text-muted' : 'text-text-secondary'}`}>
+                  <p
+                    style={{
+                      fontSize: '0.875rem',
+                      marginTop: '0.25rem',
+                      color: notification.read ? theme.textMuted : theme.textSecondary,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
                     {notification.message}
                   </p>
                 </div>
                 {!notification.read && (
-                  <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
+                  <div
+                    style={{
+                      width: '0.5rem',
+                      height: '0.5rem',
+                      borderRadius: '9999px',
+                      backgroundColor: theme.accent,
+                      flexShrink: 0,
+                      marginTop: '0.5rem',
+                    }}
+                  />
                 )}
               </div>
             </button>
@@ -227,13 +313,21 @@ const Notifications: React.FC = () => {
         <Card padding="md">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-text-secondary">settings</span>
+              <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>
+                settings
+              </span>
               <div>
-                <p className="text-sm font-medium text-white">Notification Settings</p>
-                <p className="text-xs text-text-secondary">Manage your notification preferences</p>
+                <p style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>
+                  Notification Settings
+                </p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
+                  Manage your notification preferences
+                </p>
               </div>
             </div>
-            <span className="material-symbols-outlined text-text-secondary">chevron_right</span>
+            <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>
+              chevron_right
+            </span>
           </div>
         </Card>
       </div>
