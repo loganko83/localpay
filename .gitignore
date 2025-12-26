@@ -1,24 +1,84 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+nul
+
+# Environment
+.env
+.env.local
+.env.*.local
+
 # Logs
-logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Test output
+test-results/
+playwright-report/
+coverage/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Prototype HTML folders
+admin_dashboard/
+dongbaek_taxi_integration_screen_*/
+dongbaek_tong_merchant_integration_screen/
+download/
+download*/
+edit_user_profile_screen_*/
+employee_management_screen/
+home/
+merchant_dashboard_*/
+merchant_detail_screen/
+merchant_login_screen/
+merchant_notifications_screen/
+merchant_profile_settings_screen_*/
+my_card/
+payment_confirmation_screen_*/
+payment_management_screen_*/
+promotional_offers_screen/
+qr_scan_payment_screen/
+settlement_management_screen/
+top-up_local_currency_screen_*/
+transaction_detail_screen/
+transaction_history_screen/
+user_and_merchant_management_screen/
+user_profile_and_settings_screen/
+voucher_issuance_and_management_screen/
+
+# Documentation files
+*.pdf
+*.docx
+
+# Old/duplicate files at root
+/App.tsx
+/index.tsx
+/types.ts
+/components/
+/screens/
+/metadata.json
+
+# Generated config files
+vite.config.js
+vite.config.d.ts
+vite.config.d.ts.map
+
+# Screenshots
+screenshots/
+
+# E2E tests
+e2e/
+playwright.config.ts

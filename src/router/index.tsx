@@ -18,6 +18,13 @@ const ConsumerCoupons = React.lazy(() => import('../screens/consumer/Coupons'));
 const ConsumerServices = React.lazy(() => import('../screens/consumer/Services'));
 const ConsumerPaymentConfirmation = React.lazy(() => import('../screens/consumer/PaymentConfirmation'));
 const ConsumerTransactionDetail = React.lazy(() => import('../screens/consumer/TransactionDetail'));
+const ConsumerProductTrace = React.lazy(() => import('../screens/consumer/ProductTrace'));
+const ConsumerCarbonPoints = React.lazy(() => import('../screens/consumer/CarbonPoints'));
+const ConsumerLoyaltyPoints = React.lazy(() => import('../screens/consumer/LoyaltyPoints'));
+const ConsumerTouristWallet = React.lazy(() => import('../screens/consumer/TouristWallet'));
+const ConsumerDelivery = React.lazy(() => import('../screens/consumer/Delivery'));
+const ConsumerDonations = React.lazy(() => import('../screens/consumer/Donations'));
+const ConsumerMerchantMap = React.lazy(() => import('../screens/consumer/MerchantMap'));
 
 // Merchant screens
 const MerchantLogin = React.lazy(() => import('../screens/merchant/Login'));
@@ -25,9 +32,15 @@ const MerchantDashboard = React.lazy(() => import('../screens/merchant/Dashboard
 const MerchantWallet = React.lazy(() => import('../screens/merchant/Wallet'));
 const MerchantScan = React.lazy(() => import('../screens/merchant/Scan'));
 const MerchantPayments = React.lazy(() => import('../screens/merchant/Payments'));
+const MerchantHistory = React.lazy(() => import('../screens/merchant/History'));
 const MerchantEmployees = React.lazy(() => import('../screens/merchant/Employees'));
 const MerchantSettings = React.lazy(() => import('../screens/merchant/Settings'));
 const MerchantNotifications = React.lazy(() => import('../screens/merchant/Notifications'));
+const MerchantCreditScore = React.lazy(() => import('../screens/merchant/CreditScore'));
+const MerchantWelfareManagement = React.lazy(() => import('../screens/merchant/WelfareManagement'));
+const MerchantDeliveryOrders = React.lazy(() => import('../screens/merchant/DeliveryOrders'));
+const MerchantSettlementCalendar = React.lazy(() => import('../screens/merchant/SettlementCalendar'));
+const MerchantLoyaltyRedeem = React.lazy(() => import('../screens/merchant/LoyaltyRedeem'));
 
 // Admin screens
 const AdminLogin = React.lazy(() => import('../screens/admin/Login'));
@@ -38,6 +51,11 @@ const AdminSettlements = React.lazy(() => import('../screens/admin/Settlements')
 const AdminAuditLogs = React.lazy(() => import('../screens/admin/AuditLogs'));
 const AdminSecurity = React.lazy(() => import('../screens/admin/Security'));
 const AdminPolicies = React.lazy(() => import('../screens/admin/Policies'));
+const AdminTokenIssuance = React.lazy(() => import('../screens/admin/TokenIssuance'));
+const AdminAMLDashboard = React.lazy(() => import('../screens/admin/AMLDashboard'));
+const AdminCarbonAdmin = React.lazy(() => import('../screens/admin/CarbonAdmin'));
+const AdminDonationCampaigns = React.lazy(() => import('../screens/admin/DonationCampaigns'));
+const AdminMerchantCreditReview = React.lazy(() => import('../screens/admin/MerchantCreditReview'));
 
 // Debug screens (dev only)
 const DebugDashboard = React.lazy(() => import('../screens/debug/DebugDashboard'));
@@ -112,6 +130,13 @@ export const router = createBrowserRouter([
       { path: 'services', element: <ConsumerServices /> },
       { path: 'payment-confirmation', element: <ConsumerPaymentConfirmation /> },
       { path: 'transaction/:id', element: <ConsumerTransactionDetail /> },
+      { path: 'product-trace', element: <ConsumerProductTrace /> },
+      { path: 'carbon-points', element: <ConsumerCarbonPoints /> },
+      { path: 'loyalty', element: <ConsumerLoyaltyPoints /> },
+      { path: 'tourist-wallet', element: <ConsumerTouristWallet /> },
+      { path: 'delivery', element: <ConsumerDelivery /> },
+      { path: 'donations', element: <ConsumerDonations /> },
+      { path: 'merchant-map', element: <ConsumerMerchantMap /> },
     ],
   },
 
@@ -134,9 +159,15 @@ export const router = createBrowserRouter([
       { path: 'wallet', element: <MerchantWallet /> },
       { path: 'scan', element: <MerchantScan /> },
       { path: 'payments', element: <MerchantPayments /> },
+      { path: 'history', element: <MerchantHistory /> },
       { path: 'employees', element: <MerchantEmployees /> },
       { path: 'settings', element: <MerchantSettings /> },
       { path: 'notifications', element: <MerchantNotifications /> },
+      { path: 'credit-score', element: <MerchantCreditScore /> },
+      { path: 'welfare', element: <MerchantWelfareManagement /> },
+      { path: 'delivery-orders', element: <MerchantDeliveryOrders /> },
+      { path: 'settlement-calendar', element: <MerchantSettlementCalendar /> },
+      { path: 'loyalty-redeem', element: <MerchantLoyaltyRedeem /> },
     ],
   },
 
@@ -162,6 +193,11 @@ export const router = createBrowserRouter([
       { path: 'audit', element: <AdminAuditLogs /> },
       { path: 'security', element: <AdminSecurity /> },
       { path: 'policies', element: <AdminPolicies /> },
+      { path: 'token-issuance', element: <AdminTokenIssuance /> },
+      { path: 'aml', element: <AdminAMLDashboard /> },
+      { path: 'carbon', element: <AdminCarbonAdmin /> },
+      { path: 'donation-campaigns', element: <AdminDonationCampaigns /> },
+      { path: 'merchant-credit-review', element: <AdminMerchantCreditReview /> },
     ],
   },
 

@@ -5,6 +5,7 @@ interface HeaderProps {
   title?: string;
   showBack?: boolean;
   transparent?: boolean;
+  onBack?: () => void;
   rightAction?: {
     icon: string;
     onClick: () => void;
@@ -17,13 +18,18 @@ const Header: React.FC<HeaderProps> = ({
   title,
   showBack = false,
   transparent = false,
+  onBack,
   rightAction,
   children,
 }) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(-1);
+    if (onBack) {
+      onBack();
+    } else {
+      navigate(-1);
+    }
   };
 
   return (

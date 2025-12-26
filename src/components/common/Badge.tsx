@@ -5,6 +5,7 @@ interface BadgeProps {
   size?: 'sm' | 'md' | 'lg';
   dot?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 const Badge: React.FC<BadgeProps> = ({
@@ -12,6 +13,7 @@ const Badge: React.FC<BadgeProps> = ({
   size = 'sm',
   dot = false,
   children,
+  className = '',
 }) => {
   const variantStyles = {
     success: 'bg-primary/20 text-primary',
@@ -53,6 +55,7 @@ const Badge: React.FC<BadgeProps> = ({
         inline-flex items-center gap-1.5 rounded-full font-medium
         ${variantStyles[variant]}
         ${sizeStyles[size]}
+        ${className}
       `}
     >
       {children}

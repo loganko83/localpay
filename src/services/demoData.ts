@@ -38,6 +38,9 @@ const DEMO_USERS = {
   company1: 'company-demo-001',
 };
 
+// Store demo product IDs for easy access
+let demoProductId: string | null = null;
+
 /**
  * Initialize all demo data
  */
@@ -320,6 +323,8 @@ async function initializeProductTraceability(): Promise<void> {
 
   // Add tracking events
   if (product) {
+    demoProductId = product.id;
+
     await productTraceabilityService.addTrackingEvent({
       productId: product.id,
       eventType: 'INSPECTED',
@@ -350,9 +355,18 @@ async function initializeProductTraceability(): Promise<void> {
       temperature: 5,
       verificationMethod: 'QR_SCAN',
     });
+
+    console.log(`[DemoData] Product registered with ID: ${product.id}`);
   }
 
   console.log('[DemoData] Product traceability data initialized');
+}
+
+/**
+ * Get demo product ID for testing
+ */
+export function getDemoProductId(): string | null {
+  return demoProductId;
 }
 
 /**

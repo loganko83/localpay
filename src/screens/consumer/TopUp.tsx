@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/layout';
-import { Card, Button } from '../../components/common';
 import { useWalletStore } from '../../store';
+
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 const quickAmounts = [10000, 50000, 100000, 500000];
 
@@ -19,7 +30,7 @@ const TopUp: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const numericAmount = parseInt(amount.replace(/,/g, '')) || 0;
-  const bonusRate = 0.05; // 5% bonus
+  const bonusRate = 0.05;
   const bonusAmount = Math.floor(numericAmount * bonusRate);
   const totalAmount = numericAmount + bonusAmount;
 
@@ -45,67 +56,81 @@ const TopUp: React.FC = () => {
     if (numericAmount < 1000) return;
 
     setIsProcessing(true);
-
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-
     updateBalance(totalAmount);
     setIsProcessing(false);
-
-    // Navigate to success or show modal
     navigate('/consumer/wallet');
   };
 
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Top Up" showBack />
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-20 px-5 py-4 flex items-center justify-between"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <button onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
+        </button>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Top Up</h1>
+        <div className="w-8" />
+      </header>
 
       {/* Current Balance */}
-      <div className="px-4 mb-6">
-        <Card variant="balance" padding="lg">
+      <div className="px-5 py-4">
+        <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-text-secondary mb-1">Current Balance</p>
-              <h2 className="text-2xl font-bold text-white">
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Current Balance</p>
+              <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
                 {formatAmount(wallet?.balance || 0)} <span className="text-lg">P</span>
               </h2>
             </div>
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined filled">account_balance_wallet</span>
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ background: theme.accentSoft }}
+            >
+              <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>account_balance_wallet</span>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Amount Input */}
-      <div className="px-4 mb-4">
-        <label className="block text-sm font-medium text-text-secondary mb-2">
+      <div className="px-5 mb-4">
+        <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
           Top-up Amount
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary font-medium">
-            ₩
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: theme.textSecondary }}>
+            W
           </span>
           <input
             type="text"
             value={amount}
             onChange={(e) => handleAmountChange(e.target.value)}
             placeholder="0"
-            className="w-full h-16 bg-surface border border-surface-highlight rounded-xl text-white text-2xl font-bold text-right pr-4 pl-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            className="w-full h-16 rounded-xl text-2xl font-bold text-right pr-4 pl-10 focus:outline-none"
+            style={{
+              background: theme.card,
+              border: `1px solid ${theme.border}`,
+              color: theme.text,
+            }}
           />
         </div>
       </div>
 
       {/* Quick Amount Buttons */}
-      <div className="px-4 mb-6">
+      <div className="px-5 mb-6">
         <div className="flex gap-2">
           {quickAmounts.map((value) => (
             <button
               key={value}
               onClick={() => handleQuickAmount(value)}
-              className="flex-1 py-2 bg-surface-highlight rounded-lg text-sm font-medium text-text-secondary hover:text-white hover:bg-surface transition-colors"
+              className="flex-1 py-2 rounded-lg text-sm font-medium transition-colors"
+              style={{ background: theme.cardHover, color: theme.textSecondary, border: `1px solid ${theme.border}` }}
             >
-              +{value >= 10000 ? `${value / 10000}만` : formatAmount(value)}
+              +{value >= 10000 ? `${value / 10000}` : formatAmount(value)}
             </button>
           ))}
         </div>
@@ -113,56 +138,62 @@ const TopUp: React.FC = () => {
 
       {/* Bonus Info */}
       {numericAmount > 0 && (
-        <div className="px-4 mb-6">
-          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+        <div className="px-5 mb-6">
+          <div className="rounded-xl p-4" style={{ background: theme.accentSoft, border: `1px solid ${theme.accent}30` }}>
             <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-primary text-[20px]">redeem</span>
-              <span className="text-sm font-bold text-primary">5% Bonus Included!</span>
+              <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>redeem</span>
+              <span className="text-sm font-bold" style={{ color: theme.accent }}>5% Bonus Included!</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-text-secondary">Top-up amount</span>
-              <span className="text-white">₩{formatAmount(numericAmount)}</span>
+              <span style={{ color: theme.textSecondary }}>Top-up amount</span>
+              <span style={{ color: theme.text }}>W{formatAmount(numericAmount)}</span>
             </div>
             <div className="flex justify-between text-sm mt-1">
-              <span className="text-text-secondary">Bonus (5%)</span>
-              <span className="text-primary">+₩{formatAmount(bonusAmount)}</span>
+              <span style={{ color: theme.textSecondary }}>Bonus (5%)</span>
+              <span style={{ color: theme.accent }}>+W{formatAmount(bonusAmount)}</span>
             </div>
-            <div className="border-t border-primary/20 mt-2 pt-2 flex justify-between">
-              <span className="text-sm font-bold text-white">You'll receive</span>
-              <span className="text-lg font-bold text-primary">{formatAmount(totalAmount)} B</span>
+            <div className="mt-2 pt-2 flex justify-between" style={{ borderTop: `1px solid ${theme.accent}30` }}>
+              <span className="text-sm font-bold" style={{ color: theme.text }}>You'll receive</span>
+              <span className="text-lg font-bold" style={{ color: theme.accent }}>{formatAmount(totalAmount)} B</span>
             </div>
           </div>
         </div>
       )}
 
       {/* Payment Source */}
-      <div className="px-4 mb-6">
-        <h3 className="text-sm font-bold text-white mb-3">From Bank Account</h3>
+      <div className="px-5 mb-6">
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>From Bank Account</h3>
         <div className="space-y-3">
           {linkedAccounts.map((account) => (
             <button
               key={account.id}
               onClick={() => setSelectedAccount(account.id)}
-              className={`w-full p-4 rounded-xl border flex items-center gap-3 transition-colors ${
-                selectedAccount === account.id
-                  ? 'bg-primary/10 border-primary'
-                  : 'bg-surface border-surface-highlight hover:border-text-secondary'
-              }`}
+              className="w-full p-4 rounded-xl flex items-center gap-3 transition-colors"
+              style={{
+                background: selectedAccount === account.id ? theme.accentSoft : theme.card,
+                border: `1px solid ${selectedAccount === account.id ? theme.accent : theme.border}`,
+              }}
             >
-              <div className="h-10 w-10 rounded-full bg-surface-highlight flex items-center justify-center">
-                <span className="material-symbols-outlined text-text-secondary">account_balance</span>
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ background: theme.cardHover }}
+              >
+                <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>account_balance</span>
               </div>
               <div className="flex-1 text-left">
-                <p className="text-sm font-bold text-white">{account.bank}</p>
-                <p className="text-xs text-text-secondary">{account.accountNumber}</p>
+                <p className="text-sm font-bold" style={{ color: theme.text }}>{account.bank}</p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>{account.accountNumber}</p>
               </div>
               {selectedAccount === account.id && (
-                <span className="material-symbols-outlined text-primary">check_circle</span>
+                <span className="material-symbols-outlined" style={{ color: theme.accent }}>check_circle</span>
               )}
             </button>
           ))}
 
-          <button className="w-full p-4 rounded-xl border border-dashed border-surface-highlight flex items-center justify-center gap-2 text-text-secondary hover:text-white hover:border-text-secondary transition-colors">
+          <button
+            className="w-full p-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
+            style={{ border: `2px dashed ${theme.border}`, color: theme.textSecondary }}
+          >
             <span className="material-symbols-outlined">add</span>
             <span className="text-sm font-medium">Link New Account</span>
           </button>
@@ -170,18 +201,28 @@ const TopUp: React.FC = () => {
       </div>
 
       {/* Confirm Button */}
-      <div className="px-4 mt-auto">
-        <Button
-          variant="primary"
-          fullWidth
-          size="lg"
-          loading={isProcessing}
-          disabled={numericAmount < 1000}
+      <div className="px-5 mt-auto">
+        <button
           onClick={handleTopUp}
+          disabled={numericAmount < 1000 || isProcessing}
+          className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-opacity"
+          style={{
+            background: numericAmount < 1000 ? theme.textMuted : theme.accent,
+            opacity: isProcessing ? 0.7 : 1,
+          }}
         >
-          {numericAmount < 1000 ? 'Enter amount (min ₩1,000)' : `Top Up ₩${formatAmount(numericAmount)}`}
-        </Button>
-        <p className="text-xs text-text-muted text-center mt-3">
+          {isProcessing ? (
+            <>
+              <span className="material-symbols-outlined animate-spin">progress_activity</span>
+              Processing...
+            </>
+          ) : numericAmount < 1000 ? (
+            'Enter amount (min W1,000)'
+          ) : (
+            `Top Up W${formatAmount(numericAmount)}`
+          )}
+        </button>
+        <p className="text-xs text-center mt-3" style={{ color: theme.textMuted }}>
           Funds will be transferred from your bank account instantly
         </p>
       </div>

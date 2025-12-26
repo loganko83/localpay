@@ -1,17 +1,19 @@
-/**
- * Consumer Regional Coupons Screen
- *
- * PoC Feature: Regional coupon system for local currency
- * - Browse available coupons by category
- * - View coupon details and usage conditions
- * - Claim and track coupon usage
- */
-
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/layout';
-import { Card, Badge, Button } from '../../components/common';
 import { RegionalCoupon } from '../../types';
+
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 // Mock regional coupons
 const mockCoupons: RegionalCoupon[] = [
@@ -143,48 +145,60 @@ const Coupons: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Regional Coupons" showBack />
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-20 px-5 py-4 flex items-center justify-between"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <button onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
+        </button>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Regional Coupons</h1>
+        <div className="w-8" />
+      </header>
 
       {/* My Coupons Summary */}
-      <div className="px-4 py-4">
-        <Card variant="balance" padding="md">
-          <div className="flex items-center justify-between">
+      <div className="px-5 py-4">
+        <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm text-text-secondary">Available Coupons</p>
-              <h2 className="text-2xl font-bold text-white">3</h2>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Available Coupons</p>
+              <h2 className="text-2xl font-bold" style={{ color: theme.text }}>3</h2>
             </div>
-            <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-2xl">
-                confirmation_number
-              </span>
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ background: theme.accentSoft }}
+            >
+              <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>confirmation_number</span>
             </div>
           </div>
-          <div className="flex gap-4 mt-4 pt-4 border-t border-surface-highlight">
+          <div className="flex gap-4 pt-4" style={{ borderTop: `1px solid ${theme.border}` }}>
             <div className="flex-1 text-center">
-              <p className="text-lg font-bold text-white">12</p>
-              <p className="text-xs text-text-secondary">Used</p>
+              <p className="text-lg font-bold" style={{ color: theme.text }}>12</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>Used</p>
             </div>
-            <div className="flex-1 text-center border-l border-surface-highlight">
-              <p className="text-lg font-bold text-primary">15,000</p>
-              <p className="text-xs text-text-secondary">Saved (KRW)</p>
+            <div className="flex-1 text-center" style={{ borderLeft: `1px solid ${theme.border}` }}>
+              <p className="text-lg font-bold" style={{ color: theme.accent }}>15,000</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>Saved (KRW)</p>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Category Filter */}
-      <div className="px-4 mb-4">
+      <div className="px-5 mb-4">
         <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                selectedCategory === cat.id
-                  ? 'bg-primary text-background'
-                  : 'bg-surface text-text-secondary hover:text-white'
-              }`}
+              className="flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all"
+              style={{
+                background: selectedCategory === cat.id ? theme.accent : theme.card,
+                color: selectedCategory === cat.id ? '#fff' : theme.textSecondary,
+                border: `1px solid ${selectedCategory === cat.id ? theme.accent : theme.border}`,
+              }}
             >
               <span className="material-symbols-outlined text-lg">{cat.icon}</span>
               <span className="text-sm font-medium">{cat.label}</span>
@@ -194,12 +208,13 @@ const Coupons: React.FC = () => {
       </div>
 
       {/* Coupon List */}
-      <div className="px-4 space-y-3">
+      <div className="px-5 space-y-3">
         {filteredCoupons.map((coupon) => (
           <button
             key={coupon.id}
             onClick={() => setSelectedCoupon(coupon)}
-            className="w-full bg-surface rounded-2xl overflow-hidden text-left hover:bg-surface-highlight transition-colors"
+            className="w-full rounded-xl overflow-hidden text-left"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
           >
             {/* Coupon Header with Image */}
             <div className="relative h-32 overflow-hidden">
@@ -212,15 +227,21 @@ const Coupons: React.FC = () => {
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="flex items-end justify-between">
                   <div>
-                    <Badge variant="primary" size="sm">
+                    <span
+                      className="text-xs font-bold px-2 py-1 rounded"
+                      style={{ background: theme.accent, color: '#fff' }}
+                    >
                       {getDiscountDisplay(coupon)}
-                    </Badge>
+                    </span>
                     <h3 className="text-lg font-bold text-white mt-1">{coupon.name}</h3>
                   </div>
                   {getRemainingCount(coupon) < 50 && (
-                    <Badge variant="warning" size="sm">
+                    <span
+                      className="text-xs font-bold px-2 py-1 rounded"
+                      style={{ background: '#f59e0b', color: '#fff' }}
+                    >
                       {getRemainingCount(coupon)} left
-                    </Badge>
+                    </span>
                   )}
                 </div>
               </div>
@@ -228,17 +249,17 @@ const Coupons: React.FC = () => {
 
             {/* Coupon Body */}
             <div className="p-4">
-              <p className="text-sm text-text-secondary line-clamp-2 mb-3">
+              <p className="text-sm line-clamp-2 mb-3" style={{ color: theme.textSecondary }}>
                 {coupon.description}
               </p>
 
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1 text-text-muted">
+                <div className="flex items-center gap-1" style={{ color: theme.textMuted }}>
                   <span className="material-symbols-outlined text-sm">calendar_today</span>
                   <span>Until {new Date(coupon.validUntil).toLocaleDateString('ko-KR')}</span>
                 </div>
                 {coupon.minPurchase && (
-                  <span className="text-text-muted">
+                  <span style={{ color: theme.textMuted }}>
                     Min. {formatAmount(coupon.minPurchase)} KRW
                   </span>
                 )}
@@ -246,13 +267,13 @@ const Coupons: React.FC = () => {
 
               {/* Usage Progress */}
               <div className="mt-3">
-                <div className="h-1.5 bg-background rounded-full overflow-hidden">
+                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
                   <div
-                    className="h-full bg-primary rounded-full transition-all"
-                    style={{ width: `${getUsagePercentage(coupon)}%` }}
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${getUsagePercentage(coupon)}%`, background: theme.accent }}
                   />
                 </div>
-                <div className="flex justify-between mt-1 text-[10px] text-text-muted">
+                <div className="flex justify-between mt-1 text-[10px]" style={{ color: theme.textMuted }}>
                   <span>{coupon.usedCount} claimed</span>
                   <span>{getRemainingCount(coupon)} remaining</span>
                 </div>
@@ -265,7 +286,10 @@ const Coupons: React.FC = () => {
       {/* Coupon Detail Modal */}
       {selectedCoupon && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end">
-          <div className="w-full max-w-md mx-auto bg-surface rounded-t-3xl overflow-hidden max-h-[85vh] flex flex-col">
+          <div
+            className="w-full max-w-md mx-auto rounded-t-3xl overflow-hidden max-h-[85vh] flex flex-col"
+            style={{ background: theme.card }}
+          >
             {/* Modal Header Image */}
             <div className="relative h-48 flex-shrink-0">
               <img
@@ -273,30 +297,37 @@ const Coupons: React.FC = () => {
                 alt={selectedCoupon.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+              <div
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(to top, ${theme.card}, transparent 50%, transparent)` }}
+              />
               <button
                 onClick={() => setSelectedCoupon(null)}
-                className="absolute top-4 right-4 p-2 bg-black/30 backdrop-blur-sm rounded-full"
+                className="absolute top-4 right-4 p-2 rounded-full"
+                style={{ background: 'rgba(0,0,0,0.3)' }}
               >
                 <span className="material-symbols-outlined text-white">close</span>
               </button>
               <div className="absolute bottom-4 left-4 right-4">
-                <Badge variant="primary" size="lg">
+                <span
+                  className="text-sm font-bold px-3 py-1 rounded"
+                  style={{ background: theme.accent, color: '#fff' }}
+                >
                   {getDiscountDisplay(selectedCoupon)}
-                </Badge>
+                </span>
                 <h2 className="text-2xl font-bold text-white mt-2">{selectedCoupon.name}</h2>
               </div>
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              <p className="text-text-secondary">{selectedCoupon.description}</p>
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              <p style={{ color: theme.textSecondary }}>{selectedCoupon.description}</p>
 
               {/* Coupon Details */}
-              <div className="bg-background rounded-xl p-4 space-y-3">
+              <div className="rounded-xl p-4 space-y-3" style={{ background: theme.bg }}>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Discount</span>
-                  <span className="text-white font-medium">
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>Discount</span>
+                  <span className="font-medium" style={{ color: theme.text }}>
                     {selectedCoupon.discountType === 'percentage'
                       ? `${selectedCoupon.discountValue}% Off`
                       : `${formatAmount(selectedCoupon.discountValue)} KRW Off`}
@@ -304,48 +335,48 @@ const Coupons: React.FC = () => {
                 </div>
                 {selectedCoupon.minPurchase && (
                   <div className="flex justify-between">
-                    <span className="text-text-secondary text-sm">Min. Purchase</span>
-                    <span className="text-white">{formatAmount(selectedCoupon.minPurchase)} KRW</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>Min. Purchase</span>
+                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.minPurchase)} KRW</span>
                   </div>
                 )}
                 {selectedCoupon.maxDiscount && (
                   <div className="flex justify-between">
-                    <span className="text-text-secondary text-sm">Max. Discount</span>
-                    <span className="text-white">{formatAmount(selectedCoupon.maxDiscount)} KRW</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>Max. Discount</span>
+                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.maxDiscount)} KRW</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Valid Until</span>
-                  <span className="text-white">
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>Valid Until</span>
+                  <span style={{ color: theme.text }}>
                     {new Date(selectedCoupon.validUntil).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
                 {selectedCoupon.merchantName && (
                   <div className="flex justify-between">
-                    <span className="text-text-secondary text-sm">Merchant</span>
-                    <span className="text-primary">{selectedCoupon.merchantName}</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>Merchant</span>
+                    <span style={{ color: theme.accent }}>{selectedCoupon.merchantName}</span>
                   </div>
                 )}
               </div>
 
               {/* Usage Stats */}
-              <div className="bg-background rounded-xl p-4">
+              <div className="rounded-xl p-4" style={{ background: theme.bg }}>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-text-secondary">Remaining</span>
-                  <span className="text-lg font-bold text-primary">
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>Remaining</span>
+                  <span className="text-lg font-bold" style={{ color: theme.accent }}>
                     {getRemainingCount(selectedCoupon)} / {selectedCoupon.usageLimit}
                   </span>
                 </div>
-                <div className="h-2 bg-surface rounded-full overflow-hidden">
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
                   <div
-                    className="h-full bg-primary rounded-full"
-                    style={{ width: `${100 - getUsagePercentage(selectedCoupon)}%` }}
+                    className="h-full rounded-full"
+                    style={{ width: `${100 - getUsagePercentage(selectedCoupon)}%`, background: theme.accent }}
                   />
                 </div>
               </div>
 
               {/* Terms */}
-              <div className="text-xs text-text-muted space-y-1">
+              <div className="text-xs space-y-1" style={{ color: theme.textMuted }}>
                 <p>- Cannot be combined with other discounts</p>
                 <p>- One coupon per transaction</p>
                 <p>- Valid only at participating merchants in {selectedCoupon.region}</p>
@@ -353,19 +384,18 @@ const Coupons: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-background flex-shrink-0">
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full"
+            <div className="p-5 flex-shrink-0" style={{ borderTop: `1px solid ${theme.border}` }}>
+              <button
+                className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2"
+                style={{ background: theme.accent }}
                 onClick={() => {
                   setSelectedCoupon(null);
                   navigate('/consumer/scan');
                 }}
               >
-                <span className="material-symbols-outlined mr-2">qr_code_scanner</span>
+                <span className="material-symbols-outlined">qr_code_scanner</span>
                 Use Coupon
-              </Button>
+              </button>
             </div>
           </div>
         </div>

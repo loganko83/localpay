@@ -1,14 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button } from '../../components/common';
 import { useWalletStore, useTransactionStore } from '../../store';
-
-const quickActions = [
-  { icon: 'currency_exchange', label: 'Exchange', path: '/consumer/exchange' },
-  { icon: 'confirmation_number', label: 'Coupons', path: '/consumer/offers' },
-  { icon: 'subway', label: 'Metro', path: '/consumer/metro' },
-  { icon: 'stars', label: 'Rewards', path: '/consumer/rewards' },
-];
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -33,143 +25,233 @@ const Home: React.FC = () => {
     return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
   };
 
+  // Unified Dark Theme
+  const theme = {
+    bg: '#111111',
+    card: '#1a1a1a',
+    cardHover: '#222222',
+    border: '#2a2a2a',
+    accent: '#ff4757',
+    accentSoft: 'rgba(255,71,87,0.15)',
+    text: '#ffffff',
+    textSecondary: '#888888',
+    textMuted: '#555555',
+  };
+
   return (
-    <div className="flex flex-col pb-4">
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
       {/* Header */}
-      <div className="px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">location_on</span>
-          <span className="text-white font-medium">Jeonju</span>
-          <span className="material-symbols-outlined text-text-secondary text-sm">expand_more</span>
-        </div>
-        <button
-          onClick={() => navigate('/consumer/profile')}
-          className="h-10 w-10 rounded-full bg-surface-highlight overflow-hidden"
-        >
-          <div className="h-full w-full bg-primary/20 flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary">person</span>
+      <div
+        className="sticky top-0 z-20 flex items-center justify-between px-5 py-4"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ background: theme.accent }}
+          >
+            <span className="material-symbols-outlined text-white text-[20px]">person</span>
           </div>
-        </button>
+          <div>
+            <p style={{ color: theme.textMuted }} className="text-xs">Location</p>
+            <p style={{ color: theme.text }} className="text-sm font-semibold">Busan, Korea</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+          >
+            <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textSecondary }}>search</span>
+          </button>
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center relative"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+          >
+            <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textSecondary }}>notifications</span>
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full" style={{ background: theme.accent }} />
+          </button>
+        </div>
       </div>
 
-      {/* Welcome */}
-      <div className="px-4 pt-2 pb-4">
-        <h1 className="text-2xl font-bold text-white">
-          Welcome back!
-        </h1>
-        <p className="text-text-secondary">
-          Ready to pay with LocalPay today?
-        </p>
-      </div>
-
-      {/* Balance Card */}
-      <div className="px-4 mb-6">
-        <Card variant="balance" padding="lg">
-          <div className="flex justify-between items-start mb-6">
+      {/* Main Content */}
+      <div className="px-5 py-4 space-y-5">
+        {/* Balance Card */}
+        <div
+          className="rounded-2xl p-5"
+          style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+        >
+          <div className="flex justify-between items-start mb-5">
             <div>
-              <p className="text-sm text-text-secondary font-medium mb-1">Total Balance</p>
-              <h2 className="text-3xl font-bold text-white">
-                {formatAmount(wallet?.balance || 0)} <span className="text-lg">P</span>
+              <p style={{ color: theme.textSecondary }} className="text-sm mb-1">Total Balance</p>
+              <h2 style={{ color: theme.text }} className="text-3xl font-bold">
+                {formatAmount(wallet?.balance || 150000)}
               </h2>
-              <p className="text-xs text-text-muted mt-1">
-                ≈ ₩{formatAmount(wallet?.balance || 0)}
-              </p>
+              <p style={{ color: theme.textMuted }} className="text-sm mt-1">B-Coin</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined filled">account_balance_wallet</span>
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{ background: theme.accentSoft }}
+            >
+              <span className="material-symbols-outlined text-[24px]" style={{ color: theme.accent }}>account_balance_wallet</span>
             </div>
           </div>
 
           <div className="flex gap-3">
-            <Button
-              variant="primary"
-              className="flex-1"
-              icon={<span className="material-symbols-outlined text-[20px]">add</span>}
+            <button
               onClick={() => navigate('/consumer/topup')}
+              className="flex-1 h-11 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+              style={{ background: theme.accent, color: '#fff' }}
             >
+              <span className="material-symbols-outlined text-[18px]">add</span>
               Top Up
-            </Button>
-            <Button
-              variant="secondary"
-              className="flex-1"
-              icon={<span className="material-symbols-outlined text-[20px]">send</span>}
-              onClick={() => navigate('/consumer/send')}
+            </button>
+            <button
+              onClick={() => navigate('/consumer/scan')}
+              className="flex-1 h-11 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+              style={{ background: theme.cardHover, color: theme.text, border: `1px solid ${theme.border}` }}
             >
-              Send
-            </Button>
+              <span className="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+              Pay
+            </button>
           </div>
-        </Card>
-      </div>
+        </div>
 
-      {/* Quick Actions */}
-      <div className="px-4 mb-6">
-        <h3 className="text-sm font-bold text-white mb-3">Quick Actions</h3>
+        {/* Quick Actions */}
         <div className="grid grid-cols-4 gap-3">
-          {quickActions.map((action, idx) => (
+          {[
+            { icon: 'swap_horiz', label: 'Transfer', path: '/consumer/wallet' },
+            { icon: 'confirmation_number', label: 'Coupons', path: '/consumer/coupons' },
+            { icon: 'train', label: 'Transit', path: '/consumer/services' },
+            { icon: 'stars', label: 'Rewards', path: '/consumer/loyalty' },
+          ].map((action, idx) => (
             <button
               key={idx}
               onClick={() => navigate(action.path)}
-              className="flex flex-col items-center gap-2 group"
+              className="flex flex-col items-center gap-2"
+              style={{ background: 'transparent', border: 'none' }}
             >
-              <div className="h-14 w-14 rounded-2xl bg-surface border border-surface-highlight flex items-center justify-center group-active:scale-95 transition-all">
-                <span className={`material-symbols-outlined text-2xl ${idx === 0 ? 'text-primary' : 'text-white'}`}>
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center"
+                style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+              >
+                <span className="material-symbols-outlined text-[24px]" style={{ color: theme.accent }}>
                   {action.icon}
                 </span>
               </div>
-              <span className="text-xs text-text-secondary font-medium">{action.label}</span>
+              <span className="text-xs" style={{ color: theme.textSecondary }}>{action.label}</span>
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Recent Activity */}
-      <div className="px-4">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-sm font-bold text-white">Recent Activity</h3>
-          <button
-            onClick={() => navigate('/consumer/history')}
-            className="text-xs text-primary font-medium hover:text-white transition-colors"
-          >
-            See All
-          </button>
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">This Month</p>
+            <p style={{ color: theme.text }} className="text-lg font-bold">+45.2K</p>
+            <p style={{ color: '#22c55e' }} className="text-xs">+12.5%</p>
+          </div>
+          <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">Spent</p>
+            <p style={{ color: theme.text }} className="text-lg font-bold">-128K</p>
+            <p style={{ color: theme.textMuted }} className="text-xs">32 tx</p>
+          </div>
+          <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">Points</p>
+            <p style={{ color: theme.text }} className="text-lg font-bold">2,450</p>
+            <p style={{ color: '#f59e0b' }} className="text-xs">Gold</p>
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {recentTransactions.map((tx) => (
-            <Card
-              key={tx.id}
-              variant="transaction"
-              padding="md"
-              onClick={() => navigate(`/consumer/transaction/${tx.id}`)}
+        {/* Recent Activity */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 style={{ color: theme.text }} className="text-base font-bold">Recent Activity</h3>
+            <button
+              onClick={() => navigate('/consumer/history')}
+              style={{ color: theme.accent, background: 'transparent', border: 'none' }}
+              className="text-sm font-medium"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                    tx.type === 'payment' ? 'bg-primary/10 text-primary' :
-                    tx.type === 'topup' ? 'bg-blue-500/10 text-blue-500' :
-                    tx.type === 'refund' ? 'bg-yellow-500/10 text-yellow-500' :
-                    'bg-surface-highlight text-text-secondary'
-                  }`}>
-                    <span className="material-symbols-outlined text-[20px]">
-                      {tx.type === 'payment' ? 'shopping_bag' :
-                       tx.type === 'topup' ? 'add_circle' :
-                       tx.type === 'refund' ? 'undo' : 'swap_vert'}
-                    </span>
+              See All
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {recentTransactions.length === 0 ? (
+              <>
+                {[
+                  { name: 'Starbucks Reserve', amount: -8500, time: '2 hours ago', icon: 'local_cafe' },
+                  { name: 'Busan Metro', amount: -1450, time: 'Yesterday', icon: 'train' },
+                  { name: 'Cashback Reward', amount: 500, time: 'Yesterday', icon: 'redeem' },
+                  { name: 'GS25 Convenience', amount: -3200, time: '2 days ago', icon: 'store' },
+                ].map((tx, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-3 rounded-xl"
+                    style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ background: tx.amount > 0 ? theme.accentSoft : theme.cardHover }}
+                    >
+                      <span
+                        className="material-symbols-outlined text-[20px]"
+                        style={{ color: tx.amount > 0 ? theme.accent : theme.textSecondary }}
+                      >
+                        {tx.icon}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p style={{ color: theme.text }} className="text-sm font-medium">{tx.name}</p>
+                      <p style={{ color: theme.textMuted }} className="text-xs">{tx.time}</p>
+                    </div>
+                    <p
+                      className="text-sm font-semibold"
+                      style={{ color: tx.amount > 0 ? '#22c55e' : theme.text }}
+                    >
+                      {tx.amount > 0 ? '+' : ''}{formatAmount(tx.amount)}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">{tx.merchantName}</p>
-                    <p className="text-xs text-text-secondary">{formatTime(tx.createdAt)}</p>
-                  </div>
-                </div>
-                <span className={`text-sm font-bold ${
-                  tx.type === 'refund' || tx.type === 'topup' ? 'text-primary' : 'text-white'
-                }`}>
-                  {tx.type === 'payment' || tx.type === 'withdrawal' ? '- ' : '+ '}
-                  {formatAmount(tx.amount)} B
-                </span>
-              </div>
-            </Card>
-          ))}
+                ))}
+              </>
+            ) : (
+              recentTransactions.map((tx) => {
+                const isIncome = tx.type === 'topup' || tx.type === 'refund';
+                return (
+                  <button
+                    key={tx.id}
+                    onClick={() => navigate(`/consumer/transaction/${tx.id}`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-left"
+                    style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ background: isIncome ? theme.accentSoft : theme.cardHover }}
+                    >
+                      <span
+                        className="material-symbols-outlined text-[20px]"
+                        style={{ color: isIncome ? theme.accent : theme.textSecondary }}
+                      >
+                        {tx.type === 'payment' ? 'shopping_bag' :
+                         tx.type === 'topup' ? 'add_circle' :
+                         tx.type === 'refund' ? 'redeem' : 'swap_vert'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p style={{ color: theme.text }} className="text-sm font-medium">{tx.merchantName}</p>
+                      <p style={{ color: theme.textMuted }} className="text-xs">{formatTime(tx.createdAt)}</p>
+                    </div>
+                    <p
+                      className="text-sm font-semibold"
+                      style={{ color: isIncome ? '#22c55e' : theme.text }}
+                    >
+                      {isIncome ? '+' : '-'}{formatAmount(tx.amount)}
+                    </p>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CardProps {
-  variant?: 'default' | 'balance' | 'transaction' | 'stat';
+  variant?: 'default' | 'glass' | 'gradient' | 'outline';
   padding?: 'sm' | 'md' | 'lg' | 'none';
   className?: string;
   onClick?: () => void;
@@ -15,21 +15,37 @@ const Card: React.FC<CardProps> = ({
   onClick,
   children,
 }) => {
-  const baseStyles = 'rounded-2xl border border-surface-highlight';
+  const baseStyles = 'rounded-2xl transition-all duration-200';
 
   const variantStyles = {
-    default: 'bg-surface',
-    balance: 'bg-surface relative overflow-hidden',
-    transaction: 'bg-surface hover:bg-surface-highlight cursor-pointer',
-    stat: 'bg-surface',
+    default: `
+      bg-slate-800/60 backdrop-blur-sm
+      border border-slate-700/50
+    `,
+    glass: `
+      bg-white/5 backdrop-blur-lg
+      border border-white/10
+    `,
+    gradient: `
+      bg-gradient-to-br from-slate-800 to-slate-900
+      border border-slate-700/50
+    `,
+    outline: `
+      bg-transparent
+      border border-slate-700 hover:border-slate-600
+    `,
   };
 
   const paddingStyles = {
     none: '',
     sm: 'p-3',
     md: 'p-4',
-    lg: 'p-6',
+    lg: 'p-5',
   };
+
+  const clickableStyles = onClick
+    ? 'cursor-pointer hover:bg-white/5 active:scale-[0.99]'
+    : '';
 
   return (
     <div
@@ -37,17 +53,12 @@ const Card: React.FC<CardProps> = ({
         ${baseStyles}
         ${variantStyles[variant]}
         ${paddingStyles[padding]}
-        ${onClick ? 'cursor-pointer active:scale-[0.98] transition-transform' : ''}
+        ${clickableStyles}
         ${className}
       `}
       onClick={onClick}
     >
-      {variant === 'balance' && (
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
-      )}
-      <div className={variant === 'balance' ? 'relative z-10' : ''}>
-        {children}
-      </div>
+      {children}
     </div>
   );
 };

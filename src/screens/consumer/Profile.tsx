@@ -1,352 +1,197 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/layout';
-import { Card, Toggle, Button, Badge } from '../../components/common';
 import { useAuthStore } from '../../store';
 
-interface MenuItem {
-  icon: string;
-  label: string;
-  action?: () => void;
-  arrow?: boolean;
-  toggle?: boolean;
-  value?: boolean;
-  onChange?: (value: boolean) => void;
-  badge?: string;
-  subtitle?: string;
-}
-
-interface MenuSection {
-  title: string;
-  items: MenuItem[];
-}
-
-interface DIDCredential {
-  id: string;
-  type: string;
-  issuer: string;
-  issuedAt: string;
-  expiresAt: string;
-  status: 'valid' | 'expired' | 'revoked';
-  verified: boolean;
-}
-
-const mockCredentials: DIDCredential[] = [
-  {
-    id: 'vc-resident-001',
-    type: 'ResidentCredential',
-    issuer: 'Jeonbuk Provincial Government',
-    issuedAt: '2024-01-15',
-    expiresAt: '2029-01-15',
-    status: 'valid',
-    verified: true,
-  },
-  {
-    id: 'vc-age-001',
-    type: 'AgeVerificationCredential',
-    issuer: 'Ministry of Interior',
-    issuedAt: '2024-06-01',
-    expiresAt: '2025-06-01',
-    status: 'valid',
-    verified: true,
-  },
-  {
-    id: 'vc-welfare-001',
-    type: 'WelfareEligibilityCredential',
-    issuer: 'Jeonju City Welfare Office',
-    issuedAt: '2024-03-01',
-    expiresAt: '2025-03-01',
-    status: 'valid',
-    verified: true,
-  },
-];
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [showCredentialDetail, setShowCredentialDetail] = useState<DIDCredential | null>(null);
-
-  const userDID = 'did:xphere:jeonbuk:0x8a7b...3f2e';
-  const credentials = mockCredentials;
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const menuSections: MenuSection[] = [
-    {
-      title: 'Quick Actions',
-      items: [
-        { icon: 'qr_code_2', label: 'My QR Code', action: () => navigate('/consumer/scan') },
-        { icon: 'support_agent', label: 'Customer Support', action: () => {} },
-        { icon: 'share', label: 'Invite Friends', action: () => {} },
-      ],
-    },
+  const copyWalletAddress = () => {
+    navigator.clipboard.writeText('0x3f8a...8a9b');
+  };
+
+  const menuSections = [
     {
       title: 'Account & Security',
       items: [
-        { icon: 'person', label: 'Edit Profile', action: () => {}, arrow: true },
-        { icon: 'fingerprint', label: 'Biometric Login', toggle: true, value: biometricEnabled, onChange: setBiometricEnabled },
-        { icon: 'pin', label: 'Change PIN', action: () => {}, arrow: true },
-        { icon: 'backup', label: 'Wallet Backup', action: () => {}, arrow: true, badge: 'Required' },
-      ],
-    },
-    {
-      title: 'Linked Accounts',
-      items: [
-        { icon: 'account_balance', label: 'Bank Accounts', action: () => {}, arrow: true, subtitle: '2 accounts linked' },
-        { icon: 'credit_card', label: 'Prepaid Cards', action: () => {}, arrow: true, subtitle: '1 card linked' },
+        { icon: 'person_edit', label: 'Edit Profile', color: '#f97316' },
+        { icon: 'face', label: 'Biometric Login', color: '#3b82f6', toggle: true },
+        { icon: 'lock', label: 'Change PIN', color: '#a855f7' },
+        { icon: 'shield', label: 'Wallet Backup', color: theme.accent, badge: 'Required' },
       ],
     },
     {
       title: 'Preferences',
       items: [
-        { icon: 'notifications', label: 'Notifications', toggle: true, value: notificationsEnabled, onChange: setNotificationsEnabled },
-        { icon: 'language', label: 'Language', action: () => {}, arrow: true, subtitle: 'Korean' },
-        { icon: 'currency_exchange', label: 'Currency Display', action: () => {}, arrow: true, subtitle: 'KRW' },
+        { icon: 'notifications', label: 'Notifications', color: '#eab308' },
+        { icon: 'payments', label: 'Currency Display', color: '#14b8a6', value: 'KRW' },
+        { icon: 'language', label: 'Language', color: '#6366f1', value: 'Korean' },
       ],
     },
     {
       title: 'About',
       items: [
-        { icon: 'description', label: 'Terms of Service', action: () => {}, arrow: true },
-        { icon: 'privacy_tip', label: 'Privacy Policy', action: () => {}, arrow: true },
-        { icon: 'info', label: 'App Version', subtitle: 'v1.0.0' },
+        { icon: 'info', label: 'Terms of Service', color: theme.textMuted },
+        { icon: 'privacy_tip', label: 'Privacy Policy', color: theme.textMuted },
       ],
     },
   ];
 
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Profile" />
-
-      {/* Profile Header */}
-      <div className="px-4 py-6 flex items-center gap-4">
-        <div className="h-16 w-16 rounded-full bg-surface-highlight border-2 border-primary overflow-hidden">
-          <div className="h-full w-full bg-primary/20 flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary text-2xl">person</span>
-          </div>
-        </div>
-        <div className="flex-1">
-          <h2 className="text-xl font-bold text-white">LocalPay User</h2>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="px-2 py-0.5 bg-primary/20 text-primary text-xs font-medium rounded-full">
-              Silver Member
-            </span>
-          </div>
-        </div>
-        <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">
-          <span className="material-symbols-outlined text-text-secondary">edit</span>
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-50 px-5 py-4 flex items-center justify-between"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <button onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-      </div>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Profile & Settings</h1>
+        <button onClick={handleLogout}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>logout</span>
+        </button>
+      </header>
 
-      {/* DID Identity Section */}
-      <div className="px-4 mb-6">
-        <Card padding="md">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">fingerprint</span>
-              <h3 className="font-semibold text-white">Digital Identity (DID)</h3>
-            </div>
-            <Badge variant="success">Verified</Badge>
-          </div>
-
-          {/* DID Address */}
-          <div className="bg-surface-highlight rounded-lg p-3 mb-4">
-            <p className="text-xs text-text-secondary mb-1">Your DID</p>
-            <div className="flex items-center justify-between">
-              <code className="text-sm text-white font-mono">{userDID}</code>
-              <button className="p-1 hover:bg-surface rounded transition-colors">
-                <span className="material-symbols-outlined text-text-secondary text-sm">content_copy</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Verifiable Credentials */}
-          <div className="space-y-2">
-            <p className="text-xs text-text-secondary font-medium">Verifiable Credentials ({credentials.length})</p>
-            {credentials.map((credential) => (
-              <button
-                key={credential.id}
-                onClick={() => setShowCredentialDetail(credential)}
-                className="w-full flex items-center justify-between p-3 bg-surface-highlight rounded-lg hover:bg-surface-highlight/70 transition-colors"
+      <main className="flex-1 overflow-y-auto">
+        {/* Profile Card */}
+        <div className="px-5 py-6">
+          <div
+            className="rounded-2xl p-6 flex flex-col items-center"
+            style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+          >
+            {/* Avatar */}
+            <div className="relative mb-4">
+              <div
+                className="w-24 h-24 rounded-full flex items-center justify-center"
+                style={{ background: theme.accentSoft, border: `2px solid ${theme.accent}` }}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                    credential.status === 'valid' ? 'bg-green-500/20' : 'bg-red-500/20'
-                  }`}>
-                    <span className={`material-symbols-outlined text-sm ${
-                      credential.status === 'valid' ? 'text-green-500' : 'text-red-500'
-                    }`}>
-                      {credential.status === 'valid' ? 'verified_user' : 'error'}
-                    </span>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium text-white">
-                      {credential.type.replace('Credential', '')}
-                    </p>
-                    <p className="text-xs text-text-secondary">{credential.issuer}</p>
-                  </div>
+                <span className="material-symbols-outlined text-4xl" style={{ color: theme.accent }}>person</span>
+              </div>
+              <div
+                className="absolute bottom-0 right-0 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                style={{ background: theme.accent, color: '#fff' }}
+              >
+                Lvl 2
+              </div>
+            </div>
+
+            <h2 className="text-xl font-bold" style={{ color: theme.text }}>Ji-min Kim</h2>
+            <p className="text-sm mb-3" style={{ color: theme.textMuted }}>Busan Citizen</p>
+
+            <button
+              onClick={copyWalletAddress}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+              style={{ background: theme.cardHover }}
+            >
+              <span className="text-xs font-mono" style={{ color: theme.textSecondary }}>0x3f...8a9</span>
+              <span className="material-symbols-outlined text-[14px]" style={{ color: theme.textMuted }}>content_copy</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="px-5 mb-6">
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { icon: 'qr_code_2', label: 'My QR', color: theme.accent, path: '/consumer/scan' },
+              { icon: 'support_agent', label: 'Support', color: '#3b82f6' },
+              { icon: 'share', label: 'Share', color: '#22c55e' },
+            ].map((action, idx) => (
+              <button
+                key={idx}
+                onClick={() => action.path && navigate(action.path)}
+                className="flex flex-col items-center gap-2 py-4 rounded-xl"
+                style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  style={{ background: `${action.color}15` }}
+                >
+                  <span className="material-symbols-outlined" style={{ color: action.color }}>{action.icon}</span>
                 </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
+                <span className="text-xs font-medium" style={{ color: theme.text }}>{action.label}</span>
               </button>
             ))}
           </div>
-
-          {/* Add Credential Button */}
-          <button className="w-full mt-4 flex items-center justify-center gap-2 p-3 border border-dashed border-primary/50 rounded-lg text-primary hover:bg-primary/10 transition-colors">
-            <span className="material-symbols-outlined text-sm">add</span>
-            <span className="text-sm font-medium">Add New Credential</span>
-          </button>
-        </Card>
-      </div>
-
-      {/* Credential Detail Modal */}
-      {showCredentialDetail && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-end justify-center">
-          <div className="bg-surface w-full max-w-md rounded-t-3xl p-6 animate-slide-up">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-white">Credential Details</h3>
-              <button
-                onClick={() => setShowCredentialDetail(null)}
-                className="p-2 rounded-full hover:bg-surface-highlight"
-              >
-                <span className="material-symbols-outlined text-text-secondary">close</span>
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-center mb-4">
-                <div className={`h-16 w-16 rounded-full flex items-center justify-center ${
-                  showCredentialDetail.status === 'valid' ? 'bg-green-500/20' : 'bg-red-500/20'
-                }`}>
-                  <span className={`material-symbols-outlined text-3xl ${
-                    showCredentialDetail.status === 'valid' ? 'text-green-500' : 'text-red-500'
-                  }`}>
-                    {showCredentialDetail.status === 'valid' ? 'verified' : 'cancel'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="text-center mb-4">
-                <h4 className="text-xl font-bold text-white">
-                  {showCredentialDetail.type.replace('Credential', '')}
-                </h4>
-                <p className="text-text-secondary">{showCredentialDetail.issuer}</p>
-              </div>
-
-              <div className="bg-surface-highlight rounded-xl p-4 space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Status</span>
-                  <Badge variant={showCredentialDetail.status === 'valid' ? 'success' : 'error'}>
-                    {showCredentialDetail.status.toUpperCase()}
-                  </Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Credential ID</span>
-                  <span className="text-white text-sm font-mono">{showCredentialDetail.id}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Issued</span>
-                  <span className="text-white text-sm">{showCredentialDetail.issuedAt}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Expires</span>
-                  <span className="text-white text-sm">{showCredentialDetail.expiresAt}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary text-sm">Verified</span>
-                  <span className="text-green-500 text-sm flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">check_circle</span>
-                    Blockchain Verified
-                  </span>
-                </div>
-              </div>
-
-              <Button variant="secondary" fullWidth onClick={() => setShowCredentialDetail(null)}>
-                Close
-              </Button>
-            </div>
-          </div>
         </div>
-      )}
 
-      {/* Menu Sections */}
-      <div className="px-4 space-y-6">
-        {menuSections.map((section, sectionIdx) => (
-          <div key={sectionIdx}>
-            {section.title !== 'Quick Actions' && (
-              <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-                {section.title}
-              </h3>
-            )}
-
-            {section.title === 'Quick Actions' ? (
-              <div className="grid grid-cols-3 gap-3 mb-2">
-                {section.items.map((item, idx) => (
-                  <button
-                    key={idx}
-                    onClick={item.action}
-                    className="flex flex-col items-center gap-2 p-4 bg-surface rounded-xl border border-surface-highlight hover:bg-surface-highlight transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-2xl text-primary">{item.icon}</span>
-                    <span className="text-xs text-white font-medium">{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <Card padding="none">
-                <div className="divide-y divide-surface-highlight">
-                  {section.items.map((item, idx) => (
+        {/* Menu Sections */}
+        {menuSections.map((section, sIdx) => (
+          <div key={sIdx} className="px-5 mb-6">
+            <h3 className="text-xs font-bold mb-2 uppercase tracking-wider px-1" style={{ color: theme.textMuted }}>
+              {section.title}
+            </h3>
+            <div className="rounded-xl overflow-hidden" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+              {section.items.map((item, iIdx) => (
+                <div
+                  key={iIdx}
+                  className="flex items-center justify-between p-4"
+                  style={{ borderBottom: iIdx < section.items.length - 1 ? `1px solid ${theme.border}` : 'none' }}
+                >
+                  <div className="flex items-center gap-3">
                     <div
-                      key={idx}
-                      className={`flex items-center justify-between p-4 ${
-                        item.action && !item.toggle ? 'hover:bg-surface-highlight/50 cursor-pointer' : ''
-                      }`}
-                      onClick={item.action && !item.toggle ? item.action : undefined}
+                      className="w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ background: `${item.color}15` }}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-text-secondary">{item.icon}</span>
-                        <div>
-                          <span className="text-sm font-medium text-white">{item.label}</span>
-                          {item.subtitle && (
-                            <p className="text-xs text-text-secondary">{item.subtitle}</p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {item.badge && (
-                          <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-500 text-xs font-medium rounded-full">
-                            {item.badge}
-                          </span>
-                        )}
-                        {item.toggle ? (
-                          <Toggle checked={item.value!} onChange={item.onChange!} />
-                        ) : item.arrow ? (
-                          <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-                        ) : null}
-                      </div>
+                      <span className="material-symbols-outlined text-[18px]" style={{ color: item.color }}>{item.icon}</span>
                     </div>
-                  ))}
+                    <span className="text-sm font-medium" style={{ color: theme.text }}>{item.label}</span>
+                    {item.badge && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: theme.accentSoft, color: theme.accent }}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                  {item.toggle ? (
+                    <button
+                      onClick={() => setBiometricEnabled(!biometricEnabled)}
+                      className="relative w-10 h-6 rounded-full transition-colors"
+                      style={{ background: biometricEnabled ? theme.accent : theme.cardHover }}
+                    >
+                      <div
+                        className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                        style={{ left: biometricEnabled ? '18px' : '2px' }}
+                      />
+                    </button>
+                  ) : item.value ? (
+                    <span className="text-xs" style={{ color: theme.textMuted }}>{item.value}</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textMuted }}>chevron_right</span>
+                  )}
                 </div>
-              </Card>
-            )}
+              ))}
+            </div>
           </div>
         ))}
 
-        {/* Logout Button */}
-        <Button
-          variant="danger"
-          fullWidth
-          icon={<span className="material-symbols-outlined">logout</span>}
-          onClick={handleLogout}
-        >
-          Logout
-        </Button>
-      </div>
+        {/* Version & Logout */}
+        <div className="flex flex-col items-center pb-8 gap-4">
+          <p className="text-xs font-mono" style={{ color: theme.textMuted }}>Busan B-Pass v2.1.0</p>
+          <button onClick={handleLogout} className="text-sm font-medium py-2 px-6 rounded-full" style={{ color: theme.accent }}>
+            Log Out
+          </button>
+        </div>
+      </main>
     </div>
   );
 };

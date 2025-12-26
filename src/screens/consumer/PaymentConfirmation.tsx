@@ -1,16 +1,18 @@
-/**
- * Payment Confirmation Screen
- *
- * Shows payment result with:
- * - Success/Failure animation
- * - Transaction receipt
- * - Blockchain verification status
- * - Share and action buttons
- */
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Badge } from '../../components/common';
+
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 interface PaymentResult {
   success: boolean;
@@ -28,7 +30,6 @@ const PaymentConfirmation: React.FC = () => {
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
 
-  // Mock payment result (in production, this would come from payment flow)
   const [result] = useState<PaymentResult>({
     success: true,
     transactionId: 'TX-2024-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
@@ -55,54 +56,58 @@ const PaymentConfirmation: React.FC = () => {
     });
   };
 
-  // Simulate verification status update
   useEffect(() => {
     if (result.verificationStatus === 'pending') {
-      const timer = setTimeout(() => {
-        // In production, this would poll the blockchain
-      }, 3000);
+      const timer = setTimeout(() => {}, 3000);
       return () => clearTimeout(timer);
     }
   }, [result.verificationStatus]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: theme.bg }}>
       {/* Success Animation */}
       <div className="flex-1 flex flex-col items-center justify-center p-6">
         {result.success ? (
           <>
             {/* Success Icon */}
             <div className="relative mb-6">
-              <div className="h-24 w-24 rounded-full bg-green-500/20 flex items-center justify-center animate-pulse">
-                <div className="h-20 w-20 rounded-full bg-green-500/30 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-green-500 text-5xl filled">
+              <div
+                className="w-24 h-24 rounded-full flex items-center justify-center animate-pulse"
+                style={{ background: '#22c55e20' }}
+              >
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center"
+                  style={{ background: '#22c55e30' }}
+                >
+                  <span className="material-symbols-outlined text-5xl" style={{ color: '#22c55e' }}>
                     check_circle
                   </span>
                 </div>
               </div>
-              {/* Ripple effect */}
-              <div className="absolute inset-0 rounded-full bg-green-500/10 animate-ping" />
             </div>
 
-            <h1 className="text-2xl font-bold text-white mb-2">Payment Successful</h1>
-            <p className="text-text-secondary text-center mb-6">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Payment Successful</h1>
+            <p className="text-center mb-6" style={{ color: theme.textSecondary }}>
               Your payment has been processed successfully
             </p>
 
             {/* Amount Display */}
             <div className="text-center mb-8">
-              <p className="text-4xl font-bold text-white">
+              <p className="text-4xl font-bold" style={{ color: theme.text }}>
                 {formatAmount(result.finalAmount)}
-                <span className="text-lg text-text-secondary ml-1">P</span>
+                <span className="text-lg ml-1" style={{ color: theme.textSecondary }}>P</span>
               </p>
               {result.discount && result.discount > 0 && (
                 <div className="flex items-center justify-center gap-2 mt-2">
-                  <span className="text-sm text-text-secondary line-through">
+                  <span className="text-sm line-through" style={{ color: theme.textSecondary }}>
                     {formatAmount(result.amount)}
                   </span>
-                  <Badge variant="success" size="sm">
+                  <span
+                    className="text-xs font-bold px-2 py-1 rounded"
+                    style={{ background: '#22c55e20', color: '#22c55e' }}
+                  >
                     -{formatAmount(result.discount)} saved
-                  </Badge>
+                  </span>
                 </div>
               )}
             </div>
@@ -110,122 +115,131 @@ const PaymentConfirmation: React.FC = () => {
         ) : (
           <>
             {/* Failure Icon */}
-            <div className="h-24 w-24 rounded-full bg-red-500/20 flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-red-500 text-5xl filled">
+            <div
+              className="w-24 h-24 rounded-full flex items-center justify-center mb-6"
+              style={{ background: theme.accentSoft }}
+            >
+              <span className="material-symbols-outlined text-5xl" style={{ color: theme.accent }}>
                 cancel
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Payment Failed</h1>
-            <p className="text-text-secondary text-center mb-6">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Payment Failed</h1>
+            <p className="text-center mb-6" style={{ color: theme.textSecondary }}>
               Something went wrong. Please try again.
             </p>
           </>
         )}
 
         {/* Receipt Card */}
-        <Card padding="lg" className="w-full max-w-sm">
+        <div
+          className="w-full max-w-sm rounded-xl p-5"
+          style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+        >
           <div className="space-y-4">
             {/* Merchant */}
-            <div className="flex items-center gap-3 pb-4 border-b border-surface-highlight">
-              <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary">storefront</span>
+            <div className="flex items-center gap-3 pb-4" style={{ borderBottom: `1px solid ${theme.border}` }}>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: theme.accentSoft }}
+              >
+                <span className="material-symbols-outlined" style={{ color: theme.accent }}>storefront</span>
               </div>
               <div>
-                <p className="font-medium text-white">{result.merchantName}</p>
-                <p className="text-xs text-text-secondary">{formatTime(result.timestamp)}</p>
+                <p className="font-medium" style={{ color: theme.text }}>{result.merchantName}</p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>{formatTime(result.timestamp)}</p>
               </div>
             </div>
 
             {/* Transaction Details */}
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Transaction ID</span>
-                <span className="text-white font-mono text-xs">{result.transactionId}</span>
+                <span style={{ color: theme.textSecondary }}>Transaction ID</span>
+                <span className="font-mono text-xs" style={{ color: theme.text }}>{result.transactionId}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Original Amount</span>
-                <span className="text-white">{formatAmount(result.amount)} P</span>
+                <span style={{ color: theme.textSecondary }}>Original Amount</span>
+                <span style={{ color: theme.text }}>{formatAmount(result.amount)} P</span>
               </div>
               {result.discount && result.discount > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-text-secondary">Discount</span>
-                  <span className="text-green-500">-{formatAmount(result.discount)} P</span>
+                  <span style={{ color: theme.textSecondary }}>Discount</span>
+                  <span style={{ color: '#22c55e' }}>-{formatAmount(result.discount)} P</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm font-bold pt-2 border-t border-surface-highlight">
-                <span className="text-white">Total Paid</span>
-                <span className="text-primary">{formatAmount(result.finalAmount)} P</span>
+              <div className="flex justify-between text-sm font-bold pt-2" style={{ borderTop: `1px solid ${theme.border}` }}>
+                <span style={{ color: theme.text }}>Total Paid</span>
+                <span style={{ color: theme.accent }}>{formatAmount(result.finalAmount)} P</span>
               </div>
             </div>
 
             {/* Blockchain Verification */}
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="w-full flex items-center justify-between p-3 bg-surface-highlight rounded-xl"
+              className="w-full flex items-center justify-between p-3 rounded-xl"
+              style={{ background: theme.cardHover }}
             >
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">
-                  verified
-                </span>
-                <span className="text-sm text-white">Blockchain Verified</span>
+                <span className="material-symbols-outlined text-lg" style={{ color: '#22c55e' }}>verified</span>
+                <span className="text-sm" style={{ color: theme.text }}>Blockchain Verified</span>
               </div>
-              <span className="material-symbols-outlined text-text-secondary text-sm">
+              <span className="material-symbols-outlined text-sm" style={{ color: theme.textSecondary }}>
                 {showDetails ? 'expand_less' : 'expand_more'}
               </span>
             </button>
 
             {showDetails && (
-              <div className="bg-background rounded-xl p-3 space-y-2 text-xs">
+              <div className="rounded-xl p-3 space-y-2 text-xs" style={{ background: theme.bg }}>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">Block Hash</span>
-                  <span className="text-white font-mono">{result.blockchainHash}</span>
+                  <span style={{ color: theme.textSecondary }}>Block Hash</span>
+                  <span className="font-mono" style={{ color: theme.text }}>{result.blockchainHash}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">Status</span>
-                  <Badge
-                    variant={result.verificationStatus === 'verified' ? 'success' : 'warning'}
-                    size="sm"
+                  <span style={{ color: theme.textSecondary }}>Status</span>
+                  <span
+                    className="font-bold px-2 py-0.5 rounded"
+                    style={{
+                      background: result.verificationStatus === 'verified' ? '#22c55e20' : theme.cardHover,
+                      color: result.verificationStatus === 'verified' ? '#22c55e' : theme.textSecondary,
+                    }}
                   >
                     {result.verificationStatus === 'verified' ? 'Verified' : 'Pending'}
-                  </Badge>
+                  </span>
                 </div>
-                <p className="text-text-muted pt-2 border-t border-surface">
+                <p className="pt-2" style={{ color: theme.textMuted, borderTop: `1px solid ${theme.border}` }}>
                   This transaction is recorded on the Xphere blockchain for immutable audit trail.
                 </p>
               </div>
             )}
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Actions */}
-      <div className="p-4 space-y-3">
+      <div className="p-5 space-y-3">
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={() => {/* Share receipt */}}
+          <button
+            className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+            style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
-            <span className="material-symbols-outlined mr-2 text-lg">share</span>
+            <span className="material-symbols-outlined text-lg">share</span>
             Share
-          </Button>
-          <Button
-            variant="secondary"
-            className="flex-1"
+          </button>
+          <button
             onClick={() => navigate('/consumer/history')}
+            className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+            style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
-            <span className="material-symbols-outlined mr-2 text-lg">receipt_long</span>
+            <span className="material-symbols-outlined text-lg">receipt_long</span>
             History
-          </Button>
+          </button>
         </div>
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
+        <button
           onClick={() => navigate('/consumer')}
+          className="w-full py-4 rounded-xl font-bold text-white"
+          style={{ background: theme.accent }}
         >
           Back to Home
-        </Button>
+        </button>
       </div>
     </div>
   );

@@ -1,17 +1,19 @@
-/**
- * Consumer Linked Services Screen
- *
- * PoC Feature: Integration with regional services
- * - Transport (Metro, Bus, Taxi)
- * - Retail partnerships
- * - Culture/Welfare services
- * - Service activation and status
- */
-
 import React, { useState } from 'react';
-import { Header } from '../../components/layout';
-import { Card, Badge, Toggle } from '../../components/common';
+import { useNavigate } from 'react-router-dom';
 import { LinkedService } from '../../types';
+
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 // Mock linked services
 const mockServices: LinkedService[] = [
@@ -99,14 +101,14 @@ const mockServices: LinkedService[] = [
 ];
 
 const categoryInfo: Record<string, { label: string; icon: string; color: string }> = {
-  transport: { label: 'Transport', icon: 'commute', color: 'text-blue-400' },
-  retail: { label: 'Retail', icon: 'shopping_cart', color: 'text-green-400' },
-  culture: { label: 'Culture', icon: 'palette', color: 'text-purple-400' },
-  welfare: { label: 'Welfare', icon: 'volunteer_activism', color: 'text-orange-400' },
-  other: { label: 'Other', icon: 'more_horiz', color: 'text-gray-400' },
+  transport: { label: 'Transport', icon: 'commute', color: '#3b82f6' },
+  retail: { label: 'Retail', icon: 'shopping_cart', color: '#22c55e' },
+  culture: { label: 'Culture', icon: 'palette', color: '#a855f7' },
+  welfare: { label: 'Welfare', icon: 'volunteer_activism', color: '#f97316' },
 };
 
 const Services: React.FC = () => {
+  const navigate = useNavigate();
   const [services, setServices] = useState(mockServices);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -130,53 +132,67 @@ const Services: React.FC = () => {
   const enabledCount = services.filter(s => s.isEnabled).length;
 
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Linked Services" showBack />
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-20 px-5 py-4 flex items-center justify-between"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <button onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
+        </button>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Linked Services</h1>
+        <div className="w-8" />
+      </header>
 
       {/* Summary */}
-      <div className="px-4 py-4">
-        <Card variant="balance" padding="md">
+      <div className="px-5 py-4">
+        <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm text-text-secondary">Active Services</p>
-              <h2 className="text-2xl font-bold text-white">{enabledCount}</h2>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Active Services</p>
+              <h2 className="text-2xl font-bold" style={{ color: theme.text }}>{enabledCount}</h2>
             </div>
-            <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-2xl">
-                hub
-              </span>
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{ background: theme.accentSoft }}
+            >
+              <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>hub</span>
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2">
-            {Object.entries(categoryInfo).slice(0, 4).map(([key, info]) => {
+            {Object.entries(categoryInfo).map(([key, info]) => {
               const count = groupedServices[key]?.filter(s => s.isEnabled).length || 0;
               return (
                 <button
                   key={key}
                   onClick={() => setSelectedCategory(selectedCategory === key ? null : key)}
-                  className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all ${
-                    selectedCategory === key ? 'bg-primary/20' : 'bg-surface-highlight'
-                  }`}
+                  className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
+                  style={{
+                    background: selectedCategory === key ? theme.accentSoft : theme.cardHover,
+                    border: selectedCategory === key ? `1px solid ${theme.accent}` : `1px solid ${theme.border}`,
+                  }}
                 >
-                  <span className={`material-symbols-outlined ${info.color}`}>
-                    {info.icon}
-                  </span>
-                  <span className="text-[10px] text-text-secondary">{info.label}</span>
-                  <span className="text-xs font-bold text-white">{count}</span>
+                  <span className="material-symbols-outlined" style={{ color: info.color }}>{info.icon}</span>
+                  <span className="text-[10px]" style={{ color: theme.textSecondary }}>{info.label}</span>
+                  <span className="text-xs font-bold" style={{ color: theme.text }}>{count}</span>
                 </button>
               );
             })}
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* DID Verification Notice */}
-      <div className="px-4 mb-4">
-        <div className="bg-primary/10 border border-primary/30 rounded-xl p-3 flex items-start gap-3">
-          <span className="material-symbols-outlined text-primary">verified_user</span>
+      <div className="px-5 mb-4">
+        <div
+          className="rounded-xl p-3 flex items-start gap-3"
+          style={{ background: theme.accentSoft, border: `1px solid ${theme.accent}30` }}
+        >
+          <span className="material-symbols-outlined" style={{ color: theme.accent }}>verified_user</span>
           <div>
-            <p className="text-sm font-medium text-primary">DID Verification Required</p>
-            <p className="text-xs text-primary/80 mt-1">
+            <p className="text-sm font-medium" style={{ color: theme.accent }}>DID Verification Required</p>
+            <p className="text-xs mt-1" style={{ color: `${theme.accent}cc` }}>
               Some services require credential verification. Verify your identity to unlock all features.
             </p>
           </div>
@@ -184,58 +200,71 @@ const Services: React.FC = () => {
       </div>
 
       {/* Service List by Category */}
-      <div className="px-4 space-y-6">
+      <div className="px-5 space-y-6">
         {Object.entries(groupedServices)
           .filter(([category]) => !selectedCategory || category === selectedCategory)
           .map(([category, categoryServices]) => {
-            const info = categoryInfo[category] || categoryInfo.other;
+            const info = categoryInfo[category];
             return (
               <div key={category}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className={`material-symbols-outlined ${info.color}`}>
-                    {info.icon}
-                  </span>
-                  <h3 className="text-sm font-bold text-white">{info.label}</h3>
-                  <Badge variant="secondary" size="sm">
+                  <span className="material-symbols-outlined" style={{ color: info.color }}>{info.icon}</span>
+                  <h3 className="text-sm font-bold" style={{ color: theme.text }}>{info.label}</h3>
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full"
+                    style={{ background: theme.cardHover, color: theme.textSecondary }}
+                  >
                     {categoryServices.length}
-                  </Badge>
+                  </span>
                 </div>
 
                 <div className="space-y-2">
                   {categoryServices.map((service) => (
-                    <Card key={service.id} padding="md">
+                    <div
+                      key={service.id}
+                      className="rounded-xl p-4"
+                      style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+                    >
                       <div className="flex items-start gap-3">
-                        <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
-                          service.isEnabled ? 'bg-primary/20' : 'bg-surface-highlight'
-                        }`}>
-                          <span className={`material-symbols-outlined ${
-                            service.isEnabled ? 'text-primary' : 'text-text-secondary'
-                          }`}>
+                        <div
+                          className="w-10 h-10 rounded-xl flex items-center justify-center"
+                          style={{ background: service.isEnabled ? theme.accentSoft : theme.cardHover }}
+                        >
+                          <span
+                            className="material-symbols-outlined"
+                            style={{ color: service.isEnabled ? theme.accent : theme.textSecondary }}
+                          >
                             {service.iconUrl}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-medium text-white truncate">{service.name}</h4>
+                            <h4 className="font-medium truncate" style={{ color: theme.text }}>{service.name}</h4>
                             {service.isEnabled && (
-                              <span className="material-symbols-outlined text-green-500 text-sm">
+                              <span className="material-symbols-outlined text-sm" style={{ color: '#22c55e' }}>
                                 check_circle
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">
+                          <p className="text-xs mt-0.5 line-clamp-2" style={{ color: theme.textSecondary }}>
                             {service.description}
                           </p>
-                          <p className="text-[10px] text-text-muted mt-1">
+                          <p className="text-[10px] mt-1" style={{ color: theme.textMuted }}>
                             {service.provider}
                           </p>
                         </div>
-                        <Toggle
-                          checked={service.isEnabled}
-                          onChange={() => toggleService(service.id)}
-                        />
+                        <button
+                          onClick={() => toggleService(service.id)}
+                          className="relative w-12 h-7 rounded-full transition-colors"
+                          style={{ background: service.isEnabled ? theme.accent : theme.cardHover }}
+                        >
+                          <div
+                            className="absolute top-1 w-5 h-5 rounded-full bg-white transition-all"
+                            style={{ left: service.isEnabled ? '26px' : '4px' }}
+                          />
+                        </button>
                       </div>
-                    </Card>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -244,15 +273,15 @@ const Services: React.FC = () => {
       </div>
 
       {/* Footer Info */}
-      <div className="px-4 mt-6">
-        <div className="bg-surface rounded-xl p-4 text-center">
-          <span className="material-symbols-outlined text-text-secondary text-3xl mb-2">
+      <div className="px-5 mt-6">
+        <div className="rounded-xl p-4 text-center" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+          <span className="material-symbols-outlined text-3xl mb-2" style={{ color: theme.textSecondary }}>
             integration_instructions
           </span>
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm" style={{ color: theme.textSecondary }}>
             More services coming soon!
           </p>
-          <p className="text-xs text-text-muted mt-1">
+          <p className="text-xs mt-1" style={{ color: theme.textMuted }}>
             LocalPay is expanding partnerships with local businesses and government services.
           </p>
         </div>

@@ -13,15 +13,15 @@ const consumerNav: NavItem[] = [
   { icon: 'home', label: 'Home', path: '/consumer' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/consumer/wallet' },
   { icon: 'qr_code_scanner', label: 'Scan', path: '/consumer/scan', isFab: true },
-  { icon: 'receipt_long', label: 'History', path: '/consumer/history' },
-  { icon: 'person', label: 'Profile', path: '/consumer/profile' },
+  { icon: 'map', label: 'Map', path: '/consumer/merchant-map' },
+  { icon: 'settings', label: 'Settings', path: '/consumer/profile' },
 ];
 
 const merchantNav: NavItem[] = [
-  { icon: 'dashboard', label: 'Dashboard', path: '/merchant' },
+  { icon: 'grid_view', label: 'Home', path: '/merchant' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/merchant/wallet' },
   { icon: 'qr_code_scanner', label: 'Scan', path: '/merchant/scan', isFab: true },
-  { icon: 'receipt_long', label: 'Payments', path: '/merchant/payments' },
+  { icon: 'group', label: 'Staff', path: '/merchant/employees' },
   { icon: 'settings', label: 'Settings', path: '/merchant/settings' },
 ];
 
@@ -29,9 +29,31 @@ const adminNav: NavItem[] = [
   { icon: 'dashboard', label: 'Dashboard', path: '/admin' },
   { icon: 'group', label: 'Users', path: '/admin/users' },
   { icon: 'verified_user', label: 'Audit', path: '/admin/audit', isFab: true },
-  { icon: 'payments', label: 'Settlements', path: '/admin/settlements' },
+  { icon: 'payments', label: 'Settle', path: '/admin/settlements' },
   { icon: 'redeem', label: 'Vouchers', path: '/admin/vouchers' },
 ];
+
+// Theme colors for bottom nav - unified dark theme
+const themeStyles = {
+  consumer: {
+    background: '#1a1a1a',
+    borderColor: '#2a2a2a',
+    primary: '#ff4757',
+    inactive: '#555555',
+  },
+  merchant: {
+    background: '#1a1a1a',
+    borderColor: '#2a2a2a',
+    primary: '#10b981',
+    inactive: '#555555',
+  },
+  admin: {
+    background: '#1a1a1a',
+    borderColor: '#2a2a2a',
+    primary: '#3b82f6',
+    inactive: '#555555',
+  },
+};
 
 interface BottomNavProps {
   userType: UserType;
@@ -47,6 +69,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ userType }) => {
     ? merchantNav
     : adminNav;
 
+  const styles = themeStyles[userType] || themeStyles.consumer;
+
   const isActive = (path: string) => {
     if (path === `/${userType}`) {
       return location.pathname === path;
@@ -55,35 +79,47 @@ const BottomNav: React.FC<BottomNavProps> = ({ userType }) => {
   };
 
   return (
-    <nav className="fixed bottom-0 max-w-md w-full bg-background/95 backdrop-blur-lg border-t border-surface pb-6 pt-2 px-6 z-50">
-      <div className="flex justify-between items-center h-14">
+    <nav
+      className="fixed bottom-0 max-w-md w-full backdrop-blur-lg z-50 border-t pb-5 pt-3 px-6"
+      style={{
+        background: styles.background,
+        borderColor: styles.borderColor,
+      }}
+    >
+      <div className="flex justify-between items-end">
         {navItems.map((item) => {
+          const active = isActive(item.path);
+
           if (item.isFab) {
             return (
-              <div key={item.path} className="relative -top-6">
-                <button
-                  onClick={() => navigate(item.path)}
-                  className="h-16 w-16 rounded-full bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95 transition-all duration-300"
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className="relative -top-6 flex flex-col items-center justify-center w-12"
+              >
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center transition-all active:scale-95"
+                  style={{
+                    background: styles.primary,
+                    boxShadow: `0 8px 20px -4px ${styles.primary}80`,
+                  }}
                 >
-                  <span className="material-symbols-outlined text-background text-[32px]">
+                  <span className="material-symbols-outlined text-white text-[32px]">
                     {item.icon}
                   </span>
-                </button>
-              </div>
+                </div>
+              </button>
             );
           }
 
-          const active = isActive(item.path);
           return (
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`
-                flex flex-col items-center gap-1 transition-all duration-200
-                ${active ? 'text-primary scale-110' : 'text-text-secondary hover:text-white'}
-              `}
+              className="flex flex-col items-center gap-1 w-12 transition-colors"
+              style={{ color: active ? styles.primary : styles.inactive }}
             >
-              <span className="material-symbols-outlined text-[26px]">
+              <span className={`material-symbols-outlined text-[26px] ${active ? 'filled' : ''}`}>
                 {item.icon}
               </span>
               <span className="text-[10px] font-medium">{item.label}</span>

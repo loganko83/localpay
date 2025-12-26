@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
-import { Card, Button } from '../../components/common';
 import { useWalletStore, useTransactionStore } from '../../store';
 
 const salesData = [
@@ -15,10 +14,10 @@ const salesData = [
 ];
 
 const quickActions = [
-  { icon: 'qr_code_2', label: 'Receive', color: 'text-primary' },
-  { icon: 'history', label: 'History', color: 'text-white' },
-  { icon: 'group', label: 'Staff', color: 'text-white' },
-  { icon: 'analytics', label: 'Reports', color: 'text-white' },
+  { icon: 'qr_code_scanner', label: 'Receive', primary: true },
+  { icon: 'history', label: 'History', primary: false },
+  { icon: 'group', label: 'Staff', primary: false },
+  { icon: 'analytics', label: 'Reports', primary: false },
 ];
 
 const Dashboard: React.FC = () => {
@@ -37,70 +36,118 @@ const Dashboard: React.FC = () => {
   const avgTicket = Math.floor(todaySales / txCount);
 
   return (
-    <div className="flex flex-col pb-4">
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: '#0f1a14' }}>
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-surface">
+      <div
+        className="sticky top-0 z-20 flex items-center px-4 py-3 justify-between backdrop-blur-md"
+        style={{
+          background: 'rgba(15,26,20,0.95)',
+          borderBottom: '1px solid rgba(59,84,67,0.3)',
+        }}
+      >
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-surface-highlight border border-surface flex items-center justify-center overflow-hidden">
-            <span className="material-symbols-outlined text-primary">storefront</span>
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
+            style={{
+              background: '#1c271f',
+              border: '1px solid #3b5443',
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ color: '#10b981' }}>storefront</span>
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white leading-tight">Jeonju Store #42</h2>
+            <h2 className="text-base font-bold leading-tight text-white">Busan Store #42</h2>
             <div className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-primary text-[14px] filled">verified</span>
-              <span className="text-xs text-text-secondary">Verified Merchant</span>
+              <span className="material-symbols-outlined text-[14px]" style={{ color: '#10b981' }}>verified</span>
+              <span className="text-xs" style={{ color: '#9db9a6' }}>Verified Merchant</span>
             </div>
           </div>
         </div>
-        <button className="relative p-2 rounded-full hover:bg-surface transition-colors">
+        <button
+          className="relative flex items-center justify-center rounded-full w-10 h-10 transition-colors"
+          onClick={() => navigate('/merchant/notifications')}
+        >
           <span className="material-symbols-outlined text-white">notifications</span>
-          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border border-background" />
+          <span
+            className="absolute top-2 right-2 w-2 h-2 rounded-full"
+            style={{ background: '#ef4444' }}
+          />
         </button>
       </div>
 
       {/* Greeting */}
-      <div className="px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-white">
-          Good morning,<br />
-          <span className="text-text-secondary font-normal">Check your earnings today.</span>
+      <div className="px-4 pt-6 pb-2">
+        <h1 className="text-2xl font-bold leading-tight text-white">
+          Good Morning,<br />
+          <span style={{ color: '#9db9a6' }}>Let's check your earnings.</span>
         </h1>
       </div>
 
-      {/* Balance Card */}
-      <div className="px-4 mb-6">
-        <Card variant="balance" padding="lg">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <p className="text-sm text-text-secondary font-medium mb-1">Total Balance</p>
-              <h2 className="text-3xl font-bold text-white">
-                ₩ {formatAmount(wallet?.balance || 0)}
-              </h2>
-              <div className="flex items-center gap-1 mt-1 text-primary">
-                <span className="material-symbols-outlined text-sm">trending_up</span>
-                <span className="text-xs font-bold">+12% from yesterday</span>
+      {/* Total Balance Card */}
+      <div className="p-4">
+        <div
+          className="relative overflow-hidden rounded-xl shadow-lg"
+          style={{
+            background: '#1c271f',
+            border: '1px solid #3b5443',
+            boxShadow: '0 4px 20px rgba(16,185,129,0.05)',
+          }}
+        >
+          {/* Decorative glow */}
+          <div
+            className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl pointer-events-none"
+            style={{ background: 'rgba(16,185,129,0.1)' }}
+          />
+
+          <div className="flex flex-col p-5 gap-4 relative z-10">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium" style={{ color: '#9db9a6' }}>Total Balance</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold tracking-tight text-white">
+                    ₩ {formatAmount(wallet?.balance || 1450000)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="material-symbols-outlined text-sm" style={{ color: '#10b981' }}>trending_up</span>
+                  <span className="text-xs font-medium" style={{ color: '#10b981' }}>+12% vs yesterday</span>
+                </div>
+              </div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(16,185,129,0.1)' }}
+              >
+                <span className="material-symbols-outlined" style={{ color: '#10b981' }}>account_balance_wallet</span>
               </div>
             </div>
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined filled">account_balance_wallet</span>
+
+            <div className="h-px w-full" style={{ background: '#3b5443' }} />
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate('/merchant/exchange')}
+                className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg text-sm font-bold transition-colors active:scale-95"
+                style={{ background: '#10b981', color: '#0f1a14' }}
+              >
+                <span className="material-symbols-outlined text-[18px]">currency_exchange</span>
+                Exchange
+              </button>
+              <button
+                onClick={() => navigate('/merchant/withdraw')}
+                className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg text-sm font-medium transition-colors active:scale-95"
+                style={{ background: '#2a3830', color: 'white' }}
+              >
+                <span className="material-symbols-outlined text-[18px]">arrow_outward</span>
+                Withdraw
+              </button>
             </div>
           </div>
-
-          <div className="flex gap-3">
-            <Button variant="primary" className="flex-1">
-              <span className="material-symbols-outlined text-[20px] mr-1">currency_exchange</span>
-              Exchange
-            </Button>
-            <Button variant="secondary" className="flex-1">
-              <span className="material-symbols-outlined text-[20px] mr-1">arrow_outward</span>
-              Withdraw
-            </Button>
-          </div>
-        </Card>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="px-4 mb-6">
-        <h3 className="text-sm font-bold text-white mb-3">Quick Actions</h3>
+      {/* Quick Actions Grid */}
+      <div className="px-4 py-2">
+        <h3 className="text-sm font-bold mb-3 px-1 text-white">Quick Actions</h3>
         <div className="grid grid-cols-4 gap-3">
           {quickActions.map((action, idx) => (
             <button
@@ -112,64 +159,83 @@ const Dashboard: React.FC = () => {
               }}
               className="flex flex-col items-center gap-2 group"
             >
-              <div className="h-14 w-14 rounded-2xl bg-surface border border-surface-highlight flex items-center justify-center group-active:scale-95 transition-all">
-                <span className={`material-symbols-outlined text-2xl ${action.color}`}>
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center shadow-sm transition-transform active:scale-95"
+                style={{
+                  background: '#1c271f',
+                  border: '1px solid #3b5443',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined text-2xl"
+                  style={{ color: action.primary ? '#10b981' : 'white' }}
+                >
                   {action.icon}
                 </span>
               </div>
-              <span className="text-xs text-text-secondary font-medium">{action.label}</span>
+              <span className="text-xs font-medium" style={{ color: '#9db9a6' }}>{action.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Stats Row */}
-      <div className="px-4 mb-6 overflow-x-auto no-scrollbar">
-        <div className="flex gap-3 w-max">
-          <div className="w-36 p-4 rounded-xl bg-surface border border-surface-highlight flex flex-col gap-2">
-            <span className="text-xs text-text-secondary">Today's Sales</span>
-            <span className="text-lg font-bold text-white">₩{formatAmount(todaySales)}</span>
-            <span className="text-xs text-primary flex items-center">
-              <span className="material-symbols-outlined text-[12px] mr-0.5">arrow_upward</span> 12%
-            </span>
-          </div>
-          <div className="w-36 p-4 rounded-xl bg-surface border border-surface-highlight flex flex-col gap-2">
-            <span className="text-xs text-text-secondary">Transactions</span>
-            <span className="text-lg font-bold text-white">{txCount}</span>
-            <span className="text-xs text-primary flex items-center">
-              <span className="material-symbols-outlined text-[12px] mr-0.5">arrow_upward</span> 5%
-            </span>
-          </div>
-          <div className="w-36 p-4 rounded-xl bg-surface border border-surface-highlight flex flex-col gap-2">
-            <span className="text-xs text-text-secondary">Avg Ticket</span>
-            <span className="text-lg font-bold text-white">₩{formatAmount(avgTicket)}</span>
-            <span className="text-xs text-text-muted flex items-center">
-              <span className="material-symbols-outlined text-[12px] mr-0.5">remove</span> 0%
-            </span>
-          </div>
+      <div className="pl-4 py-4 overflow-x-auto flex gap-3 pr-4" style={{ scrollbarWidth: 'none' }}>
+        <div
+          className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
+          style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+        >
+          <span className="text-xs" style={{ color: '#9db9a6' }}>Today's Sales</span>
+          <span className="text-lg font-bold text-white">₩ 850k</span>
+          <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: '#10b981' }}>
+            <span className="material-symbols-outlined text-[12px]">arrow_upward</span> 12%
+          </span>
+        </div>
+        <div
+          className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
+          style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+        >
+          <span className="text-xs" style={{ color: '#9db9a6' }}>Tx Count</span>
+          <span className="text-lg font-bold text-white">{txCount}</span>
+          <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: '#10b981' }}>
+            <span className="material-symbols-outlined text-[12px]">arrow_upward</span> 5%
+          </span>
+        </div>
+        <div
+          className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
+          style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+        >
+          <span className="text-xs" style={{ color: '#9db9a6' }}>Avg Ticket</span>
+          <span className="text-lg font-bold text-white">₩ {formatAmount(avgTicket)}</span>
+          <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: '#6b7280' }}>
+            <span className="material-symbols-outlined text-[12px]">remove</span> 0%
+          </span>
         </div>
       </div>
 
       {/* Sales Chart */}
-      <div className="px-4 mb-6">
-        <Card padding="lg">
-          <div className="flex justify-between items-center mb-4">
+      <div className="p-4">
+        <div
+          className="p-5 rounded-xl shadow-sm"
+          style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+        >
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-white">Sales Trend</h3>
-              <p className="text-xs text-text-secondary">Last 7 days</p>
+              <p className="text-xs" style={{ color: '#9db9a6' }}>Last 7 days</p>
             </div>
             <div className="text-right">
-              <p className="text-lg font-bold text-white">₩5,200,000</p>
-              <p className="text-xs text-primary">+8.5%</p>
+              <p className="text-lg font-bold text-white">₩ 5.2M</p>
+              <p className="text-xs font-medium" style={{ color: '#10b981' }}>+8.5%</p>
             </div>
           </div>
-          <div className="h-40 w-full -ml-2">
+          <div className="h-32 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={salesData}>
                 <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#13ec5b" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#13ec5b" stopOpacity={0} />
+                  <linearGradient id="colorValueMerchant" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -180,7 +246,7 @@ const Dashboard: React.FC = () => {
                   dy={10}
                 />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1c271f', borderColor: '#2a3830', borderRadius: '8px' }}
+                  contentStyle={{ backgroundColor: '#1c271f', borderColor: '#3b5443', borderRadius: '8px' }}
                   itemStyle={{ color: '#fff' }}
                   labelStyle={{ display: 'none' }}
                   formatter={(value) => value != null ? [`₩${formatAmount(value as number)}`, 'Sales'] : ['', '']}
@@ -188,55 +254,111 @@ const Dashboard: React.FC = () => {
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#13ec5b"
-                  strokeWidth={3}
+                  stroke="#10b981"
+                  strokeWidth={2}
                   fillOpacity={1}
-                  fill="url(#colorValue)"
+                  fill="url(#colorValueMerchant)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Recent Transactions */}
-      <div className="px-4">
-        <div className="flex justify-between items-center mb-3">
+      <div className="px-4 pb-4">
+        <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="text-sm font-bold text-white">Recent Transactions</h3>
           <button
             onClick={() => navigate('/merchant/payments')}
-            className="text-xs text-primary font-medium hover:text-white transition-colors"
+            className="text-xs font-medium"
+            style={{ color: '#10b981' }}
           >
             See All
           </button>
         </div>
-
-        <div className="space-y-3">
-          {recentTransactions.map((tx) => (
-            <Card key={tx.id} variant="transaction" padding="md">
-              <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3">
+          {recentTransactions.length === 0 ? (
+            <>
+              {/* Placeholder transactions */}
+              {[
+                { id: 1, customer: 'Customer #8291', time: '10:42 AM', amount: 12000 },
+                { id: 2, customer: 'Customer #4102', time: '09:15 AM', amount: 45500 },
+                { id: 3, customer: 'Customer #9931', time: 'Yesterday', amount: 8000 },
+              ].map((tx) => (
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between p-3 rounded-xl shadow-sm"
+                  style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center"
+                      style={{ background: '#2a3830', color: '#9ca3af' }}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">person</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white">{tx.customer}</span>
+                      <span className="text-xs" style={{ color: '#9db9a6' }}>{tx.time}</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-sm font-bold" style={{ color: '#10b981' }}>
+                      + {formatAmount(tx.amount)} B
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: '#10b981' }}
+                      />
+                      <span className="text-[10px]" style={{ color: '#9db9a6' }}>Confirmed</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            recentTransactions.map((tx) => (
+              <div
+                key={tx.id}
+                className="flex items-center justify-between p-3 rounded-xl shadow-sm"
+                style={{ background: '#1c271f', border: '1px solid #3b5443' }}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-surface-highlight flex items-center justify-center text-text-secondary">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ background: '#2a3830', color: '#9ca3af' }}
+                  >
                     <span className="material-symbols-outlined text-[20px]">person</span>
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <span className="text-sm font-bold text-white">{tx.customerName || 'Customer'}</span>
-                    <p className="text-xs text-text-secondary">
-                      {new Date(tx.createdAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
-                    </p>
+                    <span className="text-xs" style={{ color: '#9db9a6' }}>
+                      {new Date(tx.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                    </span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className={`text-sm font-bold ${tx.type === 'refund' ? 'text-red-500' : 'text-primary'}`}>
-                    {tx.type === 'refund' ? '- ' : '+ '}{formatAmount(tx.amount)} B
+                <div className="flex flex-col items-end">
+                  <span
+                    className="text-sm font-bold"
+                    style={{ color: tx.type === 'refund' ? '#ef4444' : '#10b981' }}
+                  >
+                    {tx.type === 'refund' ? '-' : '+'} {formatAmount(tx.amount)} B
                   </span>
-                  <p className="text-[10px] text-text-secondary">
-                    {tx.type === 'payment' ? 'Payment' : 'Refund'} • {tx.status}
-                  </p>
+                  <div className="flex items-center gap-1">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: tx.status === 'completed' ? '#10b981' : '#f59e0b' }}
+                    />
+                    <span className="text-[10px]" style={{ color: '#9db9a6' }}>
+                      {tx.status === 'completed' ? 'Confirmed' : 'Pending'}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </Card>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

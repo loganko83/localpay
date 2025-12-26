@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Badge, Button } from '../../components/common';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import {
   programmableMoneyService,
   tokenLifecycleService,
@@ -36,7 +37,7 @@ interface ServiceMethod {
 
 const DebugDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'data' | 'modify' | 'test'>('data');
+  const [activeTab, setActiveTab] = useState<'data' | 'modify' | 'test' | 'performance'>('data');
   const [serviceData, setServiceData] = useState<ServiceData[]>([]);
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -350,6 +351,46 @@ const DebugDashboard: React.FC = () => {
     }
   };
 
+  // Mock Performance Data
+  const apiResponseData = [
+    { time: '00:00', auth: 120, payment: 180, query: 45 },
+    { time: '04:00', auth: 100, payment: 150, query: 40 },
+    { time: '08:00', auth: 250, payment: 320, query: 85 },
+    { time: '12:00', auth: 450, payment: 580, query: 120 },
+    { time: '16:00', auth: 380, payment: 490, query: 95 },
+    { time: '20:00', auth: 280, payment: 350, query: 70 },
+  ];
+
+  const renderMetricsData = [
+    { component: 'PaymentForm', renders: 45, avgTime: 12.3 },
+    { component: 'WalletBalance', renders: 120, avgTime: 3.2 },
+    { component: 'TransactionList', renders: 68, avgTime: 28.5 },
+    { component: 'TokenCard', renders: 250, avgTime: 5.8 },
+    { component: 'DebugDashboard', renders: 15, avgTime: 45.2 },
+  ];
+
+  const bundleSizeData = [
+    { name: 'React', value: 142, color: '#61DAFB' },
+    { name: 'Services', value: 89, color: '#10B981' },
+    { name: 'Components', value: 156, color: '#3B82F6' },
+    { name: 'Utils', value: 42, color: '#8B5CF6' },
+    { name: 'Other', value: 73, color: '#6B7280' },
+  ];
+
+  const memoryUsage = {
+    used: 245,
+    total: 512,
+    jsHeap: 189,
+    domNodes: 1247,
+  };
+
+  const networkStats = {
+    totalRequests: 142,
+    successRate: 98.6,
+    avgResponseTime: 245,
+    cachedRequests: 68,
+  };
+
   const executeMethod = async () => {
     if (!selectedMethod) return;
 
@@ -374,6 +415,7 @@ const DebugDashboard: React.FC = () => {
     { id: 'data', label: 'View Data', icon: 'visibility' },
     { id: 'modify', label: 'Quick Actions', icon: 'edit' },
     { id: 'test', label: 'Method Tester', icon: 'science' },
+    { id: 'performance', label: 'Performance', icon: 'speed' },
   ] as const;
 
   return (
@@ -697,6 +739,234 @@ const DebugDashboard: React.FC = () => {
               </pre>
             </Card>
           )}
+        </div>
+      )}
+
+      {activeTab === 'performance' && (
+        <div className="px-4 space-y-4">
+          {/* Performance Metrics Cards */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-500/30">
+              <div className="text-xs text-blue-300 mb-1">Avg Response Time</div>
+              <div className="text-2xl font-bold text-white">{networkStats.avgResponseTime}ms</div>
+              <div className="text-xs text-blue-400 mt-1">Target: &lt;300ms</div>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-green-900/30 to-green-800/20 border border-green-500/30">
+              <div className="text-xs text-green-300 mb-1">Success Rate</div>
+              <div className="text-2xl font-bold text-white">{networkStats.successRate}%</div>
+              <div className="text-xs text-green-400 mt-1">Target: &gt;99%</div>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-500/30">
+              <div className="text-xs text-purple-300 mb-1">Memory Usage</div>
+              <div className="text-2xl font-bold text-white">{memoryUsage.used}MB</div>
+              <div className="text-xs text-purple-400 mt-1">{memoryUsage.total}MB available</div>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-orange-900/30 to-orange-800/20 border border-orange-500/30">
+              <div className="text-xs text-orange-300 mb-1">Cache Hit Rate</div>
+              <div className="text-2xl font-bold text-white">
+                {((networkStats.cachedRequests / networkStats.totalRequests) * 100).toFixed(1)}%
+              </div>
+              <div className="text-xs text-orange-400 mt-1">{networkStats.cachedRequests}/{networkStats.totalRequests} cached</div>
+            </Card>
+          </div>
+
+          {/* API Response Times Chart */}
+          <Card className="bg-gray-900 border border-gray-800">
+            <h3 className="text-sm font-semibold text-white mb-3">API Response Times (24h)</h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={apiResponseData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="time" stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+                <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
+                  labelStyle={{ color: '#F3F4F6' }}
+                />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Line type="monotone" dataKey="auth" stroke="#3B82F6" strokeWidth={2} name="Auth (ms)" />
+                <Line type="monotone" dataKey="payment" stroke="#10B981" strokeWidth={2} name="Payment (ms)" />
+                <Line type="monotone" dataKey="query" stroke="#8B5CF6" strokeWidth={2} name="Query (ms)" />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* React Render Metrics */}
+          <Card className="bg-gray-900 border border-gray-800">
+            <h3 className="text-sm font-semibold text-white mb-3">React Component Render Metrics</h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={renderMetricsData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="component" stroke="#9CA3AF" style={{ fontSize: '10px' }} angle={-45} textAnchor="end" height={80} />
+                <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
+                  labelStyle={{ color: '#F3F4F6' }}
+                />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Bar dataKey="renders" fill="#3B82F6" name="Total Renders" />
+                <Bar dataKey="avgTime" fill="#F59E0B" name="Avg Time (ms)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* Bundle Size Breakdown */}
+          <Card className="bg-gray-900 border border-gray-800">
+            <h3 className="text-sm font-semibold text-white mb-3">Bundle Size Breakdown</h3>
+            <div className="flex items-center justify-center">
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={bundleSizeData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {bundleSizeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
+                    formatter={(value) => `${value}KB`}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+              {bundleSizeData.map((item) => (
+                <div key={item.name} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded" style={{ backgroundColor: item.color }}></div>
+                  <span className="text-gray-400">{item.name}: {item.value}KB</span>
+                </div>
+              ))}
+              <div className="col-span-2 pt-2 border-t border-gray-800 text-white font-semibold">
+                Total: {bundleSizeData.reduce((sum, item) => sum + item.value, 0)}KB
+              </div>
+            </div>
+          </Card>
+
+          {/* Memory Usage Details */}
+          <Card className="bg-gray-900 border border-gray-800">
+            <h3 className="text-sm font-semibold text-white mb-3">Memory Usage Details</h3>
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-400">Heap Used</span>
+                  <span className="text-white">{memoryUsage.jsHeap}MB / {memoryUsage.total}MB</span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: `${(memoryUsage.jsHeap / memoryUsage.total) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-400">Total Memory</span>
+                  <span className="text-white">{memoryUsage.used}MB / {memoryUsage.total}MB</span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div
+                    className="bg-purple-500 h-2 rounded-full"
+                    style={{ width: `${(memoryUsage.used / memoryUsage.total) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800">
+                <div>
+                  <div className="text-xs text-gray-400">DOM Nodes</div>
+                  <div className="text-lg font-bold text-white">{memoryUsage.domNodes.toLocaleString()}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-400">JS Heap</div>
+                  <div className="text-lg font-bold text-white">{memoryUsage.jsHeap}MB</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Network Requests Summary */}
+          <Card className="bg-gray-900 border border-gray-800">
+            <h3 className="text-sm font-semibold text-white mb-3">Network Requests Summary</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-400">Total Requests</span>
+                  <span className="text-sm font-semibold text-white">{networkStats.totalRequests}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-400">Cached Requests</span>
+                  <span className="text-sm font-semibold text-green-400">{networkStats.cachedRequests}</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-400">Success Rate</span>
+                  <span className="text-sm font-semibold text-white">{networkStats.successRate}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-gray-400">Avg Response</span>
+                  <span className="text-sm font-semibold text-blue-400">{networkStats.avgResponseTime}ms</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-gray-800">
+              <div className="text-xs text-gray-400 mb-2">Request Distribution</div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-gray-500 w-16">GET</div>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '65%' }}></div>
+                  </div>
+                  <div className="text-xs text-gray-400">65%</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-gray-500 w-16">POST</div>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '25%' }}></div>
+                  </div>
+                  <div className="text-xs text-gray-400">25%</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-gray-500 w-16">PUT/PATCH</div>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '8%' }}></div>
+                  </div>
+                  <div className="text-xs text-gray-400">8%</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-gray-500 w-16">DELETE</div>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div className="bg-red-500 h-2 rounded-full" style={{ width: '2%' }}></div>
+                  </div>
+                  <div className="text-xs text-gray-400">2%</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Performance Tips */}
+          <Card className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-500/30">
+            <h3 className="text-sm font-semibold text-yellow-400 mb-2">Performance Tips</h3>
+            <ul className="text-xs text-gray-300 space-y-1">
+              <li>- React components are rendering efficiently (&lt;50ms avg)</li>
+              <li>- API response times are within acceptable range</li>
+              <li>- Consider implementing lazy loading for heavy components</li>
+              <li>- Cache hit rate could be improved (target: 60%+)</li>
+              <li>- Monitor memory usage during long sessions</li>
+            </ul>
+          </Card>
         </div>
       )}
 

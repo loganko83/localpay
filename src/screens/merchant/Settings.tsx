@@ -1,239 +1,413 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/layout';
-import { Card, Toggle, Button } from '../../components/common';
 import { useAuthStore } from '../../store';
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
-  const [autoSettlement, setAutoSettlement] = useState(true);
-  const [notifications, setNotifications] = useState(true);
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [activeTab, setActiveTab] = useState<'info' | 'operations' | 'finance'>('info');
+  const [isOpen, setIsOpen] = useState(true);
+  const [busanCoinEnabled, setBusanCoinEnabled] = useState(true);
+  const [qrPayEnabled, setQrPayEnabled] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [dailyReport, setDailyReport] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const storeInfo = {
-    name: 'Jeonju Store #42',
-    businessNumber: '123-45-67890',
-    category: 'Restaurant',
-    address: '123 Hanok Village Road, Jeonju',
-    phone: '063-123-4567',
-    hours: '11:00 AM - 10:00 PM',
-  };
-
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Settings" />
+    <div className="flex flex-col min-h-screen pb-24" style={{ background: '#0f1a14' }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-50 px-4 py-3 flex items-center"
+        style={{ background: '#0f1a14', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+      >
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
+          style={{ color: 'white' }}
+        >
+          <span className="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+        <h1 className="text-lg font-bold text-white flex-1 text-center pr-10">Profile Settings</h1>
+      </header>
 
-      {/* Store Profile */}
-      <div className="px-4 py-4 flex items-center gap-4 border-b border-surface">
-        <div className="h-16 w-16 rounded-xl bg-surface-highlight border border-primary/30 overflow-hidden flex items-center justify-center">
-          <span className="material-symbols-outlined text-primary text-2xl">storefront</span>
-        </div>
-        <div className="flex-1">
-          <h2 className="text-lg font-bold text-white">{storeInfo.name}</h2>
-          <p className="text-sm text-text-secondary">{storeInfo.category}</p>
+      <div className="flex-1 overflow-y-auto">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center py-6 px-4">
+          <div className="relative mb-4">
+            <div
+              className="w-28 h-28 rounded-full bg-cover bg-center"
+              style={{
+                backgroundImage: 'url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop")',
+                border: '4px solid rgba(16,185,129,0.2)',
+              }}
+            />
+            <button
+              className="absolute bottom-0 right-0 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
+              style={{ background: '#10b981' }}
+            >
+              <span className="material-symbols-outlined text-white text-[18px]">edit</span>
+            </button>
+          </div>
+          <h2 className="text-2xl font-bold text-white text-center">Busan Seafood House</h2>
           <div className="flex items-center gap-1 mt-1">
-            <span className="material-symbols-outlined text-primary text-[14px] filled">verified</span>
-            <span className="text-xs text-primary">Verified Merchant</span>
+            <span className="material-symbols-outlined text-[16px]" style={{ color: '#10b981' }}>verified</span>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>ID: 0x8F...2A | Verified Merchant</p>
           </div>
         </div>
-        <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">
-          <span className="material-symbols-outlined text-text-secondary">edit</span>
-        </button>
-      </div>
 
-      {/* Settings Sections */}
-      <div className="px-4 py-4 space-y-6">
-        {/* Store Information */}
-        <section>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-            Store Information
-          </h3>
-          <Card padding="none">
-            <div className="divide-y divide-surface-highlight">
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">badge</span>
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Business Number</span>
-                    <p className="text-xs text-text-secondary">{storeInfo.businessNumber}</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
+        {/* Segmented Tabs */}
+        <div
+          className="sticky top-[56px] z-40 px-4 py-3"
+          style={{ background: 'rgba(15,26,20,0.95)', backdropFilter: 'blur(8px)' }}
+        >
+          <div
+            className="flex h-10 items-center justify-center rounded-lg p-1"
+            style={{ background: '#1c271f' }}
+          >
+            {(['info', 'operations', 'finance'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className="flex-1 h-full rounded-md text-sm font-medium transition-all"
+                style={{
+                  background: activeTab === tab ? '#0f1a14' : 'transparent',
+                  color: activeTab === tab ? '#10b981' : 'rgba(255,255,255,0.5)',
+                  boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
+                }}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
+            ))}
+          </div>
+        </div>
 
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">location_on</span>
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Address</span>
-                    <p className="text-xs text-text-secondary">{storeInfo.address}</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-              </button>
+        {/* Business Details Section */}
+        <div className="px-4 pt-4 pb-2">
+          <h3 className="text-lg font-bold text-white">Business Details</h3>
+        </div>
 
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">schedule</span>
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Business Hours</span>
-                    <p className="text-xs text-text-secondary">{storeInfo.hours}</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-              </button>
+        <div className="px-4 flex flex-col gap-4">
+          {/* Business Name */}
+          <label className="flex flex-col">
+            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Business Name</p>
+            <div className="relative">
+              <input
+                type="text"
+                defaultValue="Busan Seafood House"
+                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                style={{
+                  background: '#1c271f',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              />
+              <span
+                className="material-symbols-outlined absolute right-3 top-3"
+                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+              >
+                storefront
+              </span>
+            </div>
+          </label>
 
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">call</span>
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Phone</span>
-                    <p className="text-xs text-text-secondary">{storeInfo.phone}</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
+          {/* Store Address */}
+          <label className="flex flex-col">
+            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Store Address</p>
+            <div className="relative">
+              <input
+                type="text"
+                defaultValue="123 Gwangan-ro, Suyeong-gu, Busan"
+                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                style={{
+                  background: '#1c271f',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              />
+              <span
+                className="material-symbols-outlined absolute right-3 top-3 cursor-pointer transition-colors"
+                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+              >
+                map
+              </span>
+            </div>
+          </label>
+
+          {/* Map Preview */}
+          <div
+            className="h-32 w-full rounded-xl overflow-hidden relative"
+            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <img
+              src="https://maps.googleapis.com/maps/api/staticmap?center=Busan,Korea&zoom=14&size=400x200&maptype=roadmap&style=feature:all|element:labels|visibility:on&style=feature:all|element:geometry|color:0x242f3e"
+              alt="Map"
+              className="w-full h-full object-cover opacity-60"
+            />
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
+              <button
+                className="px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm flex items-center gap-1"
+                style={{ background: 'rgba(255,255,255,0.9)', color: '#0f1a14' }}
+              >
+                <span className="material-symbols-outlined text-sm">edit_location</span>
+                Edit Location
               </button>
             </div>
-          </Card>
-        </section>
+          </div>
 
-        {/* Payment Settings */}
-        <section>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-            Payment Settings
-          </h3>
-          <Card padding="none">
-            <div className="divide-y divide-surface-highlight">
-              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">autorenew</span>
-                  <div>
-                    <span className="text-sm font-medium text-white">Auto Settlement</span>
-                    <p className="text-xs text-text-secondary">Daily automatic transfers</p>
-                  </div>
-                </div>
-                <Toggle checked={autoSettlement} onChange={setAutoSettlement} />
-              </div>
-
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">account_balance</span>
-                  <div className="text-left">
-                    <span className="text-sm font-medium text-white">Settlement Account</span>
-                    <p className="text-xs text-text-secondary">IBK ****4402</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-              </button>
-
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">qr_code</span>
-                  <span className="text-sm font-medium text-white">QR Code Settings</span>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-              </button>
+          {/* Contact Number */}
+          <label className="flex flex-col">
+            <p className="text-sm font-medium mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Contact Number</p>
+            <div className="relative">
+              <input
+                type="tel"
+                defaultValue="051-123-4567"
+                className="w-full h-12 rounded-xl px-4 pr-10 text-white focus:outline-none focus:ring-2 transition-all"
+                style={{
+                  background: '#1c271f',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              />
+              <span
+                className="material-symbols-outlined absolute right-3 top-3"
+                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}
+              >
+                call
+              </span>
             </div>
-          </Card>
-        </section>
+          </label>
+        </div>
 
-        {/* Notifications */}
-        <section>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-            Notifications
-          </h3>
-          <Card padding="none">
-            <div className="divide-y divide-surface-highlight">
-              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">notifications</span>
-                  <span className="text-sm font-medium text-white">Push Notifications</span>
-                </div>
-                <Toggle checked={notifications} onChange={setNotifications} />
+        {/* Operations Section */}
+        <div className="px-4 pt-6 pb-2">
+          <h3 className="text-lg font-bold text-white">Operations</h3>
+        </div>
+
+        <div className="px-4 flex flex-col gap-3">
+          {/* Operating Hours */}
+          <div
+            className="flex items-center justify-between p-4 rounded-xl"
+            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(16,185,129,0.1)' }}
+              >
+                <span className="material-symbols-outlined" style={{ color: '#10b981' }}>schedule</span>
               </div>
-
-              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">volume_up</span>
-                  <span className="text-sm font-medium text-white">Payment Sound</span>
-                </div>
-                <Toggle checked={soundEnabled} onChange={setSoundEnabled} />
+              <div>
+                <span className="text-white font-medium">Operating Hours</span>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Mon-Sun: 10:00 AM - 10:00 PM</p>
               </div>
             </div>
-          </Card>
-        </section>
+            <span className="material-symbols-outlined" style={{ color: 'rgba(255,255,255,0.4)' }}>chevron_right</span>
+          </div>
 
-        {/* Team */}
-        <section>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-            Team
-          </h3>
-          <Card padding="none">
+          {/* Currently Open Toggle */}
+          <div
+            className="flex items-center justify-between p-4 rounded-xl"
+            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(34,197,94,0.1)' }}
+              >
+                <span className="material-symbols-outlined" style={{ color: '#22c55e' }}>door_open</span>
+              </div>
+              <div>
+                <span className="text-white font-medium">Currently Open</span>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Visible on map</p>
+              </div>
+            </div>
             <button
-              onClick={() => navigate('/merchant/employees')}
-              className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+              className="relative w-11 h-6 rounded-full transition-colors"
+              style={{ background: isOpen ? '#10b981' : '#3a4a3f' }}
+            >
+              <div
+                className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                style={{ left: isOpen ? '22px' : '2px' }}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Financials Section */}
+        <div className="px-4 pt-6 pb-2">
+          <h3 className="text-lg font-bold text-white">Financials & Settlement</h3>
+        </div>
+
+        <div className="px-4 flex flex-col gap-3">
+          {/* Settlement Account */}
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined" style={{ color: 'rgba(255,255,255,0.4)' }}>account_balance</span>
+                <span className="text-white font-medium text-sm">Settlement Account</span>
+              </div>
+              <button className="text-xs font-bold uppercase tracking-wide" style={{ color: '#10b981' }}>Change</button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-bold text-lg">Busan Bank</p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>**** **** **** 8821</p>
+              </div>
+              <span
+                className="text-xs px-2 py-1 rounded"
+                style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+              >
+                Active
+              </span>
+            </div>
+            <p className="text-xs mt-3 flex items-center gap-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <span className="material-symbols-outlined text-[14px]">lock</span>
+              Secured by blockchain ledger
+            </p>
+          </div>
+
+          {/* Payment Methods */}
+          <div
+            className="rounded-xl overflow-hidden"
+            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            {/* Busan Coin */}
+            <div
+              className="p-4 flex items-center justify-between"
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
             >
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-text-secondary">group</span>
-                <div className="text-left">
-                  <span className="text-sm font-medium text-white">Team Members</span>
-                  <p className="text-xs text-text-secondary">5 members</p>
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  style={{ background: 'rgba(59,130,246,0.1)' }}
+                >
+                  <span className="material-symbols-outlined" style={{ color: '#3b82f6' }}>currency_bitcoin</span>
+                </div>
+                <div>
+                  <p className="text-white font-medium">Busan Coin</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Zero fees</p>
                 </div>
               </div>
-              <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-            </button>
-          </Card>
-        </section>
-
-        {/* About */}
-        <section>
-          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 pl-1">
-            About
-          </h3>
-          <Card padding="none">
-            <div className="divide-y divide-surface-highlight">
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">description</span>
-                  <span className="text-sm font-medium text-white">Terms of Service</span>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
+              <button
+                onClick={() => setBusanCoinEnabled(!busanCoinEnabled)}
+                className="relative w-11 h-6 rounded-full transition-colors"
+                style={{ background: busanCoinEnabled ? '#10b981' : '#3a4a3f' }}
+              >
+                <div
+                  className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                  style={{ left: busanCoinEnabled ? '22px' : '2px' }}
+                />
               </button>
-
-              <button className="w-full flex items-center justify-between p-4 hover:bg-surface-highlight/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">privacy_tip</span>
-                  <span className="text-sm font-medium text-white">Privacy Policy</span>
-                </div>
-                <span className="material-symbols-outlined text-text-secondary text-sm">chevron_right</span>
-              </button>
-
-              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-text-secondary">info</span>
-                  <span className="text-sm font-medium text-white">App Version</span>
-                </div>
-                <span className="text-sm text-text-secondary">v1.0.0</span>
-              </div>
             </div>
-          </Card>
-        </section>
 
-        {/* Logout */}
-        <Button
-          variant="danger"
-          fullWidth
-          icon={<span className="material-symbols-outlined">logout</span>}
-          onClick={handleLogout}
+            {/* QR Pay */}
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  style={{ background: 'rgba(99,102,241,0.1)' }}
+                >
+                  <span className="material-symbols-outlined" style={{ color: '#6366f1' }}>qr_code_scanner</span>
+                </div>
+                <div>
+                  <p className="text-white font-medium">QR Pay</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Standard rate</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setQrPayEnabled(!qrPayEnabled)}
+                className="relative w-11 h-6 rounded-full transition-colors"
+                style={{ background: qrPayEnabled ? '#10b981' : '#3a4a3f' }}
+              >
+                <div
+                  className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                  style={{ left: qrPayEnabled ? '22px' : '2px' }}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Notifications Section */}
+        <div className="px-4 pt-6 pb-2">
+          <h3 className="text-lg font-bold text-white">Notifications</h3>
+        </div>
+
+        <div className="px-4 pb-4">
+          <div
+            className="rounded-xl overflow-hidden"
+            style={{ background: '#1c271f', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            <div
+              className="p-4 flex items-center justify-between"
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+            >
+              <span className="text-white font-medium">Push Notifications</span>
+              <button
+                onClick={() => setPushNotifications(!pushNotifications)}
+                className="relative w-11 h-6 rounded-full transition-colors"
+                style={{ background: pushNotifications ? '#10b981' : '#3a4a3f' }}
+              >
+                <div
+                  className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                  style={{ left: pushNotifications ? '22px' : '2px' }}
+                />
+              </button>
+            </div>
+            <div className="p-4 flex items-center justify-between">
+              <span className="text-white font-medium">Daily Sales Report</span>
+              <button
+                onClick={() => setDailyReport(!dailyReport)}
+                className="relative w-11 h-6 rounded-full transition-colors"
+                style={{ background: dailyReport ? '#10b981' : '#3a4a3f' }}
+              >
+                <div
+                  className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                  style={{ left: dailyReport ? '22px' : '2px' }}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Logout Button */}
+        <div className="px-4 py-4">
+          <button
+            onClick={handleLogout}
+            className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+            style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}
+          >
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Sticky Save Button */}
+      <div
+        className="fixed bottom-0 left-0 right-0 p-4 z-50 max-w-md mx-auto"
+        style={{
+          background: 'rgba(15,26,20,0.8)',
+          backdropFilter: 'blur(12px)',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+        }}
+      >
+        <button
+          className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+          style={{
+            background: '#10b981',
+            color: '#0f1a14',
+            boxShadow: '0 8px 20px -4px rgba(16,185,129,0.4)',
+          }}
         >
-          Logout
-        </Button>
+          Save Changes
+          <span className="material-symbols-outlined text-[20px]">check</span>
+        </button>
       </div>
     </div>
   );

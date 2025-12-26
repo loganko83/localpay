@@ -1,143 +1,189 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
+
 const Scan: React.FC = () => {
   const navigate = useNavigate();
-  const [showMyCode, setShowMyCode] = useState(false);
+  const [activeTab, setActiveTab] = useState<'scan' | 'myqr'>('scan');
   const [flashOn, setFlashOn] = useState(false);
 
   return (
-    <div className="flex flex-col h-full bg-black relative">
-      {/* Camera Placeholder */}
-      <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center overflow-hidden">
+    <div className="relative flex h-screen w-full flex-col overflow-hidden select-none" style={{ background: theme.bg }}>
+      {/* Simulated Camera Feed Background */}
+      <div className="absolute inset-0 z-0" style={{ background: '#0a0a0a' }}>
         <img
-          src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=687&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=800&auto=format&fit=crop"
           alt="Camera Feed"
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover"
+          style={{ opacity: 0.4, filter: 'blur(2px)' }}
         />
-
-        {/* Scanning Overlay */}
-        {!showMyCode && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-64 h-64 border-2 border-primary rounded-3xl relative">
-              <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_20px_rgba(237,38,48,0.8)] animate-[scan_2s_infinite]" />
-
-              {/* Corners */}
-              <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl" />
-              <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl" />
-              <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl" />
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl" />
-            </div>
-          </div>
-        )}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.8) 100%)' }}
+        />
       </div>
 
-      {/* Scanner UI */}
-      {!showMyCode && (
-        <div className="relative z-10 flex flex-col justify-between h-full pt-10 pb-28 px-6">
-          <div className="flex justify-between items-center text-white">
-            <button
-              onClick={() => navigate(-1)}
-              className="h-10 w-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/60 transition-colors"
-            >
-              <span className="material-symbols-outlined">close</span>
+      {/* UI Overlay */}
+      <div className="relative z-10 flex flex-col h-full justify-between">
+        {/* Top Section */}
+        <div style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)' }} className="pt-4 pb-8">
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-2">
+            <button onClick={() => navigate(-1)}>
+              <span className="material-symbols-outlined text-3xl" style={{ color: theme.text }}>close</span>
             </button>
-            <div className="bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10">
-              <span className="text-sm font-medium">Scan to Pay</span>
-            </div>
-            <button
-              onClick={() => setFlashOn(!flashOn)}
-              className={`h-10 w-10 backdrop-blur-md rounded-full flex items-center justify-center transition-colors ${
-                flashOn ? 'bg-primary text-background' : 'bg-black/40 hover:bg-black/60'
-              }`}
-            >
-              <span className="material-symbols-outlined">
-                {flashOn ? 'flash_on' : 'flash_off'}
+            <h2 className="text-lg font-bold" style={{ color: theme.text }}>Scan to Pay</h2>
+            <button onClick={() => setFlashOn(!flashOn)}>
+              <span className="material-symbols-outlined text-2xl" style={{ color: flashOn ? theme.accent : theme.text }}>
+                {flashOn ? 'flashlight_on' : 'flashlight_off'}
               </span>
             </button>
           </div>
 
-          <div className="text-center space-y-6">
-            <p className="text-white/80 text-sm">
+          {/* Tabs */}
+          <div className="flex justify-center gap-8 mt-4">
+            {[
+              { id: 'scan', label: 'Scan QR' },
+              { id: 'myqr', label: 'My QR Code' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as 'scan' | 'myqr')}
+                className="flex flex-col items-center gap-2"
+              >
+                <span
+                  className="text-sm font-bold"
+                  style={{ color: activeTab === tab.id ? theme.text : theme.textMuted }}
+                >
+                  {tab.label}
+                </span>
+                <div
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{
+                    background: activeTab === tab.id ? theme.accent : 'transparent',
+                    boxShadow: activeTab === tab.id ? `0 0 8px ${theme.accent}` : 'none',
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Middle Section */}
+        {activeTab === 'scan' ? (
+          <div className="flex-1 flex flex-col items-center justify-center -mt-10">
+            <p className="text-lg font-medium text-center mb-8" style={{ color: theme.text, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
               Align QR code within the frame
             </p>
 
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setShowMyCode(true)}
-                className="flex flex-col items-center gap-2 group"
-              >
-                <div className="h-12 w-12 rounded-full bg-white text-black flex items-center justify-center shadow-lg transition-transform active:scale-95 group-hover:scale-105">
-                  <span className="material-symbols-outlined">qr_code_2</span>
-                </div>
-                <span className="text-xs text-white font-medium">My QR</span>
-              </button>
+            {/* Scanner Frame */}
+            <div className="relative w-72 h-72 rounded-3xl overflow-hidden">
+              <div className="absolute inset-0 rounded-3xl" style={{ border: `1px solid ${theme.border}` }} />
 
-              <button className="flex flex-col items-center gap-2 group">
-                <div className="h-12 w-12 rounded-full bg-black/60 text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-transform active:scale-95 group-hover:bg-black/80">
-                  <span className="material-symbols-outlined">image</span>
-                </div>
-                <span className="text-xs text-white font-medium">Gallery</span>
-              </button>
+              {/* Scan Line */}
+              <div
+                className="absolute left-0 right-0 h-0.5"
+                style={{
+                  background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)`,
+                  boxShadow: `0 0 15px ${theme.accent}`,
+                  animation: 'scanLine 2.5s linear infinite',
+                }}
+              />
+
+              {/* Corners */}
+              <div className="absolute top-0 left-0 w-8 h-8 rounded-tl-xl" style={{ borderLeft: `4px solid ${theme.accent}`, borderTop: `4px solid ${theme.accent}` }} />
+              <div className="absolute top-0 right-0 w-8 h-8 rounded-tr-xl" style={{ borderRight: `4px solid ${theme.accent}`, borderTop: `4px solid ${theme.accent}` }} />
+              <div className="absolute bottom-0 left-0 w-8 h-8 rounded-bl-xl" style={{ borderLeft: `4px solid ${theme.accent}`, borderBottom: `4px solid ${theme.accent}` }} />
+              <div className="absolute bottom-0 right-0 w-8 h-8 rounded-br-xl" style={{ borderRight: `4px solid ${theme.accent}`, borderBottom: `4px solid ${theme.accent}` }} />
             </div>
           </div>
-        </div>
-      )}
-
-      {/* My QR Code Overlay */}
-      {showMyCode && (
-        <div className="absolute inset-0 z-20 bg-background/90 backdrop-blur-xl flex flex-col items-center justify-center p-6 animate-[fadeIn_0.3s_ease-out]">
-          <div className="w-full max-w-sm bg-surface border border-surface-highlight rounded-3xl p-6 flex flex-col items-center shadow-2xl relative">
-            <button
-              onClick={() => setShowMyCode(false)}
-              className="absolute top-4 right-4 h-8 w-8 rounded-full bg-surface-highlight flex items-center justify-center text-text-secondary hover:text-white transition-colors"
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-10">
+            <div
+              className="w-full max-w-sm rounded-2xl p-6 flex flex-col items-center"
+              style={{ background: theme.card, border: `1px solid ${theme.border}` }}
             >
-              <span className="material-symbols-outlined text-[20px]">close</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: theme.accentSoft }}>
+                <span className="material-symbols-outlined text-3xl" style={{ color: theme.accent }}>person</span>
+              </div>
+
+              <h2 className="text-xl font-bold" style={{ color: theme.text }}>My Payment QR</h2>
+              <p className="text-sm mb-6" style={{ color: theme.textMuted }}>Scan to receive payment</p>
+
+              <div className="p-4 rounded-2xl mb-6" style={{ background: '#fff' }}>
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=busan-localpay-user-payment&color=111111&bgcolor=ffffff&margin=10"
+                  alt="My QR Code"
+                  className="w-48 h-48"
+                />
+              </div>
+
+              <div className="flex gap-3 w-full">
+                <button className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2" style={{ background: theme.cardHover, color: theme.text }}>
+                  <span className="material-symbols-outlined text-[18px]">share</span>
+                  Share
+                </button>
+                <button className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2" style={{ background: theme.cardHover, color: theme.text }}>
+                  <span className="material-symbols-outlined text-[18px]">download</span>
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Bottom Section */}
+        <div
+          className="pb-10 pt-12 px-6 flex flex-col items-center gap-6"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)' }}
+        >
+          <button
+            onClick={() => navigate('/consumer/merchant-code')}
+            className="flex w-full max-w-sm items-center justify-center gap-2 rounded-xl h-12"
+            style={{ background: theme.card, border: `1px solid ${theme.border}`, color: theme.text }}
+          >
+            <span className="material-symbols-outlined text-xl">keyboard</span>
+            <span className="text-sm font-bold">Enter Merchant Code Manually</span>
+          </button>
+
+          <div className="flex items-center justify-between w-full max-w-xs px-4">
+            <button onClick={() => navigate('/consumer/history')} className="flex flex-col items-center gap-1">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+                <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>photo_library</span>
+              </div>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>Gallery</span>
             </button>
 
-            <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 ring-4 ring-primary/10">
-              <span className="material-symbols-outlined text-primary text-3xl">person</span>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ border: '3px solid white' }}>
+              <div className="w-14 h-14 rounded-full" style={{ background: 'white' }} />
             </div>
 
-            <h2 className="text-xl font-bold text-white">My Payment QR</h2>
-            <p className="text-sm text-text-secondary mb-8">Scan to receive payment</p>
-
-            <div className="bg-white p-4 rounded-2xl mb-8 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=jeonbuk-localpay-user-payment&color=221011&bgcolor=ffffff&margin=10"
-                alt="My QR Code"
-                className="w-48 h-48"
-              />
-            </div>
-
-            <p className="text-sm text-center text-text-secondary mb-6 px-4">
-              Show this code to merchants to make a payment
-            </p>
-
-            <div className="flex gap-3 w-full">
-              <button className="flex-1 py-3 rounded-xl bg-surface-highlight text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface transition-colors">
-                <span className="material-symbols-outlined text-[18px]">share</span>
-                Share
-              </button>
-              <button className="flex-1 py-3 rounded-xl bg-surface-highlight text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-surface transition-colors">
-                <span className="material-symbols-outlined text-[18px]">download</span>
-                Save
-              </button>
-            </div>
+            <button onClick={() => navigate('/consumer/history')} className="flex flex-col items-center gap-1">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+                <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>history</span>
+              </div>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>History</span>
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
       <style>{`
-        @keyframes scan {
-          0% { top: 0%; opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+        @keyframes scanLine {
+          0% { top: 0%; }
+          100% { top: 100%; }
         }
       `}</style>
     </div>

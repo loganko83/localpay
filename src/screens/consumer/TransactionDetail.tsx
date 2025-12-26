@@ -1,18 +1,19 @@
-/**
- * Transaction Detail Screen
- *
- * Shows full transaction information with:
- * - Transaction summary
- * - Blockchain verification status
- * - Refund request option
- * - Receipt sharing
- */
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../components/layout';
-import { Card, Badge, Button } from '../../components/common';
 import { useTransactionStore } from '../../store';
+
+// Unified Dark Theme
+const theme = {
+  bg: '#111111',
+  card: '#1a1a1a',
+  cardHover: '#222222',
+  border: '#2a2a2a',
+  accent: '#ff4757',
+  accentSoft: 'rgba(255,71,87,0.15)',
+  text: '#ffffff',
+  textSecondary: '#888888',
+  textMuted: '#555555',
+};
 
 const TransactionDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ const TransactionDetail: React.FC = () => {
   const { transactions } = useTransactionStore();
   const [showRefundModal, setShowRefundModal] = useState(false);
 
-  // Find transaction by ID
   const transaction = transactions.find(t => t.id === id) || {
     id: id || 'TX-001',
     txId: 'TX-2024-ABC123',
@@ -48,22 +48,12 @@ const TransactionDetail: React.FC = () => {
     });
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed': return 'success';
-      case 'pending': return 'warning';
-      case 'failed': return 'danger';
-      default: return 'secondary';
-    }
-  };
-
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'payment': return 'shopping_cart';
       case 'topup': return 'add_circle';
       case 'refund': return 'replay';
       case 'transfer': return 'swap_horiz';
-      case 'withdrawal': return 'arrow_downward';
       default: return 'receipt';
     }
   };
@@ -74,126 +64,146 @@ const TransactionDetail: React.FC = () => {
       case 'topup': return 'Top-up';
       case 'refund': return 'Refund';
       case 'transfer': return 'Transfer';
-      case 'withdrawal': return 'Withdrawal';
       default: return type;
     }
   };
 
-  // Mock blockchain data
   const blockchainData = {
     hash: 'BC-' + Math.random().toString(36).substr(2, 12),
     blockNumber: 12345678,
     txHash: '0x' + Math.random().toString(36).substr(2, 40),
-    verified: true,
     verifiedAt: new Date(Date.now() - 60000).toISOString(),
-    signature: 'sig:user:' + Date.now(),
   };
 
+  const isIncome = transaction.type === 'topup' || transaction.type === 'refund';
+
   return (
-    <div className="flex flex-col pb-4">
-      <Header title="Transaction Detail" showBack />
+    <div className="flex flex-col min-h-screen pb-28" style={{ background: theme.bg }}>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-20 px-5 py-4 flex items-center justify-between"
+        style={{ background: theme.bg, borderBottom: `1px solid ${theme.border}` }}
+      >
+        <button onClick={() => navigate(-1)}>
+          <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
+        </button>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Transaction Detail</h1>
+        <div className="w-8" />
+      </header>
 
       {/* Transaction Summary */}
-      <div className="px-4 py-6">
+      <div className="px-5 py-6">
         <div className="flex flex-col items-center text-center">
-          <div className={`h-16 w-16 rounded-full flex items-center justify-center mb-4 ${
-            transaction.type === 'topup' || transaction.type === 'refund'
-              ? 'bg-green-500/20'
-              : 'bg-primary/20'
-          }`}>
-            <span className={`material-symbols-outlined text-3xl ${
-              transaction.type === 'topup' || transaction.type === 'refund'
-                ? 'text-green-500'
-                : 'text-primary'
-            }`}>
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+            style={{ background: isIncome ? '#22c55e20' : theme.accentSoft }}
+          >
+            <span
+              className="material-symbols-outlined text-3xl"
+              style={{ color: isIncome ? '#22c55e' : theme.accent }}
+            >
               {getTypeIcon(transaction.type)}
             </span>
           </div>
 
-          <p className={`text-3xl font-bold ${
-            transaction.type === 'topup' || transaction.type === 'refund'
-              ? 'text-green-500'
-              : 'text-white'
-          }`}>
-            {transaction.type === 'topup' || transaction.type === 'refund' ? '+' : '-'}
-            {formatAmount(transaction.amount)}
+          <p
+            className="text-3xl font-bold"
+            style={{ color: isIncome ? '#22c55e' : theme.text }}
+          >
+            {isIncome ? '+' : '-'}{formatAmount(transaction.amount)}
             <span className="text-lg ml-1">P</span>
           </p>
 
           <div className="flex items-center gap-2 mt-2">
-            <Badge variant={getStatusColor(transaction.status) as any}>
+            <span
+              className="text-xs font-bold px-2 py-1 rounded"
+              style={{
+                background: transaction.status === 'completed' ? '#22c55e20' : theme.cardHover,
+                color: transaction.status === 'completed' ? '#22c55e' : theme.textSecondary,
+              }}
+            >
               {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
-            </Badge>
-            <span className="text-text-secondary text-sm">
+            </span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>
               {getTypeLabel(transaction.type)}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Merchant/Source Info */}
-      <div className="px-4 mb-4">
-        <Card padding="md">
+      {/* Merchant Info */}
+      <div className="px-5 mb-4">
+        <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-surface-highlight flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{ background: theme.cardHover }}
+            >
+              <span className="material-symbols-outlined" style={{ color: theme.accent }}>
                 {transaction.merchantId ? 'storefront' : 'account_balance'}
               </span>
             </div>
-            <div className="flex-1">
-              <p className="font-medium text-white">
+            <div>
+              <p className="font-medium" style={{ color: theme.text }}>
                 {transaction.merchantName || 'Bank Transfer'}
               </p>
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs" style={{ color: theme.textSecondary }}>
                 {formatDate(transaction.createdAt)}
               </p>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Transaction Details */}
-      <div className="px-4 mb-4">
-        <h3 className="text-sm font-bold text-white mb-3">Transaction Information</h3>
-        <Card padding="md">
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-text-secondary text-sm">Transaction ID</span>
-              <span className="text-white text-sm font-mono">{transaction.txId}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary text-sm">Type</span>
-              <span className="text-white text-sm">{getTypeLabel(transaction.type)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary text-sm">Amount</span>
-              <span className="text-white text-sm">{formatAmount(transaction.amount)} P</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary text-sm">Status</span>
-              <Badge variant={getStatusColor(transaction.status) as any} size="sm">
-                {transaction.status}
-              </Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary text-sm">Date & Time</span>
-              <span className="text-white text-sm">{formatDate(transaction.createdAt)}</span>
-            </div>
+      <div className="px-5 mb-4">
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Transaction Information</h3>
+        <div className="rounded-xl p-4 space-y-3" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+          <div className="flex justify-between">
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Transaction ID</span>
+            <span className="text-sm font-mono" style={{ color: theme.text }}>{transaction.txId}</span>
           </div>
-        </Card>
+          <div className="flex justify-between">
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Type</span>
+            <span className="text-sm" style={{ color: theme.text }}>{getTypeLabel(transaction.type)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Amount</span>
+            <span className="text-sm" style={{ color: theme.text }}>{formatAmount(transaction.amount)} P</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Status</span>
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded"
+              style={{
+                background: transaction.status === 'completed' ? '#22c55e20' : theme.cardHover,
+                color: transaction.status === 'completed' ? '#22c55e' : theme.textSecondary,
+              }}
+            >
+              {transaction.status}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Date & Time</span>
+            <span className="text-sm" style={{ color: theme.text }}>{formatDate(transaction.createdAt)}</span>
+          </div>
+        </div>
       </div>
 
       {/* Blockchain Verification */}
-      <div className="px-4 mb-4">
-        <h3 className="text-sm font-bold text-white mb-3">Blockchain Verification</h3>
-        <Card padding="md">
-          <div className="flex items-center gap-3 pb-3 mb-3 border-b border-surface-highlight">
-            <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-green-500">verified</span>
+      <div className="px-5 mb-4">
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Blockchain Verification</h3>
+        <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
+          <div className="flex items-center gap-3 pb-3 mb-3" style={{ borderBottom: `1px solid ${theme.border}` }}>
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ background: '#22c55e20' }}
+            >
+              <span className="material-symbols-outlined" style={{ color: '#22c55e' }}>verified</span>
             </div>
             <div>
-              <p className="font-medium text-white">Verified on Blockchain</p>
-              <p className="text-xs text-text-secondary">
+              <p className="font-medium" style={{ color: theme.text }}>Verified on Blockchain</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>
                 Verified at {formatDate(blockchainData.verifiedAt)}
               </p>
             </div>
@@ -201,117 +211,112 @@ const TransactionDetail: React.FC = () => {
 
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-text-secondary">Block Hash</span>
-              <span className="text-white font-mono">{blockchainData.hash}</span>
+              <span style={{ color: theme.textSecondary }}>Block Hash</span>
+              <span className="font-mono" style={{ color: theme.text }}>{blockchainData.hash}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">Block Number</span>
-              <span className="text-white">{blockchainData.blockNumber.toLocaleString()}</span>
+              <span style={{ color: theme.textSecondary }}>Block Number</span>
+              <span style={{ color: theme.text }}>{blockchainData.blockNumber.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">TX Hash</span>
-              <span className="text-white font-mono truncate max-w-[180px]">
+              <span style={{ color: theme.textSecondary }}>TX Hash</span>
+              <span className="font-mono truncate max-w-[180px]" style={{ color: theme.text }}>
                 {blockchainData.txHash}
               </span>
             </div>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-surface-highlight">
-            <p className="text-[10px] text-text-muted">
+          <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${theme.border}` }}>
+            <p className="text-[10px]" style={{ color: theme.textMuted }}>
               This transaction is permanently recorded on the Xphere blockchain network
               for audit and verification purposes.
             </p>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Actions */}
-      <div className="px-4 space-y-3">
+      <div className="px-5 space-y-3">
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={() => {/* Share */}}
+          <button
+            className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+            style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
-            <span className="material-symbols-outlined mr-2 text-lg">share</span>
+            <span className="material-symbols-outlined text-lg">share</span>
             Share
-          </Button>
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={() => {/* Download */}}
+          </button>
+          <button
+            className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+            style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
-            <span className="material-symbols-outlined mr-2 text-lg">download</span>
+            <span className="material-symbols-outlined text-lg">download</span>
             Receipt
-          </Button>
+          </button>
         </div>
 
         {transaction.type === 'payment' && transaction.status === 'completed' && (
-          <Button
-            variant="ghost"
-            size="lg"
-            className="w-full text-red-500"
+          <button
             onClick={() => setShowRefundModal(true)}
+            className="w-full py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+            style={{ background: 'transparent', color: theme.accent }}
           >
-            <span className="material-symbols-outlined mr-2">replay</span>
+            <span className="material-symbols-outlined">replay</span>
             Request Refund
-          </Button>
+          </button>
         )}
       </div>
 
       {/* Refund Modal */}
       {showRefundModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-surface rounded-2xl p-4 space-y-4">
+          <div className="w-full max-w-sm rounded-2xl p-4 space-y-4" style={{ background: theme.card }}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Request Refund</h2>
-              <button
-                onClick={() => setShowRefundModal(false)}
-                className="p-2 hover:bg-background rounded-lg"
-              >
-                <span className="material-symbols-outlined text-text-secondary">close</span>
+              <h2 className="text-lg font-bold" style={{ color: theme.text }}>Request Refund</h2>
+              <button onClick={() => setShowRefundModal(false)} className="p-2 rounded-lg" style={{ background: theme.cardHover }}>
+                <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
             </div>
 
-            <div className="bg-background rounded-xl p-4 text-center">
-              <p className="text-2xl font-bold text-white mb-1">
+            <div className="rounded-xl p-4 text-center" style={{ background: theme.bg }}>
+              <p className="text-2xl font-bold mb-1" style={{ color: theme.text }}>
                 {formatAmount(transaction.amount)} P
               </p>
-              <p className="text-sm text-text-secondary">{transaction.merchantName}</p>
+              <p className="text-sm" style={{ color: theme.textSecondary }}>{transaction.merchantName}</p>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-text-secondary">Reason for refund</label>
+              <label className="text-sm" style={{ color: theme.textSecondary }}>Reason for refund</label>
               <textarea
-                className="w-full bg-background text-white rounded-xl p-3 border border-surface-highlight focus:border-primary outline-none resize-none"
+                className="w-full rounded-xl p-3 resize-none focus:outline-none"
                 rows={3}
                 placeholder="Please describe your reason for requesting a refund..."
+                style={{ background: theme.bg, color: theme.text, border: `1px solid ${theme.border}` }}
               />
             </div>
 
-            <p className="text-xs text-text-muted">
+            <p className="text-xs" style={{ color: theme.textMuted }}>
               Refund requests are processed by the merchant. You will be notified once the
               merchant responds to your request.
             </p>
 
             <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                className="flex-1"
+              <button
                 onClick={() => setShowRefundModal(false)}
+                className="flex-1 py-3 rounded-xl font-medium"
+                style={{ background: theme.cardHover, color: theme.text }}
               >
                 Cancel
-              </Button>
-              <Button
-                variant="primary"
-                className="flex-1"
+              </button>
+              <button
                 onClick={() => {
                   setShowRefundModal(false);
                   navigate('/consumer/history');
                 }}
+                className="flex-1 py-3 rounded-xl font-bold text-white"
+                style={{ background: theme.accent }}
               >
                 Submit Request
-              </Button>
+              </button>
             </div>
           </div>
         </div>
