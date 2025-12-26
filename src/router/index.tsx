@@ -103,15 +103,16 @@ const AdminLayout = () => (
   </Layout>
 );
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <React.Suspense fallback={<LoadingFallback />}>
-        <AppSelector />
-      </React.Suspense>
-    ),
-  },
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: (
+        <React.Suspense fallback={<LoadingFallback />}>
+          <AppSelector />
+        </React.Suspense>
+      ),
+    },
 
   // Consumer Routes
   {
@@ -211,9 +212,13 @@ export const router = createBrowserRouter([
     ),
   },
 
-  // Fallback
+    // Fallback
+    {
+      path: '*',
+      element: <Navigate to="/" replace />,
+    },
+  ],
   {
-    path: '*',
-    element: <Navigate to="/" replace />,
-  },
-]);
+    basename: '/localpay',
+  }
+);
