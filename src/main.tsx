@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { QueryProvider } from './components/common/QueryProvider';
 import { useAuthStore } from './store';
 import { applyTheme } from './styles/themes';
 import { initializeDemoData } from './services';
@@ -28,6 +30,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ErrorBoundary>
+      <QueryProvider>
+        <RouterProvider router={router} />
+      </QueryProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

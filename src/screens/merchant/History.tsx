@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const theme = {
-  bg: '#111111',
-  card: '#1a1a1a',
-  cardHover: '#222222',
-  border: '#2a2a2a',
-  accent: '#ff4757',
-  accentSoft: 'rgba(255,71,87,0.15)',
-  text: '#ffffff',
-  textSecondary: '#888888',
-  textMuted: '#555555',
-};
+import { theme } from '../../styles/theme';
 
 type FilterType = 'all' | 'completed' | 'refunded' | 'pending';
 
@@ -206,8 +196,8 @@ const History: React.FC = () => {
                       tx.status === 'success'
                         ? theme.accentSoft
                         : tx.status === 'pending'
-                        ? 'rgba(245,158,11,0.15)'
-                        : 'rgba(107,114,128,0.15)',
+                          ? 'rgba(245,158,11,0.15)'
+                          : 'rgba(107,114,128,0.15)',
                   }}
                 >
                   <span
@@ -217,8 +207,8 @@ const History: React.FC = () => {
                         tx.status === 'success'
                           ? theme.accent
                           : tx.status === 'pending'
-                          ? '#f59e0b'
-                          : theme.textMuted,
+                            ? '#f59e0b'
+                            : theme.textMuted,
                       fontSize: '24px',
                     }}
                   >
@@ -250,8 +240,8 @@ const History: React.FC = () => {
                       tx.status === 'success'
                         ? theme.accentSoft
                         : tx.status === 'pending'
-                        ? 'rgba(245,158,11,0.15)'
-                        : 'rgba(107,114,128,0.15)',
+                          ? 'rgba(245,158,11,0.15)'
+                          : 'rgba(107,114,128,0.15)',
                   }}
                 >
                   <p
@@ -261,8 +251,8 @@ const History: React.FC = () => {
                         tx.status === 'success'
                           ? theme.accent
                           : tx.status === 'pending'
-                          ? '#f59e0b'
-                          : theme.textSecondary,
+                            ? '#f59e0b'
+                            : theme.textSecondary,
                     }}
                   >
                     {tx.status === 'success' ? 'Success' : tx.status === 'pending' ? 'Pending' : 'Refunded'}

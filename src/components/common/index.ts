@@ -5,6 +5,8 @@ export { default as Badge } from './Badge';
 export { default as Modal } from './Modal';
 export { default as Toggle } from './Toggle';
 export { default as FAB } from './FAB';
+export { Toast } from './Toast';
+export { ToastContainer } from './ToastContainer';
 
 // Regulatory Compliance Components
 export {

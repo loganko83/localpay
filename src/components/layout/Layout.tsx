@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { theme } from '../../styles/theme';
+import { ToastContainer } from '../common';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,11 +9,11 @@ interface LayoutProps {
 
 // Theme colors - unified dark theme
 const themeColors = {
-  consumer: '#111111',
-  merchant: '#111111',
-  admin: '#111111',
-  debug: '#111111',
-  default: '#111111',
+  consumer: theme.bg,
+  merchant: theme.bg,
+  admin: theme.bg,
+  debug: theme.bg,
+  default: theme.bg,
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -43,6 +45,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         style={{ background: backgroundColor }}
       >
         {children}
+        <ToastContainer />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { Layout, BottomNav } from '../components/layout';
+import { AdminLayout as WebAdminLayout } from '../components/admin';
 
 // Lazy load screens for better performance
 const AppSelector = React.lazy(() => import('../screens/AppSelector'));
@@ -56,6 +57,12 @@ const AdminAMLDashboard = React.lazy(() => import('../screens/admin/AMLDashboard
 const AdminCarbonAdmin = React.lazy(() => import('../screens/admin/CarbonAdmin'));
 const AdminDonationCampaigns = React.lazy(() => import('../screens/admin/DonationCampaigns'));
 const AdminMerchantCreditReview = React.lazy(() => import('../screens/admin/MerchantCreditReview'));
+const AdminAnalytics = React.lazy(() => import('../screens/admin/Analytics'));
+const AdminBlockchainExplorer = React.lazy(() => import('../screens/admin/BlockchainExplorer'));
+const AdminSettings = React.lazy(() => import('../screens/admin/Settings'));
+const AdminFDSDashboard = React.lazy(() => import('../screens/admin/FDSDashboard'));
+const AdminAMLCenter = React.lazy(() => import('../screens/admin/AMLCenter'));
+const AdminWelfareTracker = React.lazy(() => import('../screens/admin/WelfareTracker'));
 
 // Debug screens (dev only)
 const DebugDashboard = React.lazy(() => import('../screens/debug/DebugDashboard'));
@@ -92,15 +99,11 @@ const MerchantLayout = () => (
   </Layout>
 );
 
-const AdminLayout = () => (
-  <Layout>
-    <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
-      <React.Suspense fallback={<LoadingFallback />}>
-        <Outlet />
-      </React.Suspense>
-    </div>
-    <BottomNav userType="admin" />
-  </Layout>
+// Web-based Admin Layout with sidebar
+const AdminLayoutWrapper = () => (
+  <React.Suspense fallback={<LoadingFallback />}>
+    <WebAdminLayout />
+  </React.Suspense>
 );
 
 export const router = createBrowserRouter(
@@ -114,103 +117,109 @@ export const router = createBrowserRouter(
       ),
     },
 
-  // Consumer Routes
-  {
-    path: '/consumer',
-    element: <ConsumerLayout />,
-    children: [
-      { index: true, element: <ConsumerHome /> },
-      { path: 'wallet', element: <ConsumerWallet /> },
-      { path: 'scan', element: <ConsumerScan /> },
-      { path: 'history', element: <ConsumerHistory /> },
-      { path: 'profile', element: <ConsumerProfile /> },
-      { path: 'topup', element: <ConsumerTopUp /> },
-      { path: 'merchant/:id', element: <ConsumerMerchantDetail /> },
-      { path: 'offers', element: <ConsumerOffers /> },
-      { path: 'coupons', element: <ConsumerCoupons /> },
-      { path: 'services', element: <ConsumerServices /> },
-      { path: 'payment-confirmation', element: <ConsumerPaymentConfirmation /> },
-      { path: 'transaction/:id', element: <ConsumerTransactionDetail /> },
-      { path: 'product-trace', element: <ConsumerProductTrace /> },
-      { path: 'carbon-points', element: <ConsumerCarbonPoints /> },
-      { path: 'loyalty', element: <ConsumerLoyaltyPoints /> },
-      { path: 'tourist-wallet', element: <ConsumerTouristWallet /> },
-      { path: 'delivery', element: <ConsumerDelivery /> },
-      { path: 'donations', element: <ConsumerDonations /> },
-      { path: 'merchant-map', element: <ConsumerMerchantMap /> },
-    ],
-  },
+    // Consumer Routes
+    {
+      path: '/consumer',
+      element: <ConsumerLayout />,
+      children: [
+        { index: true, element: <ConsumerHome /> },
+        { path: 'wallet', element: <ConsumerWallet /> },
+        { path: 'scan', element: <ConsumerScan /> },
+        { path: 'history', element: <ConsumerHistory /> },
+        { path: 'profile', element: <ConsumerProfile /> },
+        { path: 'topup', element: <ConsumerTopUp /> },
+        { path: 'merchant/:id', element: <ConsumerMerchantDetail /> },
+        { path: 'offers', element: <ConsumerOffers /> },
+        { path: 'coupons', element: <ConsumerCoupons /> },
+        { path: 'services', element: <ConsumerServices /> },
+        { path: 'payment-confirmation', element: <ConsumerPaymentConfirmation /> },
+        { path: 'transaction/:id', element: <ConsumerTransactionDetail /> },
+        { path: 'product-trace', element: <ConsumerProductTrace /> },
+        { path: 'carbon-points', element: <ConsumerCarbonPoints /> },
+        { path: 'loyalty', element: <ConsumerLoyaltyPoints /> },
+        { path: 'tourist-wallet', element: <ConsumerTouristWallet /> },
+        { path: 'delivery', element: <ConsumerDelivery /> },
+        { path: 'donations', element: <ConsumerDonations /> },
+        { path: 'merchant-map', element: <ConsumerMerchantMap /> },
+      ],
+    },
 
-  // Merchant Routes
-  {
-    path: '/merchant/login',
-    element: (
-      <Layout>
+    // Merchant Routes
+    {
+      path: '/merchant/login',
+      element: (
+        <Layout>
+          <React.Suspense fallback={<LoadingFallback />}>
+            <MerchantLogin />
+          </React.Suspense>
+        </Layout>
+      ),
+    },
+    {
+      path: '/merchant',
+      element: <MerchantLayout />,
+      children: [
+        { index: true, element: <MerchantDashboard /> },
+        { path: 'wallet', element: <MerchantWallet /> },
+        { path: 'scan', element: <MerchantScan /> },
+        { path: 'payments', element: <MerchantPayments /> },
+        { path: 'history', element: <MerchantHistory /> },
+        { path: 'employees', element: <MerchantEmployees /> },
+        { path: 'settings', element: <MerchantSettings /> },
+        { path: 'notifications', element: <MerchantNotifications /> },
+        { path: 'credit-score', element: <MerchantCreditScore /> },
+        { path: 'welfare', element: <MerchantWelfareManagement /> },
+        { path: 'delivery-orders', element: <MerchantDeliveryOrders /> },
+        { path: 'settlement-calendar', element: <MerchantSettlementCalendar /> },
+        { path: 'loyalty-redeem', element: <MerchantLoyaltyRedeem /> },
+      ],
+    },
+
+    // Admin Routes (Web-based Dashboard)
+    {
+      path: '/admin/login',
+      element: (
+        <Layout>
+          <React.Suspense fallback={<LoadingFallback />}>
+            <AdminLogin />
+          </React.Suspense>
+        </Layout>
+      ),
+    },
+    {
+      path: '/admin',
+      element: <AdminLayoutWrapper />,
+      children: [
+        { index: true, element: <AdminDashboard /> },
+        { path: 'analytics', element: <AdminAnalytics /> },
+        { path: 'users', element: <AdminUsers /> },
+        { path: 'vouchers', element: <AdminVouchers /> },
+        { path: 'settlements', element: <AdminSettlements /> },
+        { path: 'audit', element: <AdminAuditLogs /> },
+        { path: 'blockchain', element: <AdminBlockchainExplorer /> },
+        { path: 'security', element: <AdminSecurity /> },
+        { path: 'policies', element: <AdminPolicies /> },
+        { path: 'tokens', element: <AdminTokenIssuance /> },
+        { path: 'aml', element: <AdminAMLDashboard /> },
+        { path: 'carbon', element: <AdminCarbonAdmin /> },
+        { path: 'donations', element: <AdminDonationCampaigns /> },
+        { path: 'merchant-credit', element: <AdminMerchantCreditReview /> },
+        { path: 'settings', element: <AdminSettings /> },
+        { path: 'fds', element: <AdminFDSDashboard /> },
+        { path: 'aml-center', element: <AdminAMLCenter /> },
+        { path: 'welfare', element: <AdminWelfareTracker /> },
+      ],
+    },
+
+    // Debug Route (dev only)
+    {
+      path: '/debug',
+      element: (
         <React.Suspense fallback={<LoadingFallback />}>
-          <MerchantLogin />
+          <DebugDashboard />
         </React.Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: '/merchant',
-    element: <MerchantLayout />,
-    children: [
-      { index: true, element: <MerchantDashboard /> },
-      { path: 'wallet', element: <MerchantWallet /> },
-      { path: 'scan', element: <MerchantScan /> },
-      { path: 'payments', element: <MerchantPayments /> },
-      { path: 'history', element: <MerchantHistory /> },
-      { path: 'employees', element: <MerchantEmployees /> },
-      { path: 'settings', element: <MerchantSettings /> },
-      { path: 'notifications', element: <MerchantNotifications /> },
-      { path: 'credit-score', element: <MerchantCreditScore /> },
-      { path: 'welfare', element: <MerchantWelfareManagement /> },
-      { path: 'delivery-orders', element: <MerchantDeliveryOrders /> },
-      { path: 'settlement-calendar', element: <MerchantSettlementCalendar /> },
-      { path: 'loyalty-redeem', element: <MerchantLoyaltyRedeem /> },
-    ],
-  },
-
-  // Admin Routes
-  {
-    path: '/admin/login',
-    element: (
-      <Layout>
-        <React.Suspense fallback={<LoadingFallback />}>
-          <AdminLogin />
-        </React.Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: '/admin',
-    element: <AdminLayout />,
-    children: [
-      { index: true, element: <AdminDashboard /> },
-      { path: 'users', element: <AdminUsers /> },
-      { path: 'vouchers', element: <AdminVouchers /> },
-      { path: 'settlements', element: <AdminSettlements /> },
-      { path: 'audit', element: <AdminAuditLogs /> },
-      { path: 'security', element: <AdminSecurity /> },
-      { path: 'policies', element: <AdminPolicies /> },
-      { path: 'token-issuance', element: <AdminTokenIssuance /> },
-      { path: 'aml', element: <AdminAMLDashboard /> },
-      { path: 'carbon', element: <AdminCarbonAdmin /> },
-      { path: 'donation-campaigns', element: <AdminDonationCampaigns /> },
-      { path: 'merchant-credit-review', element: <AdminMerchantCreditReview /> },
-    ],
-  },
-
-  // Debug Route (dev only)
-  {
-    path: '/debug',
-    element: (
-      <React.Suspense fallback={<LoadingFallback />}>
-        <DebugDashboard />
-      </React.Suspense>
-    ),
-  },
+      ),
+    },
 
     // Fallback
     {
@@ -218,7 +227,5 @@ export const router = createBrowserRouter(
       element: <Navigate to="/" replace />,
     },
   ],
-  {
-    basename: '/localpay',
-  }
+  {}
 );

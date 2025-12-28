@@ -2,18 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { donationPlatformService, DonationCampaign, RegisteredCharity, CharityCategory } from '../../services/donationPlatform';
 
-// Unified Dark Theme
-const theme = {
-  bg: '#111111',
-  card: '#1a1a1a',
-  cardHover: '#222222',
-  border: '#2a2a2a',
-  accent: '#ff4757',
-  accentSoft: 'rgba(255,71,87,0.15)',
-  text: '#ffffff',
-  textSecondary: '#888888',
-  textMuted: '#555555',
-};
+import { theme } from '../../styles/theme';
 
 const categoryOptions: { value: CharityCategory | 'ALL'; label: string; icon: string }[] = [
   { value: 'ALL', label: 'All', icon: 'apps' },
@@ -425,10 +414,10 @@ const Donations: React.FC = () => {
                   >
                     <span className="material-symbols-outlined text-[32px]" style={{ color: theme.accent }}>
                       {charity?.category === 'WELFARE' ? 'child_care' :
-                       charity?.category === 'ENVIRONMENT' ? 'eco' :
-                       charity?.category === 'MEDICAL' ? 'medical_services' :
-                       charity?.category === 'DISASTER' ? 'crisis_alert' :
-                       'volunteer_activism'}
+                        charity?.category === 'ENVIRONMENT' ? 'eco' :
+                          charity?.category === 'MEDICAL' ? 'medical_services' :
+                            charity?.category === 'DISASTER' ? 'crisis_alert' :
+                              'volunteer_activism'}
                     </span>
                   </div>
 

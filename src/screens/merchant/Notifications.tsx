@@ -12,17 +12,7 @@ import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Button } from '../../components/common';
 
-const theme = {
-  bg: '#111111',
-  card: '#1a1a1a',
-  cardHover: '#222222',
-  border: '#2a2a2a',
-  accent: '#ff4757',
-  accentSoft: 'rgba(255,71,87,0.15)',
-  text: '#ffffff',
-  textSecondary: '#888888',
-  textMuted: '#555555',
-};
+import { theme } from '../../styles/theme';
 
 interface Notification {
   id: string;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Button, Input, Modal } from '../../components/common';
 import { Voucher } from '../../types';
+import { theme } from '../../styles/theme';
 
 const mockVouchers: Voucher[] = [
   {
@@ -82,7 +83,7 @@ const Vouchers: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col pb-24">
+    <div className="flex flex-col pb-24" style={{ background: theme.bg }}>
       <Header title="Voucher Management" />
 
       {/* Stats */}
@@ -104,11 +105,10 @@ const Vouchers: React.FC = () => {
             <button
               key={filter}
               onClick={() => setStatusFilter(filter as typeof statusFilter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize ${
-                statusFilter === filter
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize ${statusFilter === filter
                   ? 'bg-primary text-background'
                   : 'bg-surface-highlight text-text-secondary hover:text-white'
-              }`}
+                }`}
             >
               {filter}
             </button>
@@ -121,11 +121,10 @@ const Vouchers: React.FC = () => {
         {filteredVouchers.map((voucher) => (
           <Card key={voucher.id} variant="transaction" padding="md">
             <div className="flex items-start gap-3 mb-3">
-              <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${
-                voucher.status === 'active' ? 'bg-primary/10 text-primary' :
-                voucher.status === 'paused' ? 'bg-yellow-500/10 text-yellow-500' :
-                'bg-surface-highlight text-text-secondary'
-              }`}>
+              <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${voucher.status === 'active' ? 'bg-primary/10 text-primary' :
+                  voucher.status === 'paused' ? 'bg-yellow-500/10 text-yellow-500' :
+                    'bg-surface-highlight text-text-secondary'
+                }`}>
                 <span className="material-symbols-outlined">{getTypeIcon(voucher.type)}</span>
               </div>
               <div className="flex-1">
@@ -150,9 +149,8 @@ const Vouchers: React.FC = () => {
               </div>
               <div className="h-2 bg-surface-highlight rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${
-                    voucher.status === 'active' ? 'bg-primary' : 'bg-text-muted'
-                  }`}
+                  className={`h-full rounded-full transition-all ${voucher.status === 'active' ? 'bg-primary' : 'bg-text-muted'
+                    }`}
                   style={{ width: `${Math.min((voucher.usageCount / voucher.usageLimit) * 100, 100)}%` }}
                 />
               </div>

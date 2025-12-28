@@ -4,6 +4,8 @@ import { bankAPI, BankPaymentRequest } from '../services/bankAPI';
 import { auditLogService } from '../services/auditLog';
 import { policyEngine } from '../services/policyEngine';
 import type { CredentialType } from '../services/identity';
+import { BankError, ValidationError } from '../services/errors';
+import { useToastStore } from './toastStore';
 
 interface WalletState {
   wallet: Wallet | null;
@@ -131,11 +133,11 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
           targetId: `wallet-${userId}`,
           metadata: { balance: response.balance },
         });
-      } else {
-        set({ error: 'Failed to sync balance', isLoading: false });
       }
     } catch (error) {
-      set({ error: 'Network error during balance sync', isLoading: false });
+      const message = error instanceof BankError ? error.message : 'Network error during balance sync';
+      set({ error: message, isLoading: false });
+      useToastStore.getState().addToast(message, 'error');
     }
   },
 
@@ -146,6 +148,11 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
   processTopUp: async (userId: string, amount: number, sourceAccountId: string) => {
     set({ isLoading: true, error: null });
     try {
+      // Pre-request validation
+      if (amount <= 0) {
+        throw new ValidationError('Top-up amount must be greater than zero');
+      }
+
       const response = await bankAPI.requestCharge({
         userId,
         amount,
@@ -176,13 +183,13 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
         });
 
         return { success: true, transactionId: response.transactionId };
-      } else {
-        set({ error: 'Top-up request failed', isLoading: false });
-        return { success: false, error: 'Bank rejected top-up request' };
       }
+      return { success: false, error: 'Bank rejected top-up request' };
     } catch (error) {
-      set({ error: 'Network error during top-up', isLoading: false });
-      return { success: false, error: 'Network error' };
+      const message = error instanceof Error ? error.message : 'Network error during top-up';
+      set({ error: message, isLoading: false });
+      useToastStore.getState().addToast(message, 'error');
+      return { success: false, error: message };
     }
   },
 
@@ -193,6 +200,11 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
   processPayment: async (request: BankPaymentRequest) => {
     set({ isLoading: true, error: null });
     try {
+      // Pre-request validation
+      if (request.amount <= 0) {
+        throw new ValidationError('Payment amount must be greater than zero');
+      }
+
       const response = await bankAPI.requestPayment(request);
 
       if (response.success) {
@@ -223,13 +235,13 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
           transactionId: response.transactionId,
           approvalCode: response.approvalCode,
         };
-      } else {
-        set({ error: 'Payment request failed', isLoading: false });
-        return { success: false, error: 'Bank rejected payment request' };
       }
+      return { success: false, error: 'Bank rejected payment request' };
     } catch (error) {
-      set({ error: 'Network error during payment', isLoading: false });
-      return { success: false, error: 'Network error' };
+      const message = error instanceof Error ? error.message : 'Network error during payment';
+      set({ error: message, isLoading: false });
+      useToastStore.getState().addToast(message, 'error');
+      return { success: false, error: message };
     }
   },
 
@@ -245,6 +257,11 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
     set({ isLoading: true, error: null });
 
     try {
+      // Pre-request validation
+      if (request.amount <= 0) {
+        throw new ValidationError('Payment amount must be greater than zero');
+      }
+
       // Step 1: Validate against policies
       const policyResult = await policyEngine.validateTransaction({
         userId: request.userId,
@@ -255,7 +272,8 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
       });
 
       if (!policyResult.allowed) {
-        set({ error: 'Policy violation', isLoading: false });
+        const violationMessage = policyResult.violations.map(v => v.message).join(', ');
+        set({ error: `Policy violation: ${violationMessage}`, isLoading: false });
         return {
           success: false,
           policyViolations: policyResult.violations.map(v => v.message),
@@ -307,13 +325,13 @@ export const useWalletStore = create<WalletState>((set, _get) => ({
           approvalCode: response.approvalCode,
           discount,
         };
-      } else {
-        set({ error: 'Bank rejected payment', isLoading: false });
-        return { success: false, error: 'Bank rejected payment request' };
       }
+      return { success: false, error: 'Bank rejected payment request' };
     } catch (error) {
-      set({ error: 'Payment processing error', isLoading: false });
-      return { success: false, error: 'Payment processing error' };
+      const message = error instanceof Error ? error.message : 'Payment processing error';
+      set({ error: message, isLoading: false });
+      useToastStore.getState().addToast(message, 'error');
+      return { success: false, error: message };
     }
   },
 }));

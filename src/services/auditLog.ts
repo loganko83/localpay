@@ -12,6 +12,8 @@
  * "Blockchain is used for verification, audit, and integrity purposes only"
  */
 
+import { ValidationError } from './errors';
+
 export type AuditActionType =
   | 'POLICY_CREATED'
   | 'POLICY_UPDATED'
@@ -107,6 +109,11 @@ class AuditLogService {
    * In production: Writes to database and anchors hash to blockchain
    */
   async log(entry: Omit<AuditLogEntry, 'id' | 'timestamp' | 'blockchainHash'>): Promise<AuditLogEntry> {
+    // Validation
+    if (!entry.action) throw new ValidationError('Audit action is required');
+    if (!entry.actorId) throw new ValidationError('Audit actorId is required');
+    if (!entry.targetId) throw new ValidationError('Audit targetId is required');
+
     const fullEntry: AuditLogEntry = {
       ...entry,
       id: `AUDIT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

@@ -10,6 +10,8 @@
  * We are a "display layer" only. All financial authority rests with the bank.
  */
 
+import { BankError } from './errors';
+
 // Response types from Bank API
 export interface BankBalanceResponse {
   success: boolean;
@@ -106,6 +108,13 @@ class BankAPIService {
    */
   async getBalance(userId: string): Promise<BankBalanceResponse> {
     // TODO: Replace with actual IBK API call
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    if (userId === 'error-user') {
+      throw new BankError('Bank system unavailable', 'SYSTEM_ERROR');
+    }
+
     // Mock response for development
     return {
       success: true,
@@ -119,14 +128,26 @@ class BankAPIService {
    * Request payment to Bank
    * Bank APPROVES and EXECUTES - we only REQUEST
    */
-  async requestPayment(_request: BankPaymentRequest): Promise<BankPaymentResponse> {
+  async requestPayment(request: BankPaymentRequest): Promise<BankPaymentResponse> {
     // TODO: Replace with actual IBK API call
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Mock validation logic
+    if (request.amount <= 0) {
+      throw new BankError('Invalid payment amount', 'SYSTEM_ERROR');
+    }
+
+    if (request.amount > 1000000) {
+      throw new BankError('Payment amount exceeds single transaction limit', 'LIMIT_EXCEEDED');
+    }
+
     // The bank validates, approves, and executes the payment
     // We receive the result and display it
     return {
       success: true,
       transactionId: `TXN-${Date.now()}`,
-      newBalance: 0, // Bank returns actual new balance
+      newBalance: 0, // In production, bank returns actual new balance
       timestamp: new Date().toISOString(),
       approvalCode: `APR-${Math.random().toString(36).substr(2, 9)}`,
     };
@@ -137,15 +158,22 @@ class BankAPIService {
    * Funds move from user's bank account to Bank's trust account
    * We never touch the actual money
    */
-  async requestCharge(_request: BankChargeRequest): Promise<BankChargeResponse> {
+  async requestCharge(request: BankChargeRequest): Promise<BankChargeResponse> {
     // TODO: Replace with actual IBK API call
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    if (request.amount > 1000000) {
+      throw new BankError('Daily top-up limit exceeded', 'LIMIT_EXCEEDED');
+    }
+
     // Bank handles Open Banking API call to source account
     // Bank deposits to trust account
     // We display the result
     return {
       success: true,
       transactionId: `CHG-${Date.now()}`,
-      newBalance: 0, // Bank returns actual new balance
+      newBalance: 0, // In production, bank returns actual new balance
       timestamp: new Date().toISOString(),
     };
   }

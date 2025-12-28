@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTransactionStore } from '../../store';
+import { theme } from '../../styles/theme';
 
-// Unified Dark Theme
-const theme = {
-  bg: '#111111',
-  card: '#1a1a1a',
-  cardHover: '#222222',
-  border: '#2a2a2a',
-  accent: '#ff4757',
-  accentSoft: 'rgba(255,71,87,0.15)',
-  text: '#ffffff',
-  textSecondary: '#888888',
-  textMuted: '#555555',
-};
+
 
 const TransactionDetail: React.FC = () => {
   const navigate = useNavigate();

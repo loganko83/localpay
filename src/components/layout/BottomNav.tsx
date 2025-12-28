@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserType } from '../../types';
+import { theme } from '../../styles/theme';
 
 interface NavItem {
   icon: string;
@@ -36,22 +37,22 @@ const adminNav: NavItem[] = [
 // Theme colors for bottom nav - unified dark theme
 const themeStyles = {
   consumer: {
-    background: '#1a1a1a',
-    borderColor: '#2a2a2a',
-    primary: '#ff4757',
-    inactive: '#555555',
+    background: theme.card,
+    borderColor: theme.border,
+    primary: theme.accent,
+    inactive: theme.textMuted,
   },
   merchant: {
-    background: '#1a1a1a',
-    borderColor: '#2a2a2a',
-    primary: '#10b981',
-    inactive: '#555555',
+    background: theme.card,
+    borderColor: theme.border,
+    primary: theme.merchant,
+    inactive: theme.textMuted,
   },
   admin: {
-    background: '#1a1a1a',
-    borderColor: '#2a2a2a',
-    primary: '#3b82f6',
-    inactive: '#555555',
+    background: theme.card,
+    borderColor: theme.border,
+    primary: theme.admin,
+    inactive: theme.textMuted,
   },
 };
 
@@ -66,8 +67,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ userType }) => {
   const navItems = userType === 'consumer'
     ? consumerNav
     : userType === 'merchant'
-    ? merchantNav
-    : adminNav;
+      ? merchantNav
+      : adminNav;
 
   const styles = themeStyles[userType] || themeStyles.consumer;
 

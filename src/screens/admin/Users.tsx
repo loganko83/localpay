@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Input, Button } from '../../components/common';
+import { theme } from '../../styles/theme';
 
 const mockMerchants = [
   { id: '1', name: 'Jeonju Bibimbap', walletAddress: '0x1a2b...3c4d', status: 'active' as const, lastTx: '2 min ago', type: 'Restaurant' },
@@ -45,7 +46,7 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col pb-4">
+    <div className="flex flex-col pb-4" style={{ background: theme.bg }}>
       <Header title="User Management" />
 
       {/* Tabs */}
@@ -53,17 +54,15 @@ const Users: React.FC = () => {
         <div className="flex gap-2 p-1 bg-surface rounded-xl">
           <button
             onClick={() => setActiveTab('citizens')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'citizens' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
-            }`}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'citizens' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
+              }`}
           >
             Citizens
           </button>
           <button
             onClick={() => setActiveTab('merchants')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'merchants' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
-            }`}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'merchants' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
+              }`}
           >
             Merchants
           </button>

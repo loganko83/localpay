@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AreaChart, Area, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
+import { AreaChart, Area, ResponsiveContainer, XAxis, Tooltip, BarChart, Bar, Cell } from 'recharts';
+import { usePlatformMetrics, useNetworkStatus, useRecentBlocks } from '../../services/api/hooks';
+import { formatTimestamp } from '../../services/blockchain/explorer';
 
 const volumeData = [
   { name: 'Mon', value: 1800 },
@@ -12,13 +14,21 @@ const volumeData = [
   { name: 'Sun', value: 2900 },
 ];
 
+const categoryData = [
+  { name: 'F&B', value: 35, color: '#2b8cee' },
+  { name: 'Retail', value: 25, color: '#22c55e' },
+  { name: 'Service', value: 20, color: '#f59e0b' },
+  { name: 'Market', value: 12, color: '#ec4899' },
+  { name: 'Other', value: 8, color: '#8b5cf6' },
+];
+
 const recentActivity = [
   {
     id: '1',
     type: 'warning',
     icon: 'warning',
     title: 'High Volume Transaction',
-    description: 'Wallet ID: 0x8a...4f2 detected moving ₩50M',
+    description: 'Wallet ID: 0x8a...4f2 detected moving 50M KRW',
     time: '10m ago',
     color: '#ef4444',
   },
@@ -40,193 +50,104 @@ const recentActivity = [
     time: '2h ago',
     color: '#22c55e',
   },
+  {
+    id: '4',
+    type: 'info',
+    icon: 'verified',
+    title: 'Batch Anchoring Complete',
+    description: '1,234 audit logs anchored to Xphere',
+    time: '3h ago',
+    color: '#2b8cee',
+  },
 ];
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { data: metrics } = usePlatformMetrics();
+  const { data: networkStatus } = useNetworkStatus();
+  const { data: recentBlocks } = useRecentBlocks(5);
 
-  const platformStats = {
-    totalIssuance: '₩45.2B',
-    activeUsers: '342.1K',
-    volume24h: '₩2.1B',
-    pendingMerchants: 12,
-    blockHeight: '12,404,200',
+  const formatCurrency = (value: number) => {
+    if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}B`;
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+    return value.toString();
   };
 
   return (
-    <div className="flex flex-col min-h-screen pb-28" style={{ background: '#101922' }}>
-      {/* Header */}
-      <header
-        className="sticky top-0 z-50 backdrop-blur-md px-4 pt-6 pb-3"
-        style={{
-          background: 'rgba(16,25,34,0.95)',
-          borderBottom: '1px solid #1e293b',
-        }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button style={{ color: '#94a3b8' }}>
-              <span className="material-symbols-outlined text-[28px]">menu</span>
-            </button>
-            <div>
-              <h1 className="text-white text-lg font-bold leading-none tracking-tight">Busan Admin</h1>
-              <p className="text-xs font-medium mt-1" style={{ color: '#94a3b8' }}>City Official Access</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              className="relative p-1"
-              style={{ color: '#94a3b8' }}
-              onClick={() => navigate('/admin/notifications')}
-            >
-              <span className="material-symbols-outlined text-[24px]">notifications</span>
-              <span
-                className="absolute top-1 right-1 h-2 w-2 rounded-full"
-                style={{ background: '#ef4444', border: '2px solid #101922' }}
-              />
-            </button>
-            <div
-              className="h-9 w-9 overflow-hidden rounded-full"
-              style={{ background: '#1c2630', border: '1px solid #334155' }}
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#64748b' }}>person</span>
-              </div>
-            </div>
-          </div>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Welcome back! Here's what's happening with LocalPay.
+          </p>
         </div>
-      </header>
-
-      {/* System Status Ticker */}
-      <div
-        className="py-2 px-4 flex items-center justify-between"
-        style={{ background: '#1c2630', borderBottom: '1px solid #1e293b' }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span
-              className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-              style={{ background: '#0bda5b' }}
-            />
-            <span
-              className="relative inline-flex rounded-full h-2.5 w-2.5"
-              style={{ background: '#0bda5b' }}
-            />
-          </span>
-          <span className="text-xs font-bold tracking-wide uppercase" style={{ color: '#0bda5b' }}>
-            System Healthy
-          </span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/admin/analytics')}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <span className="material-symbols-outlined text-[18px]">analytics</span>
+            View Analytics
+          </button>
         </div>
-        <p className="text-xs font-mono" style={{ color: '#94a3b8' }}>
-          Block Height: #{platformStats.blockHeight}
-        </p>
       </div>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col gap-6 p-4 pb-24">
-        {/* Platform Overview */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white text-xl font-bold tracking-tight">Platform Overview</h2>
-            <span
-              className="text-xs font-medium px-2 py-1 rounded"
-              style={{ color: '#2b8cee', background: 'rgba(43,140,238,0.1)' }}
-            >
-              Live Data
-            </span>
-          </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Issuance"
+          value={`₩${formatCurrency(metrics?.totalIssuance || 45200000000)}`}
+          change="+2.4%"
+          positive
+          icon="account_balance_wallet"
+          onClick={() => navigate('/admin/analytics')}
+        />
+        <StatCard
+          title="Active Users"
+          value={formatCurrency(metrics?.activeUsers || 342100)}
+          change="+1.2%"
+          positive
+          icon="groups"
+          onClick={() => navigate('/admin/users')}
+        />
+        <StatCard
+          title="24h Volume"
+          value={`₩${formatCurrency(metrics?.volume24h || 2100000000)}`}
+          change="+5.4%"
+          positive
+          icon="sync_alt"
+          onClick={() => navigate('/admin/analytics')}
+        />
+        <StatCard
+          title="Pending Merchants"
+          value={(metrics?.pendingMerchants || 12).toString()}
+          change="Action Required"
+          positive={false}
+          icon="storefront"
+          highlight
+          onClick={() => navigate('/admin/users')}
+        />
+      </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {/* Total Issuance */}
-            <div
-              className="rounded-xl p-4 flex flex-col gap-1 shadow-sm"
-              style={{ background: '#1c2630', border: '1px solid #1e293b' }}
-            >
-              <div className="flex justify-between items-start mb-1">
-                <span className="text-xs font-medium uppercase" style={{ color: '#94a3b8' }}>Total Issuance</span>
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#2b8cee' }}>account_balance_wallet</span>
-              </div>
-              <p className="text-white text-2xl font-bold tracking-tight">{platformStats.totalIssuance}</p>
-              <p className="text-xs font-bold flex items-center gap-0.5" style={{ color: '#0bda5b' }}>
-                <span className="material-symbols-outlined text-[14px]">trending_up</span> +2.4%
-              </p>
-            </div>
-
-            {/* Active Users */}
-            <div
-              className="rounded-xl p-4 flex flex-col gap-1 shadow-sm"
-              style={{ background: '#1c2630', border: '1px solid #1e293b' }}
-            >
-              <div className="flex justify-between items-start mb-1">
-                <span className="text-xs font-medium uppercase" style={{ color: '#94a3b8' }}>Active Users</span>
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#2b8cee' }}>groups</span>
-              </div>
-              <p className="text-white text-2xl font-bold tracking-tight">{platformStats.activeUsers}</p>
-              <p className="text-xs font-bold flex items-center gap-0.5" style={{ color: '#0bda5b' }}>
-                <span className="material-symbols-outlined text-[14px]">trending_up</span> +1.2%
-              </p>
-            </div>
-
-            {/* 24h Volume */}
-            <div
-              className="rounded-xl p-4 flex flex-col gap-1 shadow-sm"
-              style={{ background: '#1c2630', border: '1px solid #1e293b' }}
-            >
-              <div className="flex justify-between items-start mb-1">
-                <span className="text-xs font-medium uppercase" style={{ color: '#94a3b8' }}>24h Volume</span>
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#2b8cee' }}>sync_alt</span>
-              </div>
-              <p className="text-white text-2xl font-bold tracking-tight">{platformStats.volume24h}</p>
-              <p className="text-xs font-bold flex items-center gap-0.5" style={{ color: '#0bda5b' }}>
-                <span className="material-symbols-outlined text-[14px]">trending_up</span> +5.4%
-              </p>
-            </div>
-
-            {/* Pending Merchants */}
-            <div
-              className="rounded-xl p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden cursor-pointer"
-              style={{ background: '#1c2630', border: '1px solid #1e293b' }}
-              onClick={() => navigate('/admin/users')}
-            >
-              <div
-                className="absolute -right-2 -top-2 w-12 h-12 rounded-full blur-xl"
-                style={{ background: 'rgba(249,115,22,0.2)' }}
-              />
-              <div className="flex justify-between items-start mb-1 relative z-10">
-                <span className="text-xs font-medium uppercase" style={{ color: '#94a3b8' }}>Pending Merchants</span>
-                <span className="material-symbols-outlined text-[20px]" style={{ color: '#fb923c' }}>storefront</span>
-              </div>
-              <p className="text-white text-2xl font-bold tracking-tight relative z-10">{platformStats.pendingMerchants}</p>
-              <p className="text-xs font-bold relative z-10" style={{ color: '#fb923c' }}>
-                Action Required
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Chart Section */}
-        <section
-          className="rounded-xl p-5"
-          style={{ background: '#1c2630', border: '1px solid #1e293b' }}
-        >
-          <div className="flex items-center justify-between mb-4">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Transaction Volume Chart */}
+        <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-white text-base font-bold">Transaction Volume</h3>
-              <p className="text-xs" style={{ color: '#94a3b8' }}>Last 7 Days vs Previous</p>
+              <h3 className="text-white font-semibold">Transaction Volume</h3>
+              <p className="text-gray-500 text-sm">Last 7 days comparison</p>
             </div>
-            <button
-              className="p-2 rounded-lg transition-colors"
-              style={{ color: '#94a3b8' }}
-            >
-              <span className="material-symbols-outlined text-[20px]">more_horiz</span>
-            </button>
+            <button className="text-primary text-sm hover:underline">View Report</button>
           </div>
-
-          <div className="h-40 w-full">
+          <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={volumeData}>
                 <defs>
-                  <linearGradient id="colorAdmin" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#2b8cee" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#2b8cee" stopOpacity={0} />
                   </linearGradient>
@@ -235,107 +156,288 @@ const Dashboard: React.FC = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 10 }}
-                  dy={10}
+                  tick={{ fill: '#64748b', fontSize: 12 }}
                 />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1c2630', borderColor: '#334155', borderRadius: '8px' }}
-                  itemStyle={{ color: '#fff' }}
-                  labelStyle={{ display: 'none' }}
-                  formatter={(value) => value != null ? [`₩${value}M`, 'Volume'] : ['', '']}
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    borderColor: '#334155',
+                    borderRadius: 8,
+                  }}
+                  formatter={(value) => [`₩${value}M`, 'Volume']}
                 />
                 <Area
                   type="monotone"
                   dataKey="value"
                   stroke="#2b8cee"
-                  strokeWidth={3}
-                  fillOpacity={1}
-                  fill="url(#colorAdmin)"
+                  strokeWidth={2}
+                  fill="url(#colorVolume)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </section>
+        </div>
 
-        {/* Management Quick Actions */}
-        <section>
-          <h3 className="text-white text-lg font-bold mb-3">Management</h3>
-          <div className="grid grid-cols-4 gap-3">
-            {[
-              { icon: 'manage_accounts', label: 'Users', path: '/admin/users' },
-              { icon: 'store', label: 'Merchants', path: '/admin/users' },
-              { icon: 'confirmation_number', label: 'Vouchers', path: '/admin/vouchers' },
-              { icon: 'lab_profile', label: 'Audit', path: '/admin/audit' },
-            ].map((action) => (
-              <button
-                key={action.label}
-                onClick={() => navigate(action.path)}
-                className="flex flex-col items-center gap-2 group"
-              >
-                <div
-                  className="h-14 w-14 rounded-2xl flex items-center justify-center transition-all active:scale-95"
-                  style={{ background: '#1e293b', border: '1px solid #334155' }}
-                >
-                  <span className="material-symbols-outlined text-[24px] text-white">{action.icon}</span>
+        {/* Blockchain Status */}
+        <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-white font-semibold">Blockchain Status</h3>
+            <button
+              onClick={() => navigate('/admin/blockchain')}
+              className="text-primary text-sm hover:underline"
+            >
+              Explorer
+            </button>
+          </div>
+
+          {/* Network Status */}
+          <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-green-500">token</span>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500 font-medium">Xphere Connected</span>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                  </span>
                 </div>
-                <span className="text-xs font-medium" style={{ color: '#94a3b8' }}>{action.label}</span>
-              </button>
+                <p className="text-gray-500 text-xs font-mono mt-0.5">
+                  Block #{(networkStatus?.blockHeight || 12404200).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Blocks */}
+          <div className="space-y-2">
+            <p className="text-gray-400 text-xs font-medium uppercase">Recent Blocks</p>
+            {recentBlocks?.slice(0, 4).map((block) => (
+              <div
+                key={block.number}
+                className="flex items-center justify-between py-2 border-b border-white/5 last:border-0"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[16px]">
+                    deployed_code
+                  </span>
+                  <span className="text-white text-sm font-mono">
+                    #{block.number.toLocaleString()}
+                  </span>
+                </div>
+                <span className="text-gray-500 text-xs">{formatTimestamp(block.timestamp)}</span>
+              </div>
             ))}
           </div>
-        </section>
+        </div>
+      </div>
 
+      {/* Second Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white text-lg font-bold">Recent Activity</h3>
+        <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+            <h3 className="text-white font-semibold">Recent Activity</h3>
             <button
-              className="text-xs font-bold"
-              style={{ color: '#2b8cee' }}
               onClick={() => navigate('/admin/audit')}
+              className="text-primary text-sm hover:underline"
             >
               View All
             </button>
           </div>
-
-          <div className="flex flex-col gap-3">
+          <div className="divide-y divide-white/5">
             {recentActivity.map((activity) => (
               <div
                 key={activity.id}
-                className="flex gap-3 rounded-lg p-3 items-center"
-                style={{ background: '#1c2630', border: '1px solid rgba(30,41,59,0.5)' }}
+                className="px-6 py-4 hover:bg-white/5 transition-colors cursor-pointer"
               >
-                <div
-                  className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: `${activity.color}15` }}
-                >
-                  <span
-                    className="material-symbols-outlined text-[20px]"
-                    style={{ color: activity.color }}
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `${activity.color}15` }}
                   >
-                    {activity.icon}
-                  </span>
+                    <span
+                      className="material-symbols-outlined text-[20px]"
+                      style={{ color: activity.color }}
+                    >
+                      {activity.icon}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className="text-white font-medium">{activity.title}</p>
+                      <span className="text-gray-500 text-xs">{activity.time}</span>
+                    </div>
+                    <p className="text-gray-400 text-sm mt-0.5">{activity.description}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{activity.title}</p>
-                  <p className="text-xs truncate" style={{ color: '#94a3b8' }}>{activity.description}</p>
-                </div>
-                <span className="text-xs whitespace-nowrap" style={{ color: '#64748b' }}>{activity.time}</span>
               </div>
             ))}
           </div>
-        </section>
-
-        {/* Secure Badge */}
-        <div className="flex flex-col items-center justify-center py-6 gap-2 opacity-50">
-          <span className="material-symbols-outlined text-[20px]" style={{ color: '#94a3b8' }}>lock</span>
-          <p className="text-xs text-center" style={{ color: '#64748b' }}>
-            Secure Connection via Busan BlockchainNet<br />
-            Session ID: 8X92-22L1-00P
-          </p>
         </div>
-      </main>
+
+        {/* Quick Actions */}
+        <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
+          <h3 className="text-white font-semibold mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <QuickAction
+              icon="person_add"
+              label="Add User"
+              onClick={() => navigate('/admin/users')}
+            />
+            <QuickAction
+              icon="add_business"
+              label="Add Merchant"
+              onClick={() => navigate('/admin/users')}
+            />
+            <QuickAction
+              icon="confirmation_number"
+              label="Issue Voucher"
+              onClick={() => navigate('/admin/vouchers')}
+            />
+            <QuickAction
+              icon="lab_profile"
+              label="View Audit"
+              onClick={() => navigate('/admin/audit')}
+            />
+            <QuickAction
+              icon="policy"
+              label="Policies"
+              onClick={() => navigate('/admin/policies')}
+            />
+            <QuickAction
+              icon="payments"
+              label="Settlements"
+              onClick={() => navigate('/admin/settlements')}
+            />
+          </div>
+
+          {/* Category Distribution */}
+          <div className="mt-6 pt-6 border-t border-white/5">
+            <p className="text-gray-400 text-xs font-medium uppercase mb-3">
+              Merchant Categories
+            </p>
+            <div className="h-32">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={categoryData} layout="vertical">
+                  <XAxis type="number" hide />
+                  <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {categoryData.map((item) => (
+                <div key={item.name} className="flex items-center gap-1.5 text-xs">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-gray-400">{item.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Info */}
+      <div className="flex items-center justify-center gap-4 py-4 text-gray-600 text-xs">
+        <span className="flex items-center gap-1">
+          <span className="material-symbols-outlined text-[14px]">lock</span>
+          Secure Connection
+        </span>
+        <span>|</span>
+        <span>Session ID: 8X92-22L1-00P</span>
+        <span>|</span>
+        <span>Xphere BlockchainNet</span>
+      </div>
     </div>
   );
 };
+
+// Stat Card Component
+interface StatCardProps {
+  title: string;
+  value: string;
+  change: string;
+  positive: boolean;
+  icon: string;
+  highlight?: boolean;
+  onClick?: () => void;
+}
+
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  change,
+  positive,
+  icon,
+  highlight,
+  onClick,
+}) => (
+  <div
+    onClick={onClick}
+    className={`bg-gray-900/50 border rounded-xl p-5 cursor-pointer hover:bg-gray-800/50 transition-colors ${
+      highlight ? 'border-orange-500/30' : 'border-white/5'
+    }`}
+  >
+    <div className="flex items-start justify-between mb-3">
+      <span className="text-gray-400 text-sm">{title}</span>
+      <div
+        className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+          highlight ? 'bg-orange-500/20' : 'bg-primary/20'
+        }`}
+      >
+        <span
+          className={`material-symbols-outlined text-[18px] ${
+            highlight ? 'text-orange-500' : 'text-primary'
+          }`}
+        >
+          {icon}
+        </span>
+      </div>
+    </div>
+    <p className="text-white text-2xl font-bold mb-1">{value}</p>
+    <div
+      className={`flex items-center gap-1 text-sm ${
+        highlight
+          ? 'text-orange-500'
+          : positive
+          ? 'text-green-500'
+          : 'text-red-500'
+      }`}
+    >
+      {!highlight && (
+        <span className="material-symbols-outlined text-[16px]">
+          {positive ? 'trending_up' : 'trending_down'}
+        </span>
+      )}
+      {change}
+    </div>
+  </div>
+);
+
+// Quick Action Button
+interface QuickActionProps {
+  icon: string;
+  label: string;
+  onClick: () => void;
+}
+
+const QuickAction: React.FC<QuickActionProps> = ({ icon, label, onClick }) => (
+  <button
+    onClick={onClick}
+    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/30 transition-colors"
+  >
+    <span className="material-symbols-outlined text-primary text-[22px]">{icon}</span>
+    <span className="text-gray-400 text-xs">{label}</span>
+  </button>
+);
 
 export default Dashboard;

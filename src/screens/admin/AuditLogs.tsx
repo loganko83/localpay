@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Button, Input } from '../../components/common';
 import { AuditLogEntry, AuditActionType } from '../../types';
+import { theme } from '../../styles/theme';
 
 // Mock audit log data
 const mockAuditLogs: AuditLogEntry[] = [
@@ -157,11 +158,11 @@ const getActionIcon = (action: AuditActionType): string => {
   return iconMap[action] || 'info';
 };
 
-const getActionColor = (action: AuditActionType): string => {
-  if (action === 'SECURITY_ALERT') return 'bg-red-500/10 text-red-500';
-  if (action.includes('COMPLETED') || action.includes('VERIFIED')) return 'bg-green-500/10 text-green-500';
-  if (action.includes('SUSPENDED') || action.includes('REFUND')) return 'bg-yellow-500/10 text-yellow-500';
-  return 'bg-primary/10 text-primary';
+const getActionColor = (action: AuditActionType) => {
+  if (action === 'SECURITY_ALERT') return { background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' };
+  if (action.includes('COMPLETED') || action.includes('VERIFIED')) return { background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' };
+  if (action.includes('SUSPENDED') || action.includes('REFUND')) return { background: 'rgba(234, 179, 8, 0.1)', color: '#eab308' };
+  return { background: `${theme.admin}15`, color: theme.admin };
 };
 
 const AuditLogs: React.FC = () => {
@@ -203,7 +204,7 @@ const AuditLogs: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col pb-4">
+    <div className="flex flex-col pb-4" style={{ background: theme.bg }}>
       <Header title="Audit Logs & Blockchain Trail" />
 
       {/* Stats Overview */}
@@ -257,11 +258,10 @@ const AuditLogs: React.FC = () => {
             <button
               key={action}
               onClick={() => setFilterAction(action)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                filterAction === action
-                  ? 'bg-primary text-background'
-                  : 'bg-surface-highlight text-text-secondary hover:text-white'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${filterAction === action
+                ? 'bg-primary text-background'
+                : 'bg-surface-highlight text-text-secondary hover:text-white'
+                }`}
             >
               {action === 'all' ? 'All' : actionTypeLabels[action as AuditActionType]}
             </button>
@@ -289,7 +289,7 @@ const AuditLogs: React.FC = () => {
               className="cursor-pointer hover:border-primary/30 transition-colors"
             >
               <div className="flex items-start gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${getActionColor(log.action)}`}>
+                <div className="h-10 w-10 rounded-full flex items-center justify-center" style={getActionColor(log.action)}>
                   <span className="material-symbols-outlined text-[20px]">
                     {getActionIcon(log.action)}
                   </span>

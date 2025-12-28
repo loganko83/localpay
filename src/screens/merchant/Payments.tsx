@@ -4,17 +4,7 @@ import { Card, Badge, Input, Button } from '../../components/common';
 import { useTransactionStore } from '../../store';
 import { TransactionStatus } from '../../types';
 
-const theme = {
-  bg: '#111111',
-  card: '#1a1a1a',
-  cardHover: '#222222',
-  border: '#2a2a2a',
-  accent: '#ff4757',
-  accentSoft: 'rgba(255,71,87,0.15)',
-  text: '#ffffff',
-  textSecondary: '#888888',
-  textMuted: '#555555',
-};
+import { theme } from '../../styles/theme';
 
 const statusFilters: { label: string; value: TransactionStatus | 'all' }[] = [
   { label: 'All', value: 'all' },
@@ -98,8 +88,8 @@ const Payments: React.FC = () => {
               }}
             >
               {range === 'today' ? 'Today' :
-               range === 'yesterday' ? 'Yesterday' :
-               range === 'week' ? 'This Week' : 'This Month'}
+                range === 'yesterday' ? 'Yesterday' :
+                  range === 'week' ? 'This Week' : 'This Month'}
             </button>
           ))}
           <button

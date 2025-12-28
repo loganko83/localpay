@@ -1,7 +1,7 @@
 # Task List
 
 > Actionable tasks for LocalPay implementation
-> Updated: 2024-12-25
+> Updated: 2024-12-28
 
 ---
 
@@ -20,6 +20,8 @@
 | Sprint 9: Merchant Additional | COMPLETE | 100% |
 | Sprint 10: Service Integration | COMPLETE | 100% |
 | Sprint 11: Phase 6-11 UI | COMPLETE | 100% |
+| Sprint 12: Admin Web Upgrade | COMPLETE | 100% |
+| Sprint 13: Compliance & Monitoring | COMPLETE | 100% |
 
 ---
 
@@ -231,6 +233,81 @@
 
 ---
 
+### Sprint 12: Admin Web Dashboard Upgrade (COMPLETE)
+
+#### 12.1 Web-First Admin Layout
+- [x] Create AdminLayout.tsx - Desktop-first responsive layout
+- [x] Create AdminSidebar.tsx - Collapsible sidebar with icons
+- [x] Create AdminTopBar.tsx - Search, notifications, profile dropdown
+- [x] Create AdminBreadcrumbs.tsx - Navigation breadcrumbs
+- [x] Update router to use new AdminLayout
+
+#### 12.2 TanStack Integration
+- [x] Install @tanstack/react-query, @tanstack/react-table, ethers
+- [x] Create QueryProvider with devtools
+- [x] Create API hooks (useNetworkStatus, usePlatformMetrics, etc.)
+
+#### 12.3 Blockchain Service Layer (Xphere)
+- [x] Create blockchain config (config.ts) - Xphere RPC, Tamsa explorer
+- [x] Create xphere.ts - Xphere chain connection and block/tx queries
+- [x] Create merkleTree.ts - Merkle proof generation for batch verification
+- [x] Create auditAnchor.ts - Audit log anchoring service
+- [x] Create explorer.ts - Tamsa explorer integration
+
+#### 12.4 DID-BaaS Integration
+- [x] Create DID client (client.ts) - Integration with trendy.storydot.kr/did-baas/
+- [x] DID operations (issue, resolve, verify, revoke)
+- [x] Credential operations (issue, verify)
+- [x] Batch operations support
+
+#### 12.5 New Admin Screens
+- [x] Analytics - Advanced statistics with charts (volume, users, regions)
+- [x] BlockchainExplorer - Xphere block/tx search, audit verification
+- [x] Settings - Platform, blockchain, DID, notification, security settings
+
+#### 12.6 Updated Admin Screens
+- [x] Dashboard - Web layout with blockchain status, quick actions
+- [x] Updated routes for new paths (/admin/blockchain, /admin/analytics, /admin/settings)
+
+---
+
+### Sprint 13: Advanced Compliance & Monitoring (COMPLETE)
+
+#### 13.1 Research & Analysis
+- [x] Korean local currency blockchain integration research
+- [x] Project Hangang (CBDC) analysis
+- [x] Busan/Seongnam blockchain platform study
+- [x] AML/FDS requirements analysis (KoFIU compliance)
+- [x] Welfare distribution tracking best practices
+- [x] Created admin-blockchain-features.md specification
+
+#### 13.2 Fraud Detection System (FDS)
+- [x] FDS detector service (src/services/fds/detector.ts)
+- [x] FDSDashboard.tsx - Real-time fraud monitoring
+- [x] Alert severity classification (critical/high/medium/low)
+- [x] Risk scoring for merchants and users
+- [x] Pattern detection (velocity, phantom merchant, QR duplicate, etc.)
+
+#### 13.3 AML Compliance Center
+- [x] AML screening service (src/services/aml/screening.ts)
+- [x] AMLCenter.tsx - Comprehensive AML dashboard
+- [x] CTR/STR reporting workflow (KoFIU)
+- [x] Case management with investigation tracking
+- [x] Korean AML thresholds (10M KRW CTR)
+
+#### 13.4 Welfare Distribution Tracker
+- [x] WelfareTracker.tsx - Government subsidy tracking
+- [x] Program management (youth, senior, disability, culture, education)
+- [x] DID verification integration
+- [x] Blockchain-anchored distribution records
+- [x] Impact analytics (economic multiplier, capital retention)
+
+#### 13.5 Navigation Updates
+- [x] Updated AdminSidebar with new screens
+- [x] Added routes for FDS, AML Center, Welfare Tracker
+
+---
+
 ## All Sprints Complete
 
 ---
@@ -243,6 +320,14 @@
 | Audit Log | src/services/auditLog.ts | Complete |
 | Identity (DID/VC) | src/services/identity.ts | Complete |
 | Policy Engine | src/services/policyEngine.ts | Complete |
+| Xphere Blockchain | src/services/blockchain/xphere.ts | Complete |
+| Merkle Tree | src/services/blockchain/merkleTree.ts | Complete |
+| Audit Anchor | src/services/blockchain/auditAnchor.ts | Complete |
+| Tamsa Explorer | src/services/blockchain/explorer.ts | Complete |
+| DID-BaaS Client | src/services/did/client.ts | Complete |
+| TanStack Query Hooks | src/services/api/hooks.ts | Complete |
+| FDS Detector | src/services/fds/detector.ts | Complete |
+| AML Screening | src/services/aml/screening.ts | Complete |
 
 ---
 
@@ -284,9 +369,9 @@
 - [x] SettlementCalendar
 - [x] LoyaltyRedeem (Phase 8)
 
-### Admin (13 screens)
+### Admin (19 screens)
 - [x] Login
-- [x] Dashboard
+- [x] Dashboard (Web layout - Sprint 12)
 - [x] Users
 - [x] Vouchers
 - [x] Settlements
@@ -298,11 +383,17 @@
 - [x] CarbonAdmin (Phase 9)
 - [x] DonationCampaigns (Phase 10)
 - [x] MerchantCreditReview (Phase 10)
+- [x] Analytics (Sprint 12)
+- [x] BlockchainExplorer (Sprint 12)
+- [x] Settings (Sprint 12)
+- [x] FDSDashboard (Sprint 13) - Fraud Detection
+- [x] AMLCenter (Sprint 13) - Enhanced AML Compliance
+- [x] WelfareTracker (Sprint 13) - Welfare Distribution
 
 ### Debug (1 screen)
 - [x] DebugDashboard (with Performance metrics)
 
-**Total: 46 screens implemented**
+**Total: 52 screens implemented**
 
 ---
 
