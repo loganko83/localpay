@@ -92,11 +92,11 @@ const MerchantCreditReview: React.FC = () => {
   });
 
   const scoreDistribution = [
-    { range: '850-1000', label: 'Excellent', count: mockProfiles.filter(p => p.currentScore >= 850).length, color: '#00d68f' },
-    { range: '700-849', label: 'Good', count: mockProfiles.filter(p => p.currentScore >= 700 && p.currentScore < 850).length, color: '#2b8cee' },
-    { range: '550-699', label: 'Fair', count: mockProfiles.filter(p => p.currentScore >= 550 && p.currentScore < 700).length, color: '#ffa726' },
-    { range: '400-549', label: 'Poor', count: mockProfiles.filter(p => p.currentScore >= 400 && p.currentScore < 550).length, color: '#ff6b6b' },
-    { range: '0-399', label: 'Very Poor', count: mockProfiles.filter(p => p.currentScore < 400).length, color: '#d32f2f' },
+    { range: '850-1000', label: '최우수', count: mockProfiles.filter(p => p.currentScore >= 850).length, color: '#00d68f' },
+    { range: '700-849', label: '우수', count: mockProfiles.filter(p => p.currentScore >= 700 && p.currentScore < 850).length, color: '#2b8cee' },
+    { range: '550-699', label: '보통', count: mockProfiles.filter(p => p.currentScore >= 550 && p.currentScore < 700).length, color: '#ffa726' },
+    { range: '400-549', label: '주의', count: mockProfiles.filter(p => p.currentScore >= 400 && p.currentScore < 550).length, color: '#ff6b6b' },
+    { range: '0-399', label: '위험', count: mockProfiles.filter(p => p.currentScore < 400).length, color: '#d32f2f' },
   ];
 
   const getGradeColor = (grade: CreditGrade): string => {
@@ -177,12 +177,12 @@ const MerchantCreditReview: React.FC = () => {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-surface">
         <div>
-          <h1 className="text-lg font-bold text-white">Merchant Credit Review</h1>
-          <p className="text-xs text-text-secondary">Review and approve credit assessments</p>
+          <h1 className="text-lg font-bold text-white">가맹점 신용 심사</h1>
+          <p className="text-xs text-text-secondary">신용 평가 검토 및 승인</p>
         </div>
         <Badge variant="warning" size="md">
           <span className="material-symbols-outlined text-[12px] mr-1">pending</span>
-          {stats.pendingCount} pending
+          {stats.pendingCount}건 대기 중
         </Badge>
       </div>
 
@@ -191,7 +191,7 @@ const MerchantCreditReview: React.FC = () => {
         <Card padding="md" className="bg-gradient-to-br from-[#2b8cee]/10 to-transparent border-[#2b8cee]/20">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-[#2b8cee] text-[16px]">task_alt</span>
-            <p className="text-xs text-text-secondary">Reviewed</p>
+            <p className="text-xs text-text-secondary">심사 완료</p>
           </div>
           <p className="text-2xl font-bold text-white">{stats.totalReviewed}</p>
         </Card>
@@ -199,7 +199,7 @@ const MerchantCreditReview: React.FC = () => {
         <Card padding="md" className="bg-gradient-to-br from-green-500/10 to-transparent border-green-500/20">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-green-400 text-[16px]">trending_up</span>
-            <p className="text-xs text-text-secondary">Approved</p>
+            <p className="text-xs text-text-secondary">승인률</p>
           </div>
           <p className="text-2xl font-bold text-white">{stats.approvedRate.toFixed(1)}%</p>
         </Card>
@@ -207,7 +207,7 @@ const MerchantCreditReview: React.FC = () => {
         <Card padding="md" className="bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-yellow-400 text-[16px]">star</span>
-            <p className="text-xs text-text-secondary">Avg Score</p>
+            <p className="text-xs text-text-secondary">평균 점수</p>
           </div>
           <p className="text-2xl font-bold text-white">{stats.averageScore}</p>
         </Card>
@@ -217,8 +217,8 @@ const MerchantCreditReview: React.FC = () => {
       <div className="px-4 mb-6">
         <Card padding="lg">
           <div className="mb-4">
-            <h3 className="text-sm font-bold text-white">Credit Score Distribution</h3>
-            <p className="text-xs text-text-secondary">Score ranges across pending reviews</p>
+            <h3 className="text-sm font-bold text-white">신용 점수 분포</h3>
+            <p className="text-xs text-text-secondary">대기 중인 심사 건의 점수 분포</p>
           </div>
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -260,7 +260,7 @@ const MerchantCreditReview: React.FC = () => {
       <div className="px-4 mb-4 space-y-3">
         <Input
           icon="search"
-          placeholder="Search by merchant name, ID, or business type..."
+          placeholder="가맹점명, ID, 업종으로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -274,7 +274,7 @@ const MerchantCreditReview: React.FC = () => {
                 : 'bg-surface text-text-secondary hover:bg-surface-highlight'
             }`}
           >
-            All Grades
+            전체 등급
           </button>
           {(['EXCELLENT', 'GOOD', 'FAIR', 'POOR', 'VERY_POOR'] as CreditGrade[]).map((grade) => (
             <button
@@ -296,10 +296,10 @@ const MerchantCreditReview: React.FC = () => {
       <div className="px-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white">
-            Pending Reviews ({filteredProfiles.length})
+            대기 중인 심사 ({filteredProfiles.length})
           </h3>
           <button className="text-xs text-[#2b8cee] font-medium">
-            Sort by Score
+            점수순 정렬
           </button>
         </div>
 
@@ -308,11 +308,11 @@ const MerchantCreditReview: React.FC = () => {
             <span className="material-symbols-outlined text-text-muted text-[48px] mb-2">
               fact_check
             </span>
-            <p className="text-sm text-text-secondary">No pending reviews found</p>
+            <p className="text-sm text-text-secondary">대기 중인 심사가 없습니다</p>
             <p className="text-xs text-text-muted mt-1">
               {searchQuery || gradeFilter !== 'all'
-                ? 'Try adjusting your filters'
-                : 'All credit assessments are up to date'}
+                ? '필터를 조정해 보세요'
+                : '모든 신용 평가가 최신 상태입니다'}
             </p>
           </Card>
         ) : (
@@ -335,26 +335,26 @@ const MerchantCreditReview: React.FC = () => {
                     <p className={`text-2xl font-bold ${getGradeColor(profile.currentGrade)}`}>
                       {profile.currentScore}
                     </p>
-                    <p className="text-xs text-text-muted">Score</p>
+                    <p className="text-xs text-text-muted">점수</p>
                   </div>
                 </div>
 
                 {/* Key Metrics */}
                 <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-background/50 rounded-lg">
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Monthly Volume</p>
+                    <p className="text-xs text-text-muted mb-1">월 거래액</p>
                     <p className="text-sm font-bold text-white">
                       {formatCurrency(profile.financialMetrics.monthlyAverageVolume)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Transactions</p>
+                    <p className="text-xs text-text-muted mb-1">거래 건수</p>
                     <p className="text-sm font-bold text-white">
-                      {profile.financialMetrics.monthlyTransactionCount}/mo
+                      {profile.financialMetrics.monthlyTransactionCount}/월
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Credit Limit</p>
+                    <p className="text-xs text-text-muted mb-1">신용 한도</p>
                     <p className="text-sm font-bold text-white">
                       {formatCurrency(profile.creditLimit)}
                     </p>
@@ -368,7 +368,7 @@ const MerchantCreditReview: React.FC = () => {
                       group
                     </span>
                     <span className="text-xs text-text-secondary">
-                      {profile.financialMetrics.uniqueCustomers} customers
+                      {profile.financialMetrics.uniqueCustomers}명 고객
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -376,7 +376,7 @@ const MerchantCreditReview: React.FC = () => {
                       trending_up
                     </span>
                     <span className="text-xs text-text-secondary">
-                      {(profile.financialMetrics.monthOverMonthGrowth * 100).toFixed(1)}% growth
+                      {(profile.financialMetrics.monthOverMonthGrowth * 100).toFixed(1)}% 성장
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -384,7 +384,7 @@ const MerchantCreditReview: React.FC = () => {
                       history
                     </span>
                     <span className="text-xs text-text-secondary">
-                      {profile.financialMetrics.daysOnPlatform} days active
+                      활동 {profile.financialMetrics.daysOnPlatform}일
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ const MerchantCreditReview: React.FC = () => {
                       replay
                     </span>
                     <span className="text-xs text-text-secondary">
-                      {(profile.financialMetrics.repeatCustomerRate * 100).toFixed(0)}% retention
+                      재방문율 {(profile.financialMetrics.repeatCustomerRate * 100).toFixed(0)}%
                     </span>
                   </div>
                 </div>
@@ -406,7 +406,7 @@ const MerchantCreditReview: React.FC = () => {
                     onClick={() => handleReviewClick(profile, 'approve')}
                   >
                     <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                    Approve
+                    승인
                   </Button>
                   <Button
                     variant="danger"
@@ -415,7 +415,7 @@ const MerchantCreditReview: React.FC = () => {
                     onClick={() => handleReviewClick(profile, 'reject')}
                   >
                     <span className="material-symbols-outlined text-[16px]">cancel</span>
-                    Reject
+                    거절
                   </Button>
                   <Button
                     variant="ghost"
@@ -435,7 +435,7 @@ const MerchantCreditReview: React.FC = () => {
       <Modal
         isOpen={isReviewModalOpen}
         onClose={handleReviewCancel}
-        title={reviewAction === 'approve' ? 'Approve Credit Assessment' : 'Reject Credit Assessment'}
+        title={reviewAction === 'approve' ? '신용 평가 승인' : '신용 평가 거절'}
       >
         {selectedMerchant && (
           <div className="space-y-4">
@@ -446,7 +446,7 @@ const MerchantCreditReview: React.FC = () => {
                   {selectedMerchant.currentGrade}
                 </Badge>
                 <span className="text-xs text-text-secondary">
-                  Score: {selectedMerchant.currentScore}
+                  점수: {selectedMerchant.currentScore}
                 </span>
               </div>
             </div>
@@ -458,17 +458,18 @@ const MerchantCreditReview: React.FC = () => {
                     check_circle
                   </span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Approve Credit Assessment</p>
+                    <p className="text-sm font-medium text-white">신용 평가 승인</p>
                     <p className="text-xs text-text-secondary mt-1">
-                      This merchant will receive a credit limit of{' '}
+                      이 가맹점에{' '}
                       <span className="font-bold text-green-400">
                         {formatCurrency(selectedMerchant.creditLimit)}
                       </span>
+                      의 신용 한도가 부여됩니다
                     </p>
                   </div>
                 </div>
                 <p className="text-xs text-text-muted">
-                  The merchant will be notified and can start applying for credit products.
+                  가맹점에 알림이 발송되며, 신용 상품 신청이 가능해집니다.
                 </p>
               </div>
             ) : (
@@ -478,14 +479,14 @@ const MerchantCreditReview: React.FC = () => {
                     cancel
                   </span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Reject Credit Assessment</p>
+                    <p className="text-sm font-medium text-white">신용 평가 거절</p>
                     <p className="text-xs text-text-secondary mt-1">
-                      Please provide a reason for rejection
+                      거절 사유를 입력해 주세요
                     </p>
                   </div>
                 </div>
                 <Input
-                  placeholder="Enter rejection reason..."
+                  placeholder="거절 사유 입력..."
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
                 />
@@ -499,7 +500,7 @@ const MerchantCreditReview: React.FC = () => {
                 fullWidth
                 onClick={handleReviewCancel}
               >
-                Cancel
+                취소
               </Button>
               <Button
                 variant={reviewAction === 'approve' ? 'primary' : 'danger'}
@@ -509,7 +510,7 @@ const MerchantCreditReview: React.FC = () => {
                 disabled={reviewAction === 'reject' && !rejectionReason.trim()}
                 className={reviewAction === 'approve' ? 'bg-[#2b8cee] hover:bg-[#2377d4]' : ''}
               >
-                {reviewAction === 'approve' ? 'Confirm Approval' : 'Confirm Rejection'}
+                {reviewAction === 'approve' ? '승인 확인' : '거절 확인'}
               </Button>
             </div>
           </div>

@@ -108,27 +108,27 @@ const mockAuditLogs: AuditLogEntry[] = [
 ];
 
 const actionTypeLabels: Record<AuditActionType, string> = {
-  USER_REGISTERED: 'User Registration',
-  USER_KYC_VERIFIED: 'KYC Verification',
-  BANK_ACCOUNT_LINKED: 'Bank Account Linked',
-  PREPAID_CARD_ISSUED: 'Prepaid Card Issued',
-  BALANCE_CHARGED: 'Balance Charge',
-  PAYMENT_REQUESTED: 'Payment Request',
-  PAYMENT_COMPLETED: 'Payment Complete',
-  REFUND_REQUESTED: 'Refund Request',
-  REFUND_COMPLETED: 'Refund Complete',
-  MERCHANT_REGISTERED: 'Merchant Registration',
-  MERCHANT_VERIFIED: 'Merchant Verification',
-  MERCHANT_SUSPENDED: 'Merchant Suspended',
-  POLICY_CREATED: 'Policy Created',
-  POLICY_UPDATED: 'Policy Updated',
-  VOUCHER_ISSUED: 'Voucher Issued',
-  VOUCHER_REDEEMED: 'Voucher Redeemed',
-  SETTLEMENT_INITIATED: 'Settlement Started',
-  SETTLEMENT_COMPLETED: 'Settlement Complete',
-  ADMIN_LOGIN: 'Admin Login',
-  ADMIN_ACTION: 'Admin Action',
-  SECURITY_ALERT: 'Security Alert',
+  USER_REGISTERED: '사용자 등록',
+  USER_KYC_VERIFIED: 'KYC 검증',
+  BANK_ACCOUNT_LINKED: '은행 계좌 연결',
+  PREPAID_CARD_ISSUED: '선불카드 발급',
+  BALANCE_CHARGED: '잔액 충전',
+  PAYMENT_REQUESTED: '결제 요청',
+  PAYMENT_COMPLETED: '결제 완료',
+  REFUND_REQUESTED: '환불 요청',
+  REFUND_COMPLETED: '환불 완료',
+  MERCHANT_REGISTERED: '가맹점 등록',
+  MERCHANT_VERIFIED: '가맹점 검증',
+  MERCHANT_SUSPENDED: '가맹점 정지',
+  POLICY_CREATED: '정책 생성',
+  POLICY_UPDATED: '정책 업데이트',
+  VOUCHER_ISSUED: '바우처 발행',
+  VOUCHER_REDEEMED: '바우처 사용',
+  SETTLEMENT_INITIATED: '정산 시작',
+  SETTLEMENT_COMPLETED: '정산 완료',
+  ADMIN_LOGIN: '관리자 로그인',
+  ADMIN_ACTION: '관리자 작업',
+  SECURITY_ALERT: '보안 경고',
 };
 
 const getActionIcon = (action: AuditActionType): string => {
@@ -205,26 +205,26 @@ const AuditLogs: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-4" style={{ background: theme.bg }}>
-      <Header title="Audit Logs & Blockchain Trail" />
+      <Header title="감사 로그 및 블록체인 추적" />
 
       {/* Stats Overview */}
       <div className="px-4 mb-4">
         <Card variant="balance" padding="lg">
           <div className="grid grid-cols-4 gap-3 text-center">
             <div>
-              <p className="text-xs text-text-secondary mb-1">Total Logs</p>
+              <p className="text-xs text-text-secondary mb-1">총 로그</p>
               <p className="text-xl font-bold text-white">{totalLogs.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-xs text-text-secondary mb-1">Today</p>
+              <p className="text-xs text-text-secondary mb-1">오늘</p>
               <p className="text-xl font-bold text-primary">{todayLogs}</p>
             </div>
             <div>
-              <p className="text-xs text-text-secondary mb-1">Verified</p>
+              <p className="text-xs text-text-secondary mb-1">검증됨</p>
               <p className="text-xl font-bold text-green-500">{Math.round((verifiedLogs / totalLogs) * 100)}%</p>
             </div>
             <div>
-              <p className="text-xs text-text-secondary mb-1">Alerts</p>
+              <p className="text-xs text-text-secondary mb-1">경고</p>
               <p className="text-xl font-bold text-red-500">{securityAlerts}</p>
             </div>
           </div>
@@ -236,12 +236,12 @@ const AuditLogs: React.FC = () => {
         <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center gap-3">
           <span className="material-symbols-outlined text-green-500">token</span>
           <div className="flex-1">
-            <p className="text-sm font-bold text-green-500">Blockchain Connected</p>
+            <p className="text-sm font-bold text-green-500">블록체인 연결됨</p>
             <p className="text-xs text-text-secondary">
-              Xphere Network | Block #12,345,678 | All logs anchored
+              Xphere 네트워크 | 블록 #12,345,678 | 모든 로그 앵커링 완료
             </p>
           </div>
-          <Badge variant="success" size="sm">Live</Badge>
+          <Badge variant="success" size="sm">실시간</Badge>
         </div>
       </div>
 
@@ -249,7 +249,7 @@ const AuditLogs: React.FC = () => {
       <div className="px-4 mb-4 space-y-3">
         <Input
           icon="search"
-          placeholder="Search logs by description, actor, target..."
+          placeholder="설명, 행위자, 대상으로 로그 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -263,7 +263,7 @@ const AuditLogs: React.FC = () => {
                 : 'bg-surface-highlight text-text-secondary hover:text-white'
                 }`}
             >
-              {action === 'all' ? 'All' : actionTypeLabels[action as AuditActionType]}
+              {action === 'all' ? '전체' : actionTypeLabels[action as AuditActionType]}
             </button>
           ))}
         </div>
@@ -272,10 +272,10 @@ const AuditLogs: React.FC = () => {
       {/* Log List */}
       <div className="px-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-white">Audit Trail</h3>
+          <h3 className="text-sm font-bold text-white">감사 추적</h3>
           <Button variant="ghost" size="sm">
             <span className="material-symbols-outlined text-[16px] mr-1">download</span>
-            Export
+            내보내기
           </Button>
         </div>
 
@@ -328,7 +328,7 @@ const AuditLogs: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white">Audit Log Detail</h3>
+              <h3 className="text-lg font-bold text-white">감사 로그 상세</h3>
               <button onClick={() => setSelectedLog(null)} className="text-text-secondary">
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -336,46 +336,46 @@ const AuditLogs: React.FC = () => {
 
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-text-muted mb-1">Action</p>
+                <p className="text-xs text-text-muted mb-1">작업</p>
                 <p className="text-sm font-bold text-white">{actionTypeLabels[selectedLog.action]}</p>
               </div>
 
               <div>
-                <p className="text-xs text-text-muted mb-1">Description</p>
+                <p className="text-xs text-text-muted mb-1">설명</p>
                 <p className="text-sm text-white">{selectedLog.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-text-muted mb-1">Actor ID</p>
+                  <p className="text-xs text-text-muted mb-1">행위자 ID</p>
                   <p className="text-sm text-white font-mono">{selectedLog.actorId}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-text-muted mb-1">Target ID</p>
+                  <p className="text-xs text-text-muted mb-1">대상 ID</p>
                   <p className="text-sm text-white font-mono">{selectedLog.targetId}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-xs text-text-muted mb-1">Actor DID</p>
+                <p className="text-xs text-text-muted mb-1">행위자 DID</p>
                 <p className="text-sm text-white font-mono break-all">{selectedLog.actorDid || '-'}</p>
               </div>
 
               <div className="border-t border-surface-highlight pt-4">
-                <p className="text-xs text-text-muted mb-2">Blockchain Anchoring</p>
+                <p className="text-xs text-text-muted mb-2">블록체인 앵커링</p>
                 <div className="bg-surface-highlight rounded-lg p-3 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs text-text-muted">Hash</span>
+                    <span className="text-xs text-text-muted">해시</span>
                     <span className="text-xs text-white font-mono">{selectedLog.blockchainHash}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-xs text-text-muted">Block</span>
+                    <span className="text-xs text-text-muted">블록</span>
                     <span className="text-xs text-white">#{selectedLog.blockNumber?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-xs text-text-muted">Verified</span>
+                    <span className="text-xs text-text-muted">검증됨</span>
                     <span className={`text-xs ${selectedLog.verified ? 'text-green-500' : 'text-yellow-500'}`}>
-                      {selectedLog.verified ? 'Yes' : 'Pending'}
+                      {selectedLog.verified ? '완료' : '대기 중'}
                     </span>
                   </div>
                 </div>
@@ -383,7 +383,7 @@ const AuditLogs: React.FC = () => {
 
               {selectedLog.signature && (
                 <div>
-                  <p className="text-xs text-text-muted mb-1">Digital Signature</p>
+                  <p className="text-xs text-text-muted mb-1">디지털 서명</p>
                   <p className="text-xs text-white font-mono break-all bg-surface-highlight rounded p-2">
                     {selectedLog.signature}
                   </p>
@@ -392,11 +392,11 @@ const AuditLogs: React.FC = () => {
 
               <div className="flex gap-3 mt-6">
                 <Button variant="secondary" fullWidth onClick={() => setSelectedLog(null)}>
-                  Close
+                  닫기
                 </Button>
                 <Button variant="primary" fullWidth>
                   <span className="material-symbols-outlined text-[16px] mr-1">verified</span>
-                  Verify on Chain
+                  체인에서 검증
                 </Button>
               </div>
             </div>

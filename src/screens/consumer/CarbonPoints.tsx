@@ -63,10 +63,10 @@ const CarbonPoints: React.FC = () => {
   };
 
   const quickActions = [
-    { type: 'TUMBLER_USE', icon: 'coffee', label: 'Tumbler', color: '#f59e0b' },
-    { type: 'PUBLIC_TRANSPORT_BUS', icon: 'directions_bus', label: 'Transport', color: '#3b82f6' },
-    { type: 'ELECTRONIC_RECEIPT', icon: 'receipt_long', label: 'E-Receipt', color: '#a855f7' },
-    { type: 'RECYCLING_GENERAL', icon: 'recycling', label: 'Recycle', color: '#22c55e' },
+    { type: 'TUMBLER_USE', icon: 'coffee', label: '텀블러', color: '#f59e0b' },
+    { type: 'PUBLIC_TRANSPORT_BUS', icon: 'directions_bus', label: '대중교통', color: '#3b82f6' },
+    { type: 'ELECTRONIC_RECEIPT', icon: 'receipt_long', label: '전자영수증', color: '#a855f7' },
+    { type: 'RECYCLING_GENERAL', icon: 'recycling', label: '재활용', color: '#22c55e' },
   ];
 
   const handleQuickAction = async (actionType: string) => {
@@ -78,28 +78,28 @@ const CarbonPoints: React.FC = () => {
     });
     if (result) {
       loadData();
-      alert(`Earned ${result.pointsEarned} points! (${formatCO2(result.carbonReduced)} CO2 reduced)`);
+      alert(`${result.pointsEarned} 포인트 적립! (${formatCO2(result.carbonReduced)} CO2 절감)`);
     } else {
-      alert('Daily or monthly limit reached');
+      alert('일일 또는 월간 한도에 도달했습니다');
     }
   };
 
   const handleExchange = async () => {
     const points = parseInt(exchangePoints);
     if (isNaN(points) || points <= 0) {
-      alert('Please enter valid points amount');
+      alert('유효한 포인트 금액을 입력해주세요');
       return;
     }
     setExchangeLoading(true);
     const result = await carbonPointsService.exchangeToLocalCurrency(userId, points);
     setExchangeLoading(false);
     if (result.success) {
-      alert(`Exchanged ${points} points for ${formatNumber(result.krwAmount!)} KRW`);
+      alert(`${points} 포인트를 ${formatNumber(result.krwAmount!)} 원으로 전환했습니다`);
       setExchangePoints('');
       setShowExchange(false);
       loadData();
     } else {
-      alert(result.error || 'Exchange failed');
+      alert(result.error || '전환 실패');
     }
   };
 
@@ -110,9 +110,9 @@ const CarbonPoints: React.FC = () => {
   };
 
   const _getActionCategory = (type: string) => {
-    if (type.includes('TRANSPORT') || type.includes('BUS') || type.includes('SUBWAY')) return 'Transportation';
-    if (type.includes('RECYCLING')) return 'Recycling';
-    return 'Shopping';
+    if (type.includes('TRANSPORT') || type.includes('BUS') || type.includes('SUBWAY')) return '교통';
+    if (type.includes('RECYCLING')) return '재활용';
+    return '쇼핑';
   };
   void _getActionCategory;
 
@@ -121,9 +121,9 @@ const CarbonPoints: React.FC = () => {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffHours < 48) return 'Yesterday';
+    if (diffHours < 1) return '방금 전';
+    if (diffHours < 24) return `${diffHours}시간 전`;
+    if (diffHours < 48) return '어제';
     return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
   };
 
@@ -147,8 +147,8 @@ const CarbonPoints: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Carbon Points</h1>
-        <button onClick={() => alert('Carbon Points: Earn rewards for eco-friendly actions!')}>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>탄소 포인트</h1>
+        <button onClick={() => alert('탄소 포인트: 친환경 활동으로 보상을 받으세요!')}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.textSecondary }}>info</span>
         </button>
       </header>
@@ -162,19 +162,19 @@ const CarbonPoints: React.FC = () => {
                 <span className="material-symbols-outlined text-2xl" style={{ color: getLevelColor(account.level) }}>{getLevelIcon(account.level)}</span>
               </div>
               <div>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>Current Level</p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>현재 레벨</p>
                 <h3 className="text-xl font-bold" style={{ color: getLevelColor(account.level) }}>{account.level}</h3>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Tree Equivalent</p>
-              <p className="text-lg font-bold" style={{ color: theme.text }}>{getTreeEquivalent()} trees</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>나무 환산</p>
+              <p className="text-lg font-bold" style={{ color: theme.text }}>{getTreeEquivalent()} 그루</p>
             </div>
           </div>
 
           <div className="mb-4">
             <div className="flex justify-between items-center mb-1">
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Level Progress</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>레벨 진행률</p>
               <p className="text-xs" style={{ color: theme.textSecondary }}>{getLevelProgress().toFixed(0)}%</p>
             </div>
             <div className="h-2 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
@@ -184,13 +184,13 @@ const CarbonPoints: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTop: `1px solid ${theme.border}` }}>
             <div>
-              <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Total CO2 Reduced</p>
+              <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>총 CO2 절감량</p>
               <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatCO2(account.totalCarbonReduced)}</p>
             </div>
             <div>
-              <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Available Points</p>
+              <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>사용 가능 포인트</p>
               <p className="text-xl font-bold" style={{ color: theme.text }}>{formatNumber(account.availablePoints)} P</p>
-              <p className="text-xs" style={{ color: theme.textMuted }}>= {formatNumber(account.availablePoints * 10)} KRW</p>
+              <p className="text-xs" style={{ color: theme.textMuted }}>= {formatNumber(account.availablePoints * 10)} 원</p>
             </div>
           </div>
         </div>
@@ -202,14 +202,14 @@ const CarbonPoints: React.FC = () => {
           <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center gap-2 mb-1">
               <span className="material-symbols-outlined text-sm" style={{ color: '#facc15' }}>today</span>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Today's Points</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>오늘 포인트</p>
             </div>
             <p className="text-lg font-bold" style={{ color: theme.text }}>{formatNumber(account.todayPoints)}</p>
           </div>
           <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center gap-2 mb-1">
               <span className="material-symbols-outlined text-sm" style={{ color: '#3b82f6' }}>calendar_month</span>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Monthly Points</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>이번 달 포인트</p>
             </div>
             <p className="text-lg font-bold" style={{ color: theme.text }}>{formatNumber(account.monthlyPoints)}</p>
           </div>
@@ -218,7 +218,7 @@ const CarbonPoints: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="px-5 mb-6">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Quick Actions</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>빠른 활동</h3>
         <div className="grid grid-cols-4 gap-3">
           {quickActions.map((action, idx) => {
             const actionData = availableActions.find(a => a.type === action.type);
@@ -241,21 +241,21 @@ const CarbonPoints: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined" style={{ color: theme.accent }}>currency_exchange</span>
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Exchange Points</h3>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>포인트 전환</h3>
             </div>
-            <span className="text-xs px-2 py-1 rounded" style={{ background: theme.accentSoft, color: theme.accent }}>1P = 10 KRW</span>
+            <span className="text-xs px-2 py-1 rounded" style={{ background: theme.accentSoft, color: theme.accent }}>1P = 10원</span>
           </div>
 
           {!showExchange ? (
             <button onClick={() => setShowExchange(true)} className="w-full py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2" style={{ background: theme.accent }}>
               <span className="material-symbols-outlined text-[20px]">swap_horiz</span>
-              Exchange to KRW
+              원화로 전환
             </button>
           ) : (
             <div className="space-y-3">
               <input
                 type="number"
-                placeholder="Enter points amount"
+                placeholder="포인트 금액 입력"
                 value={exchangePoints}
                 onChange={(e) => setExchangePoints(e.target.value)}
                 className="w-full h-12 px-4 rounded-xl focus:outline-none"
@@ -263,14 +263,14 @@ const CarbonPoints: React.FC = () => {
               />
               {exchangePoints && !isNaN(parseInt(exchangePoints)) && (
                 <div className="p-3 rounded-xl" style={{ background: theme.cardHover }}>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>You will receive:</p>
-                  <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatNumber(parseInt(exchangePoints) * 10)} KRW</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>받으실 금액:</p>
+                  <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatNumber(parseInt(exchangePoints) * 10)} 원</p>
                 </div>
               )}
               <div className="flex gap-2">
-                <button onClick={() => { setShowExchange(false); setExchangePoints(''); }} className="flex-1 py-3 rounded-xl font-medium" style={{ background: theme.cardHover, color: theme.text }}>Cancel</button>
+                <button onClick={() => { setShowExchange(false); setExchangePoints(''); }} className="flex-1 py-3 rounded-xl font-medium" style={{ background: theme.cardHover, color: theme.text }}>취소</button>
                 <button onClick={handleExchange} disabled={!exchangePoints || parseInt(exchangePoints) <= 0 || exchangeLoading} className="flex-1 py-3 rounded-xl font-bold text-white" style={{ background: theme.accent, opacity: !exchangePoints || exchangeLoading ? 0.5 : 1 }}>
-                  {exchangeLoading ? 'Processing...' : 'Exchange'}
+                  {exchangeLoading ? '처리 중...' : '전환'}
                 </button>
               </div>
             </div>
@@ -281,8 +281,8 @@ const CarbonPoints: React.FC = () => {
       {/* Leaderboard */}
       <div className="px-5 mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold" style={{ color: theme.text }}>Leaderboard</h3>
-          {getCurrentUserRank() && <span className="text-xs px-2 py-1 rounded" style={{ background: theme.accentSoft, color: theme.accent }}>Your Rank: #{getCurrentUserRank()}</span>}
+          <h3 className="text-sm font-bold" style={{ color: theme.text }}>리더보드</h3>
+          {getCurrentUserRank() && <span className="text-xs px-2 py-1 rounded" style={{ background: theme.accentSoft, color: theme.accent }}>내 순위: #{getCurrentUserRank()}</span>}
         </div>
         <div className="rounded-xl overflow-hidden" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           {leaderboard.slice(0, 5).map((user, index) => {
@@ -294,13 +294,13 @@ const CarbonPoints: React.FC = () => {
                     {user.rank}
                   </div>
                   <div>
-                    <p className="text-sm font-bold" style={{ color: isCurrentUser ? theme.accent : theme.text }}>{isCurrentUser ? 'You' : `User ${user.userId.slice(-4)}`}</p>
-                    <p className="text-xs" style={{ color: theme.textSecondary }}>Level: {user.level}</p>
+                    <p className="text-sm font-bold" style={{ color: isCurrentUser ? theme.accent : theme.text }}>{isCurrentUser ? '나' : `사용자 ${user.userId.slice(-4)}`}</p>
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>레벨: {user.level}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold" style={{ color: theme.text }}>{formatCO2(user.totalCarbonReduced)}</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>CO2 reduced</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>CO2 절감</p>
                 </div>
               </div>
             );
@@ -310,12 +310,12 @@ const CarbonPoints: React.FC = () => {
 
       {/* Recent Actions */}
       <div className="px-5 mb-6">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Recent Actions</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>최근 활동</h3>
         {account.actions.length === 0 ? (
           <div className="rounded-xl p-8 text-center" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <span className="material-symbols-outlined text-5xl mb-2" style={{ color: theme.textSecondary }}>eco</span>
-            <p style={{ color: theme.textSecondary }}>No eco actions yet</p>
-            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>Start recording your green activities!</p>
+            <p style={{ color: theme.textSecondary }}>아직 친환경 활동이 없습니다</p>
+            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>친환경 활동을 기록해보세요!</p>
           </div>
         ) : (
           <div className="space-y-2">

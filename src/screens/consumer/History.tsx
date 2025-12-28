@@ -6,10 +6,10 @@ import { TransactionType } from '../../types';
 import { theme } from '../../styles/theme';
 
 const filterOptions: { label: string; value: TransactionType | 'all' }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Payments', value: 'payment' },
-  { label: 'Top-ups', value: 'topup' },
-  { label: 'Refunds', value: 'refund' },
+  { label: '전체', value: 'all' },
+  { label: '결제', value: 'payment' },
+  { label: '충전', value: 'topup' },
+  { label: '환불', value: 'refund' },
 ];
 
 const History: React.FC = () => {
@@ -44,11 +44,11 @@ const History: React.FC = () => {
 
     let key: string;
     if (date.toDateString() === today.toDateString()) {
-      key = 'Today';
+      key = '오늘';
     } else if (date.toDateString() === yesterday.toDateString()) {
-      key = 'Yesterday';
+      key = '어제';
     } else {
-      key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      key = date.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', year: 'numeric' });
     }
 
     if (!groups[key]) {
@@ -94,7 +94,7 @@ const History: React.FC = () => {
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    return date.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit', hour12: true });
   };
 
   return (
@@ -107,7 +107,7 @@ const History: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Transaction History</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>거래 내역</h1>
         <button>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.textSecondary }}>search</span>
         </button>
@@ -117,14 +117,14 @@ const History: React.FC = () => {
       <div className="px-5 py-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
-            <p className="text-xs mb-1" style={{ color: theme.textMuted }}>Total Spent</p>
+            <p className="text-xs mb-1" style={{ color: theme.textMuted }}>총 사용</p>
             <p className="text-xl font-bold" style={{ color: theme.text }}>{formatAmount(totalSpent)}</p>
-            <p className="text-xs mt-1" style={{ color: theme.accent }}>This month</p>
+            <p className="text-xs mt-1" style={{ color: theme.accent }}>이번 달</p>
           </div>
           <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
-            <p className="text-xs mb-1" style={{ color: theme.textMuted }}>Total Received</p>
+            <p className="text-xs mb-1" style={{ color: theme.textMuted }}>총 수신</p>
             <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatAmount(totalReceived)}</p>
-            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>This month</p>
+            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>이번 달</p>
           </div>
         </div>
       </div>
@@ -197,7 +197,7 @@ const History: React.FC = () => {
                           className="text-xs"
                           style={{ color: tx.status === 'completed' ? '#22c55e' : theme.textMuted }}
                         >
-                          {tx.status === 'completed' ? 'Completed' : tx.status === 'pending' ? 'Pending' : 'Success'}
+                          {tx.status === 'completed' ? '완료' : tx.status === 'pending' ? '대기 중' : '성공'}
                         </span>
                       </div>
                     </div>
@@ -221,8 +221,8 @@ const History: React.FC = () => {
             >
               <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>receipt_long</span>
             </div>
-            <p className="text-sm font-medium" style={{ color: theme.text }}>No transactions found</p>
-            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>Your transaction history will appear here</p>
+            <p className="text-sm font-medium" style={{ color: theme.text }}>거래 내역이 없습니다</p>
+            <p className="text-xs mt-1" style={{ color: theme.textMuted }}>거래 내역이 여기에 표시됩니다</p>
           </div>
         )}
       </div>

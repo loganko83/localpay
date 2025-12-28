@@ -76,8 +76,8 @@ const WelfareManagement: React.FC = () => {
   const allEmployees: EmployeeWithStatus[] = [
     {
       id: 'E001',
-      name: 'Kim Min-jun',
-      department: 'Engineering',
+      name: '김민준',
+      department: '개발팀',
       monthlyAllowance: 200000,
       usedBalance: 185000,
       remainingBalance: 15000,
@@ -86,8 +86,8 @@ const WelfareManagement: React.FC = () => {
     },
     {
       id: 'E002',
-      name: 'Lee Ji-won',
-      department: 'Marketing',
+      name: '이지원',
+      department: '마케팅팀',
       monthlyAllowance: 200000,
       usedBalance: 150000,
       remainingBalance: 50000,
@@ -96,8 +96,8 @@ const WelfareManagement: React.FC = () => {
     },
     {
       id: 'E003',
-      name: 'Park Su-ho',
-      department: 'Engineering',
+      name: '박수호',
+      department: '개발팀',
       monthlyAllowance: 200000,
       usedBalance: 195000,
       remainingBalance: 5000,
@@ -106,8 +106,8 @@ const WelfareManagement: React.FC = () => {
     },
     {
       id: 'E004',
-      name: 'Choi Ye-jin',
-      department: 'Sales',
+      name: '최예진',
+      department: '영업팀',
       monthlyAllowance: 200000,
       usedBalance: 180000,
       remainingBalance: 20000,
@@ -116,8 +116,8 @@ const WelfareManagement: React.FC = () => {
     },
     {
       id: 'E005',
-      name: 'Jung Hyun-woo',
-      department: 'HR',
+      name: '정현우',
+      department: '인사팀',
       monthlyAllowance: 200000,
       usedBalance: 120000,
       remainingBalance: 80000,
@@ -126,8 +126,8 @@ const WelfareManagement: React.FC = () => {
     },
     {
       id: 'E006',
-      name: 'Kang Min-seo',
-      department: 'Engineering',
+      name: '강민서',
+      department: '개발팀',
       monthlyAllowance: 200000,
       usedBalance: 0,
       remainingBalance: 200000,
@@ -143,21 +143,21 @@ const WelfareManagement: React.FC = () => {
 
   // Usage by category (mock data)
   const usageByCategory = [
-    { name: 'Meal', value: 3200000, category: 'MEAL_ALLOWANCE' as WelfareCategory },
-    { name: 'Culture', value: 1800000, category: 'CULTURE_EXPENSE' as WelfareCategory },
-    { name: 'Health', value: 1400000, category: 'HEALTH_WELLNESS' as WelfareCategory },
-    { name: 'Family', value: 800000, category: 'FAMILY_CARE' as WelfareCategory },
-    { name: 'Self-Dev', value: 600000, category: 'SELF_DEVELOPMENT' as WelfareCategory },
-    { name: 'General', value: 600000, category: 'GENERAL_WELFARE' as WelfareCategory },
+    { name: '식사', value: 3200000, category: 'MEAL_ALLOWANCE' as WelfareCategory },
+    { name: '문화', value: 1800000, category: 'CULTURE_EXPENSE' as WelfareCategory },
+    { name: '건강', value: 1400000, category: 'HEALTH_WELLNESS' as WelfareCategory },
+    { name: '가족돌봄', value: 800000, category: 'FAMILY_CARE' as WelfareCategory },
+    { name: '자기계발', value: 600000, category: 'SELF_DEVELOPMENT' as WelfareCategory },
+    { name: '일반복지', value: 600000, category: 'GENERAL_WELFARE' as WelfareCategory },
   ];
 
   // Top merchant categories
   const topMerchantCategories = [
-    { name: 'Restaurants', amount: 2800000, percent: 33 },
-    { name: 'Cafes', amount: 1900000, percent: 23 },
-    { name: 'Bookstores', amount: 1200000, percent: 14 },
-    { name: 'Gyms', amount: 1000000, percent: 12 },
-    { name: 'Others', amount: 1500000, percent: 18 },
+    { name: '음식점', amount: 2800000, percent: 33 },
+    { name: '카페', amount: 1900000, percent: 23 },
+    { name: '서점', amount: 1200000, percent: 14 },
+    { name: '헬스장', amount: 1000000, percent: 12 },
+    { name: '기타', amount: 1500000, percent: 18 },
   ];
 
   // Monthly trend (mock data)
@@ -174,21 +174,21 @@ const WelfareManagement: React.FC = () => {
   const pendingApprovals: PendingApproval[] = [
     {
       id: 'A001',
-      employeeName: 'Kim Min-jun',
-      department: 'Engineering',
-      requestType: 'Additional Allowance',
+      employeeName: '김민준',
+      department: '개발팀',
+      requestType: '추가 수당',
       amount: 100000,
       date: '2024-12-20',
-      reason: 'Extended work hours this month',
+      reason: '이번 달 연장 근무',
     },
     {
       id: 'A002',
-      employeeName: 'Lee Ji-won',
-      department: 'Marketing',
-      requestType: 'Category Change',
+      employeeName: '이지원',
+      department: '마케팅팀',
+      requestType: '카테고리 변경',
       amount: 50000,
       date: '2024-12-21',
-      reason: 'Convert meal to culture budget',
+      reason: '식사비를 문화비로 전환',
     },
   ];
 
@@ -199,7 +199,7 @@ const WelfareManagement: React.FC = () => {
   const handleBulkDistribution = async () => {
     const amount = parseInt(distributionAmount);
     if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount');
+      alert('유효한 금액을 입력해주세요');
       return;
     }
 
@@ -212,19 +212,19 @@ const WelfareManagement: React.FC = () => {
       note: `Distribution on ${distributionDate}`,
     });
 
-    alert(`Distribution of ${formatAmount(amount)} to ${filteredEmployees.length} employees successful!`);
+    alert(`${filteredEmployees.length}명 직원에게 ${formatAmount(amount)} 배분 완료!`);
     setShowDistributionModal(false);
     setDistributionAmount('');
   };
 
   const handleApprove = (approvalId: string) => {
     console.log('Approved:', approvalId);
-    alert('Request approved successfully!');
+    alert('요청이 승인되었습니다!');
   };
 
   const handleReject = (approvalId: string) => {
     console.log('Rejected:', approvalId);
-    alert('Request rejected');
+    alert('요청이 거부되었습니다');
   };
 
   return (
@@ -243,7 +243,7 @@ const WelfareManagement: React.FC = () => {
             </button>
             <div>
               <h1 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.text }}>복지 포인트 관리</h1>
-              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Corporate Welfare Management</p>
+              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>기업 복지 관리</p>
             </div>
           </div>
           <button
@@ -264,18 +264,18 @@ const WelfareManagement: React.FC = () => {
         <Card variant="balance" padding="lg">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
             <div>
-              <p style={{ fontSize: '0.875rem', color: theme.textSecondary, fontWeight: 500, marginBottom: '0.25rem' }}>Company Welfare Balance</p>
+              <p style={{ fontSize: '0.875rem', color: theme.textSecondary, fontWeight: 500, marginBottom: '0.25rem' }}>회사 복지 잔액</p>
               <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: theme.text }}>
                 {formatAmount(companyBalance)} B
               </h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: theme.accent }}>
                   <span className="material-symbols-outlined" style={{ fontSize: '0.875rem' }}>group</span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>{employeesEnrolled} employees</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>{employeesEnrolled}명 직원</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: theme.textSecondary }}>
                   <span className="material-symbols-outlined" style={{ fontSize: '0.875rem' }}>calendar_month</span>
-                  <span style={{ fontSize: '0.75rem' }}>{formatAmount(monthDistributed)} this month</span>
+                  <span style={{ fontSize: '0.75rem' }}>{formatAmount(monthDistributed)} 이번 달</span>
                 </div>
               </div>
             </div>
@@ -290,7 +290,7 @@ const WelfareManagement: React.FC = () => {
             onClick={() => setShowDistributionModal(true)}
           >
             <span className="material-symbols-outlined text-[20px]">send</span>
-            Bulk Distribution
+            일괄 배분
           </Button>
         </Card>
       </div>
@@ -301,38 +301,38 @@ const WelfareManagement: React.FC = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
           <Card padding="md">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Total Distributed</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>배분 합계</span>
               <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.125rem' }}>trending_up</span>
             </div>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(totalDistributedThisMonth)}</p>
-            <p style={{ fontSize: '0.75rem', color: theme.accent, marginTop: '0.25rem' }}>+8.5% vs last month</p>
+            <p style={{ fontSize: '0.75rem', color: theme.accent, marginTop: '0.25rem' }}>전월 대비 +8.5%</p>
           </Card>
 
           <Card padding="md">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Avg per Employee</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>1인당 평균</span>
               <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.125rem' }}>person</span>
             </div>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(averagePerEmployee)}</p>
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginTop: '0.25rem' }}>Standard allowance</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginTop: '0.25rem' }}>기본 지급액</p>
           </Card>
 
           <Card padding="md">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Pending</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>대기 중</span>
               <span className="material-symbols-outlined" style={{ color: '#eab308', fontSize: '1.125rem' }}>schedule</span>
             </div>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.text }}>{pendingDistributions}</p>
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginTop: '0.25rem' }}>No pending items</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginTop: '0.25rem' }}>대기 항목 없음</p>
           </Card>
 
           <Card padding="md">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Usage Rate</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>사용률</span>
               <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.125rem' }}>percent</span>
             </div>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.text }}>{distributionRate}%</p>
-            <p style={{ fontSize: '0.75rem', color: theme.accent, marginTop: '0.25rem' }}>Excellent usage</p>
+            <p style={{ fontSize: '0.75rem', color: theme.accent, marginTop: '0.25rem' }}>우수 사용</p>
           </Card>
         </div>
       </div>
@@ -343,7 +343,7 @@ const WelfareManagement: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <div>
               <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>예산 현황</h3>
-              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Annual Budget Allocation</p>
+              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>연간 예산 배정</p>
             </div>
             <Badge variant="primary" size="md">2024</Badge>
           </div>
@@ -351,7 +351,7 @@ const WelfareManagement: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Annual Budget</span>
+                <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>연간 예산</span>
                 <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(annualBudget)}</span>
               </div>
               <div style={{ width: '100%', height: '0.5rem', backgroundColor: theme.cardHover, borderRadius: '9999px', overflow: 'hidden' }}>
@@ -363,11 +363,11 @@ const WelfareManagement: React.FC = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', paddingTop: '0.5rem' }}>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Monthly Budget</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>월간 예산</p>
                 <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(monthlyBudget)}</p>
               </div>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Remaining</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>잔여</p>
                 <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.accent }}>{formatAmount(remainingBudget)}</p>
               </div>
             </div>
@@ -375,7 +375,7 @@ const WelfareManagement: React.FC = () => {
             {remainingBudget < monthlyBudget && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', backgroundColor: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: '0.75rem' }}>
                 <span className="material-symbols-outlined" style={{ color: '#eab308', fontSize: '1.125rem' }}>warning</span>
-                <p style={{ fontSize: '0.75rem', color: '#eab308' }}>Budget running low this quarter</p>
+                <p style={{ fontSize: '0.75rem', color: '#eab308' }}>이번 분기 예산이 부족합니다</p>
               </div>
             )}
           </div>
@@ -386,12 +386,12 @@ const WelfareManagement: React.FC = () => {
       <div style={{ padding: '0 1rem', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>직원 목록</h3>
-          <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>{filteredEmployees.length} employees</span>
+          <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>{filteredEmployees.length}명</span>
         </div>
 
         <Input
           icon="search"
-          placeholder="Search by name..."
+          placeholder="이름으로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="mb-4"
@@ -409,7 +409,7 @@ const WelfareManagement: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{employee.name}</span>
                       <Badge variant={employee.status === 'Active' ? 'success' : 'default'} size="sm">
-                        {employee.status}
+                        {employee.status === 'Active' ? '활성' : '비활성'}
                       </Badge>
                     </div>
                     <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>{employee.department}</p>
@@ -417,17 +417,17 @@ const WelfareManagement: React.FC = () => {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(employee.monthlyAllowance)}</p>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Monthly</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>월간</p>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.75rem', borderTop: `1px solid ${theme.border}` }}>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Used</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>사용</p>
                   <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>{formatAmount(employee.usedBalance)}</p>
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Remaining</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>잔여</p>
                   <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{formatAmount(employee.remainingBalance)}</p>
                 </div>
                 <div style={{ flex: 1, textAlign: 'right' }}>
@@ -449,7 +449,7 @@ const WelfareManagement: React.FC = () => {
 
         {/* Category Pie Chart */}
         <Card padding="lg" className="mb-3">
-          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>Usage by Category</h4>
+          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>카테고리별 사용</h4>
           <div style={{ height: '12rem', width: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -487,7 +487,7 @@ const WelfareManagement: React.FC = () => {
 
         {/* Top Merchant Categories */}
         <Card padding="lg" className="mb-3">
-          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>Top Merchant Categories</h4>
+          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>인기 가맹점 카테고리</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {topMerchantCategories.map((merchant, idx) => (
               <div key={idx}>
@@ -507,7 +507,7 @@ const WelfareManagement: React.FC = () => {
 
         {/* Monthly Trend */}
         <Card padding="lg">
-          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>Monthly Trend</h4>
+          <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>월별 추이</h4>
           <div style={{ height: '8rem', width: '100%', marginLeft: '-0.5rem' }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={monthlyTrend}>
@@ -557,7 +557,7 @@ const WelfareManagement: React.FC = () => {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                       <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{approval.employeeName}</span>
-                      <Badge variant="warning" size="sm">Pending</Badge>
+                      <Badge variant="warning" size="sm">대기 중</Badge>
                     </div>
                     <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>{approval.department}</p>
                   </div>
@@ -568,7 +568,7 @@ const WelfareManagement: React.FC = () => {
                 </div>
 
                 <div style={{ padding: '0.75rem', backgroundColor: theme.cardHover, borderRadius: '0.5rem', marginBottom: '0.75rem' }}>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Reason:</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>사유:</p>
                   <p style={{ fontSize: '0.75rem', color: theme.text }}>{approval.reason}</p>
                 </div>
 
@@ -580,7 +580,7 @@ const WelfareManagement: React.FC = () => {
                     onClick={() => handleReject(approval.id)}
                   >
                     <span className="material-symbols-outlined text-[16px]">close</span>
-                    Reject
+                    거부
                   </Button>
                   <Button
                     variant="primary"
@@ -589,7 +589,7 @@ const WelfareManagement: React.FC = () => {
                     onClick={() => handleApprove(approval.id)}
                   >
                     <span className="material-symbols-outlined text-[16px]">check</span>
-                    Approve
+                    승인
                   </Button>
                 </div>
               </Card>
@@ -602,12 +602,12 @@ const WelfareManagement: React.FC = () => {
       <Modal
         isOpen={showDistributionModal}
         onClose={() => setShowDistributionModal(false)}
-        title="Bulk Distribution"
+        title="일괄 배분"
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '1rem' }}>
           <div>
             <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: theme.textSecondary, marginBottom: '0.5rem' }}>
-              Category
+              카테고리
             </label>
             <select
               value={distributionCategory}
@@ -621,16 +621,16 @@ const WelfareManagement: React.FC = () => {
           </div>
 
           <Input
-            label="Amount per Employee"
+            label="1인당 금액"
             type="number"
             icon="payments"
-            placeholder="Enter amount..."
+            placeholder="금액 입력..."
             value={distributionAmount}
             onChange={(e) => setDistributionAmount(e.target.value)}
           />
 
           <Input
-            label="Distribution Date"
+            label="배분 날짜"
             type="date"
             icon="calendar_month"
             value={distributionDate}
@@ -639,11 +639,11 @@ const WelfareManagement: React.FC = () => {
 
           <div style={{ padding: '1rem', backgroundColor: theme.cardHover, borderRadius: '0.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Recipients</span>
-              <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{filteredEmployees.length} employees</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>수혜자</span>
+              <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{filteredEmployees.length}명 직원</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Total Amount</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>총 금액</span>
               <span style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.accent }}>
                 {formatAmount((parseInt(distributionAmount) || 0) * filteredEmployees.length)} B
               </span>
@@ -656,7 +656,7 @@ const WelfareManagement: React.FC = () => {
               fullWidth
               onClick={() => setShowDistributionModal(false)}
             >
-              Cancel
+              취소
             </Button>
             <Button
               variant="primary"
@@ -664,7 +664,7 @@ const WelfareManagement: React.FC = () => {
               onClick={handleBulkDistribution}
             >
               <span className="material-symbols-outlined text-[20px]">send</span>
-              Process
+              처리
             </Button>
           </div>
         </div>

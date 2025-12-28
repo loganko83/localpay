@@ -31,7 +31,7 @@ const BlockchainExplorer: React.FC = () => {
       // Address
       window.open(TAMSA_EXPLORER_URLS.address(query), '_blank');
     } else {
-      setSearchResult({ type: null, data: null, error: 'Invalid search format' });
+      setSearchResult({ type: null, data: null, error: '잘못된 검색 형식입니다' });
     }
   };
 
@@ -40,9 +40,9 @@ const BlockchainExplorer: React.FC = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Blockchain Explorer</h1>
+          <h1 className="text-2xl font-bold text-white">블록체인 탐색기</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Explore Xphere blockchain and verify audit logs
+            Xphere 블록체인 탐색 및 감사 로그 검증
           </p>
         </div>
         <a
@@ -52,7 +52,7 @@ const BlockchainExplorer: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-          Open Tamsa Explorer
+          Tamsa 탐색기 열기
         </a>
       </div>
 
@@ -60,26 +60,26 @@ const BlockchainExplorer: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatusCard
           icon="token"
-          label="Network"
+          label="네트워크"
           value={XPHERE_CONFIG.chainName}
           status="connected"
           loading={statusLoading}
         />
         <StatusCard
           icon="tag"
-          label="Chain ID"
+          label="체인 ID"
           value={XPHERE_CONFIG.chainId.toString()}
           loading={statusLoading}
         />
         <StatusCard
           icon="height"
-          label="Block Height"
+          label="블록 높이"
           value={networkStatus?.blockHeight?.toLocaleString() || '-'}
           loading={statusLoading}
         />
         <StatusCard
           icon="local_gas_station"
-          label="Gas Price"
+          label="가스 가격"
           value={networkStatus?.gasPrice ? `${(Number(networkStatus.gasPrice) / 1e9).toFixed(2)} Gwei` : '-'}
           loading={statusLoading}
         />
@@ -87,7 +87,7 @@ const BlockchainExplorer: React.FC = () => {
 
       {/* Search */}
       <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-        <h3 className="text-white font-semibold mb-4">Search Blockchain</h3>
+        <h3 className="text-white font-semibold mb-4">블록체인 검색</h3>
         <form onSubmit={handleSearch} className="flex gap-3">
           <div className="flex-1 relative">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
@@ -97,7 +97,7 @@ const BlockchainExplorer: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Block Number, TX Hash, or Address..."
+              placeholder="블록 번호, 거래 해시 또는 주소로 검색..."
               className="w-full h-12 pl-12 pr-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary/50"
             />
           </div>
@@ -105,25 +105,25 @@ const BlockchainExplorer: React.FC = () => {
             type="submit"
             className="px-6 h-12 rounded-xl bg-primary text-white font-medium hover:bg-primary/90 transition-colors"
           >
-            Search
+            검색
           </button>
         </form>
         {searchResult?.error && (
           <p className="mt-3 text-red-400 text-sm">{searchResult.error}</p>
         )}
         <div className="mt-4 flex gap-4 text-sm text-gray-500">
-          <span>Examples:</span>
+          <span>예시:</span>
           <button
             onClick={() => setSearchQuery('12404200')}
             className="text-primary hover:underline"
           >
-            Block #12404200
+            블록 #12404200
           </button>
           <button
             onClick={() => setSearchQuery('0x1234...abcd')}
             className="text-primary hover:underline"
           >
-            TX Hash
+            거래 해시
           </button>
         </div>
       </div>
@@ -131,8 +131,8 @@ const BlockchainExplorer: React.FC = () => {
       {/* Recent Blocks */}
       <div className="bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-          <h3 className="text-white font-semibold">Recent Blocks</h3>
-          <button className="text-primary text-sm hover:underline">View All</button>
+          <h3 className="text-white font-semibold">최근 블록</h3>
+          <button className="text-primary text-sm hover:underline">전체 보기</button>
         </div>
 
         {blocksLoading ? (
@@ -155,7 +155,7 @@ const BlockchainExplorer: React.FC = () => {
                       <span className="material-symbols-outlined text-primary">deployed_code</span>
                     </div>
                     <div>
-                      <p className="text-white font-medium">Block #{block.number.toLocaleString()}</p>
+                      <p className="text-white font-medium">블록 #{block.number.toLocaleString()}</p>
                       <p className="text-gray-500 text-sm font-mono">
                         {truncateHash(block.hash, 10, 8)}
                       </p>
@@ -163,7 +163,7 @@ const BlockchainExplorer: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-gray-400 text-sm">
-                      {block.transactions} transactions
+                      {block.transactions}건 거래
                     </p>
                     <p className="text-gray-500 text-xs">
                       {formatTimestamp(block.timestamp)}
@@ -180,53 +180,53 @@ const BlockchainExplorer: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Anchor Status */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Audit Anchoring Status</h3>
+          <h3 className="text-white font-semibold mb-4">감사 앵커링 현황</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-gray-400">Total Anchored Logs</span>
+              <span className="text-gray-400">총 앵커링된 로그</span>
               <span className="text-white font-bold">156,789</span>
             </div>
             <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-gray-400">Today's Anchors</span>
+              <span className="text-gray-400">오늘 앵커링</span>
               <span className="text-white font-bold">1,234</span>
             </div>
             <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-gray-400">Verification Rate</span>
+              <span className="text-gray-400">검증율</span>
               <span className="text-green-500 font-bold">99.8%</span>
             </div>
             <div className="flex items-center justify-between py-3">
-              <span className="text-gray-400">Last Anchor</span>
-              <span className="text-white font-mono text-sm">2 minutes ago</span>
+              <span className="text-gray-400">마지막 앵커링</span>
+              <span className="text-white font-mono text-sm">2분 전</span>
             </div>
           </div>
         </div>
 
         {/* Quick Actions */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Quick Actions</h3>
+          <h3 className="text-white font-semibold mb-4">빠른 작업</h3>
           <div className="grid grid-cols-2 gap-3">
             <ActionButton
               icon="verified"
-              label="Verify Log"
-              description="Check audit log integrity"
+              label="로그 검증"
+              description="감사 로그 무결성 확인"
               onClick={() => {}}
             />
             <ActionButton
               icon="account_tree"
-              label="Merkle Proof"
-              description="Generate inclusion proof"
+              label="머클 증명"
+              description="포함 증명 생성"
               onClick={() => {}}
             />
             <ActionButton
               icon="download"
-              label="Export Proofs"
-              description="Download batch proofs"
+              label="증명 내보내기"
+              description="일괄 증명 다운로드"
               onClick={() => {}}
             />
             <ActionButton
               icon="inventory_2"
-              label="Batch Anchor"
-              description="Anchor pending logs"
+              label="일괄 앵커링"
+              description="대기 중인 로그 앵커링"
               onClick={() => {}}
             />
           </div>
@@ -235,17 +235,17 @@ const BlockchainExplorer: React.FC = () => {
 
       {/* Network Info */}
       <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-        <h3 className="text-white font-semibold mb-4">Network Configuration</h3>
+        <h3 className="text-white font-semibold mb-4">네트워크 구성</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <InfoRow label="Network Name" value={XPHERE_CONFIG.chainName} />
-            <InfoRow label="Chain ID" value={XPHERE_CONFIG.chainId.toString()} />
+            <InfoRow label="네트워크명" value={XPHERE_CONFIG.chainName} />
+            <InfoRow label="체인 ID" value={XPHERE_CONFIG.chainId.toString()} />
             <InfoRow label="RPC URL" value={XPHERE_CONFIG.rpcUrl} copyable />
           </div>
           <div className="space-y-3">
-            <InfoRow label="Explorer URL" value={XPHERE_CONFIG.explorerUrl} copyable />
-            <InfoRow label="Native Currency" value={`${XPHERE_CONFIG.nativeCurrency.name} (${XPHERE_CONFIG.nativeCurrency.symbol})`} />
-            <InfoRow label="Decimals" value={XPHERE_CONFIG.nativeCurrency.decimals.toString()} />
+            <InfoRow label="탐색기 URL" value={XPHERE_CONFIG.explorerUrl} copyable />
+            <InfoRow label="기본 통화" value={`${XPHERE_CONFIG.nativeCurrency.name} (${XPHERE_CONFIG.nativeCurrency.symbol})`} />
+            <InfoRow label="소수점" value={XPHERE_CONFIG.nativeCurrency.decimals.toString()} />
           </div>
         </div>
       </div>

@@ -16,10 +16,10 @@ const salesData = [
 ];
 
 const quickActions = [
-  { icon: 'qr_code_scanner', label: 'Receive', primary: true },
-  { icon: 'history', label: 'History', primary: false },
-  { icon: 'group', label: 'Staff', primary: false },
-  { icon: 'analytics', label: 'Reports', primary: false },
+  { icon: 'qr_code_scanner', label: '받기', key: 'Receive', primary: true },
+  { icon: 'history', label: '내역', key: 'History', primary: false },
+  { icon: 'group', label: '스태프', key: 'Staff', primary: false },
+  { icon: 'analytics', label: '리포트', key: 'Reports', primary: false },
 ];
 
 const Dashboard: React.FC = () => {
@@ -58,10 +58,10 @@ const Dashboard: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.accent }}>storefront</span>
           </div>
           <div>
-            <h2 className="text-base font-bold leading-tight" style={{ color: theme.text }}>Busan Store #42</h2>
+            <h2 className="text-base font-bold leading-tight" style={{ color: theme.text }}>부산 매장 #42</h2>
             <div className="flex items-center gap-1">
               <span className="material-symbols-outlined text-[14px]" style={{ color: theme.accent }}>verified</span>
-              <span className="text-xs" style={{ color: theme.textSecondary }}>Verified Merchant</span>
+              <span className="text-xs" style={{ color: theme.textSecondary }}>인증된 가맹점</span>
             </div>
           </div>
         </div>
@@ -80,8 +80,8 @@ const Dashboard: React.FC = () => {
       {/* Greeting */}
       <div className="px-4 pt-6 pb-2">
         <h1 className="text-2xl font-bold leading-tight" style={{ color: theme.text }}>
-          Good Morning,<br />
-          <span style={{ color: theme.textSecondary }}>Let's check your earnings.</span>
+          좋은 아침입니다,<br />
+          <span style={{ color: theme.textSecondary }}>매출을 확인해보세요.</span>
         </h1>
       </div>
 
@@ -103,7 +103,7 @@ const Dashboard: React.FC = () => {
           <div className="flex flex-col p-5 gap-4 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>Total Balance</span>
+                <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>총 잔액</span>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-bold tracking-tight" style={{ color: theme.text }}>
                     ₩ {formatAmount(wallet?.balance || 1450000)}
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1 mt-1">
                   <span className="material-symbols-outlined text-sm" style={{ color: theme.accent }}>trending_up</span>
-                  <span className="text-xs font-medium" style={{ color: theme.accent }}>+12% vs yesterday</span>
+                  <span className="text-xs font-medium" style={{ color: theme.accent }}>+12% 어제 대비</span>
                 </div>
               </div>
               <div
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
                 style={{ background: theme.accent, color: theme.text }}
               >
                 <span className="material-symbols-outlined text-[18px]">currency_exchange</span>
-                Exchange
+                환전
               </button>
               <button
                 onClick={() => navigate('/merchant/withdraw')}
@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
                 style={{ background: theme.cardHover, color: theme.text }}
               >
                 <span className="material-symbols-outlined text-[18px]">arrow_outward</span>
-                Withdraw
+                출금
               </button>
             </div>
           </div>
@@ -148,15 +148,15 @@ const Dashboard: React.FC = () => {
 
       {/* Quick Actions Grid */}
       <div className="px-4 py-2">
-        <h3 className="text-sm font-bold mb-3 px-1" style={{ color: theme.text }}>Quick Actions</h3>
+        <h3 className="text-sm font-bold mb-3 px-1" style={{ color: theme.text }}>빠른 실행</h3>
         <div className="grid grid-cols-4 gap-3">
           {quickActions.map((action, idx) => (
             <button
               key={idx}
               onClick={() => {
-                if (action.label === 'Receive') navigate('/merchant/scan');
-                else if (action.label === 'History') navigate('/merchant/payments');
-                else if (action.label === 'Staff') navigate('/merchant/employees');
+                if (action.key === 'Receive') navigate('/merchant/scan');
+                else if (action.key === 'History') navigate('/merchant/payments');
+                else if (action.key === 'Staff') navigate('/merchant/employees');
               }}
               className="flex flex-col items-center gap-2 group"
             >
@@ -186,7 +186,7 @@ const Dashboard: React.FC = () => {
           className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
           style={{ background: theme.card, border: `1px solid ${theme.border}` }}
         >
-          <span className="text-xs" style={{ color: theme.textSecondary }}>Today's Sales</span>
+          <span className="text-xs" style={{ color: theme.textSecondary }}>오늘 매출</span>
           <span className="text-lg font-bold" style={{ color: theme.text }}>₩ 850k</span>
           <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: theme.accent }}>
             <span className="material-symbols-outlined text-[12px]">arrow_upward</span> 12%
@@ -196,7 +196,7 @@ const Dashboard: React.FC = () => {
           className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
           style={{ background: theme.card, border: `1px solid ${theme.border}` }}
         >
-          <span className="text-xs" style={{ color: theme.textSecondary }}>Tx Count</span>
+          <span className="text-xs" style={{ color: theme.textSecondary }}>거래 수</span>
           <span className="text-lg font-bold" style={{ color: theme.text }}>{txCount}</span>
           <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: theme.accent }}>
             <span className="material-symbols-outlined text-[12px]">arrow_upward</span> 5%
@@ -206,7 +206,7 @@ const Dashboard: React.FC = () => {
           className="flex-none w-36 p-4 rounded-xl shadow-sm flex flex-col gap-2"
           style={{ background: theme.card, border: `1px solid ${theme.border}` }}
         >
-          <span className="text-xs" style={{ color: theme.textSecondary }}>Avg Ticket</span>
+          <span className="text-xs" style={{ color: theme.textSecondary }}>평균 결제액</span>
           <span className="text-lg font-bold" style={{ color: theme.text }}>₩ {formatAmount(avgTicket)}</span>
           <span className="text-xs font-medium flex items-center gap-0.5" style={{ color: theme.textMuted }}>
             <span className="material-symbols-outlined text-[12px]">remove</span> 0%
@@ -222,8 +222,8 @@ const Dashboard: React.FC = () => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Sales Trend</h3>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Last 7 days</p>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>매출 추이</h3>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>최근 7일</p>
             </div>
             <div className="text-right">
               <p className="text-lg font-bold" style={{ color: theme.text }}>₩ 5.2M</p>
@@ -250,7 +250,7 @@ const Dashboard: React.FC = () => {
                   contentStyle={{ backgroundColor: theme.card, borderColor: theme.border, borderRadius: '8px' }}
                   itemStyle={{ color: theme.text }}
                   labelStyle={{ display: 'none' }}
-                  formatter={(value) => value != null ? [`₩${formatAmount(value as number)}`, 'Sales'] : ['', '']}
+                  formatter={(value) => value != null ? [`₩${formatAmount(value as number)}`, '매출'] : ['', '']}
                 />
                 <Area
                   type="monotone"
@@ -269,13 +269,13 @@ const Dashboard: React.FC = () => {
       {/* Recent Transactions */}
       <div className="px-4 pb-4">
         <div className="flex items-center justify-between mb-3 px-1">
-          <h3 className="text-sm font-bold" style={{ color: theme.text }}>Recent Transactions</h3>
+          <h3 className="text-sm font-bold" style={{ color: theme.text }}>최근 거래</h3>
           <button
             onClick={() => navigate('/merchant/payments')}
             className="text-xs font-medium"
             style={{ color: theme.accent }}
           >
-            See All
+            전체 보기
           </button>
         </div>
         <div className="flex flex-col gap-3">
@@ -283,9 +283,9 @@ const Dashboard: React.FC = () => {
             <>
               {/* Placeholder transactions */}
               {[
-                { id: 1, customer: 'Customer #8291', time: '10:42 AM', amount: 12000 },
-                { id: 2, customer: 'Customer #4102', time: '09:15 AM', amount: 45500 },
-                { id: 3, customer: 'Customer #9931', time: 'Yesterday', amount: 8000 },
+                { id: 1, customer: '고객 #8291', time: '오전 10:42', amount: 12000 },
+                { id: 2, customer: '고객 #4102', time: '오전 09:15', amount: 45500 },
+                { id: 3, customer: '고객 #9931', time: '어제', amount: 8000 },
               ].map((tx) => (
                 <div
                   key={tx.id}
@@ -313,7 +313,7 @@ const Dashboard: React.FC = () => {
                         className="w-1.5 h-1.5 rounded-full"
                         style={{ background: theme.accent }}
                       />
-                      <span className="text-[10px]" style={{ color: theme.textSecondary }}>Confirmed</span>
+                      <span className="text-[10px]" style={{ color: theme.textSecondary }}>확인됨</span>
                     </div>
                   </div>
                 </div>
@@ -334,7 +334,7 @@ const Dashboard: React.FC = () => {
                     <span className="material-symbols-outlined text-[20px]">person</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold" style={{ color: theme.text }}>{tx.customerName || 'Customer'}</span>
+                    <span className="text-sm font-bold" style={{ color: theme.text }}>{tx.customerName || '고객'}</span>
                     <span className="text-xs" style={{ color: theme.textSecondary }}>
                       {new Date(tx.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                     </span>
@@ -353,7 +353,7 @@ const Dashboard: React.FC = () => {
                       style={{ background: tx.status === 'completed' ? theme.accent : '#f59e0b' }}
                     />
                     <span className="text-[10px]" style={{ color: theme.textSecondary }}>
-                      {tx.status === 'completed' ? 'Confirmed' : 'Pending'}
+                      {tx.status === 'completed' ? '확인됨' : '대기 중'}
                     </span>
                   </div>
                 </div>

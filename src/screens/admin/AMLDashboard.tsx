@@ -60,14 +60,14 @@ const getAlertTypeIcon = (type: AlertType): string => {
 // Get alert type label
 const getAlertTypeLabel = (type: AlertType): string => {
   const labelMap: Record<AlertType, string> = {
-    THRESHOLD_BREACH: 'Threshold Breach',
-    STRUCTURING: 'Structuring',
-    VELOCITY_ANOMALY: 'Velocity Anomaly',
-    PATTERN_MATCH: 'Pattern Match',
-    SANCTIONS_HIT: 'Sanctions Hit',
-    UNUSUAL_BEHAVIOR: 'Unusual Behavior',
-    HIGH_RISK_COUNTERPARTY: 'High-Risk Counterparty',
-    CROSS_BORDER: 'Cross-Border',
+    THRESHOLD_BREACH: '임계값 초과',
+    STRUCTURING: '구조화 거래',
+    VELOCITY_ANOMALY: '속도 이상',
+    PATTERN_MATCH: '패턴 일치',
+    SANCTIONS_HIT: '제재 대상',
+    UNUSUAL_BEHAVIOR: '비정상 행동',
+    HIGH_RISK_COUNTERPARTY: '고위험 거래상대',
+    CROSS_BORDER: '국경간 거래',
   };
   return labelMap[type] || type;
 };
@@ -117,7 +117,7 @@ const AMLDashboard: React.FC = () => {
   // Resolve alert
   const handleResolveAlert = async (decision: 'FALSE_POSITIVE' | 'SUSPICIOUS' | 'CLEARED' | 'REPORTED_TO_FIU') => {
     if (!selectedAlert || !resolutionNotes.trim()) {
-      alert('Please provide resolution notes');
+      alert('해결 내용을 입력해주세요');
       return;
     }
 
@@ -158,8 +158,8 @@ const AMLDashboard: React.FC = () => {
         <div className="px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">AML Compliance</h1>
-              <p className="text-sm text-text-secondary">Anti-Money Laundering Monitoring</p>
+              <h1 className="text-2xl font-bold text-white">자금세탁방지</h1>
+              <p className="text-sm text-text-secondary">자금세탁방지 모니터링</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-blue-500 text-[32px]">
@@ -178,7 +178,7 @@ const AMLDashboard: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-text-secondary">Monitored</div>
+                  <div className="text-xs text-text-secondary">모니터링</div>
                   <div className="text-lg font-bold text-white truncate">
                     {stats.totalTransactionsMonitored.toLocaleString()}
                   </div>
@@ -194,7 +194,7 @@ const AMLDashboard: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-text-secondary">Open Alerts</div>
+                  <div className="text-xs text-text-secondary">미처리 알림</div>
                   <div className="text-lg font-bold text-white truncate">
                     {(stats.alertsByStatus['OPEN'] || 0) + (stats.alertsByStatus['UNDER_REVIEW'] || 0)}
                   </div>
@@ -210,7 +210,7 @@ const AMLDashboard: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-text-secondary">STRs Submitted</div>
+                  <div className="text-xs text-text-secondary">STR 제출</div>
                   <div className="text-lg font-bold text-white truncate">
                     {stats.strSubmitted}
                   </div>
@@ -226,7 +226,7 @@ const AMLDashboard: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-text-secondary">High-Risk</div>
+                  <div className="text-xs text-text-secondary">고위험</div>
                   <div className="text-lg font-bold text-white truncate">
                     {stats.highRiskCustomers}
                   </div>
@@ -238,10 +238,10 @@ const AMLDashboard: React.FC = () => {
           {/* Tabs */}
           <div className="flex gap-2 overflow-x-auto">
             {[
-              { key: 'alerts', label: 'Alerts', icon: 'notifications' },
-              { key: 'customers', label: 'Risk Profiles', icon: 'person' },
-              { key: 'strs', label: 'STRs', icon: 'report' },
-              { key: 'config', label: 'Configuration', icon: 'settings' },
+              { key: 'alerts', label: '알림', icon: 'notifications' },
+              { key: 'customers', label: '위험 프로필', icon: 'person' },
+              { key: 'strs', label: 'STR', icon: 'report' },
+              { key: 'config', label: '설정', icon: 'settings' },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -272,7 +272,7 @@ const AMLDashboard: React.FC = () => {
             {/* Alert Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <Card variant="stat" padding="sm">
-                <div className="text-xs text-text-secondary mb-1">By Severity</div>
+                <div className="text-xs text-text-secondary mb-1">심각도별</div>
                 <div className="space-y-1">
                   {(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as RiskLevel[]).map((level) => {
                     const count = alerts.filter((a) => a.severity === level).length;
@@ -289,7 +289,7 @@ const AMLDashboard: React.FC = () => {
               </Card>
 
               <Card variant="stat" padding="sm">
-                <div className="text-xs text-text-secondary mb-1">By Status</div>
+                <div className="text-xs text-text-secondary mb-1">상태별</div>
                 <div className="space-y-1">
                   {Object.entries(stats.alertsByStatus).slice(0, 4).map(([status, count]) => (
                     <div key={status} className="flex items-center justify-between">
@@ -301,7 +301,7 @@ const AMLDashboard: React.FC = () => {
               </Card>
 
               <Card variant="stat" padding="sm" className="col-span-2">
-                <div className="text-xs text-text-secondary mb-2">Alert Types</div>
+                <div className="text-xs text-text-secondary mb-2">알림 유형</div>
                 <div className="grid grid-cols-2 gap-2">
                   {Object.entries(stats.alertsByType).slice(0, 6).map(([type, count]) => (
                     <div key={type} className="flex items-center gap-2">
@@ -320,17 +320,17 @@ const AMLDashboard: React.FC = () => {
 
             {/* Sort Controls */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Open Alerts</h2>
+              <h2 className="text-lg font-bold text-white">미처리 알림</h2>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-text-secondary">Sort by:</span>
+                <span className="text-xs text-text-secondary">정렬:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="bg-surface text-white text-sm rounded-lg px-3 py-1.5 border border-surface-highlight outline-none"
                 >
-                  <option value="date">Date</option>
-                  <option value="severity">Severity</option>
-                  <option value="type">Type</option>
+                  <option value="date">날짜</option>
+                  <option value="severity">심각도</option>
+                  <option value="type">유형</option>
                 </select>
               </div>
             </div>
@@ -343,7 +343,7 @@ const AMLDashboard: React.FC = () => {
                     <span className="material-symbols-outlined text-6xl text-text-secondary mb-2 block">
                       check_circle
                     </span>
-                    <div className="text-text-secondary">No open alerts</div>
+                    <div className="text-text-secondary">미처리 알림 없음</div>
                   </div>
                 </Card>
               ) : (
@@ -386,7 +386,7 @@ const AMLDashboard: React.FC = () => {
                             <span className="material-symbols-outlined text-[14px]">
                               receipt_long
                             </span>
-                            {alert.relatedTransactions.length} txns
+                            {alert.relatedTransactions.length}건 거래
                           </div>
                           <div className="flex items-center gap-1">
                             <span className="material-symbols-outlined text-[14px]">
@@ -420,9 +420,9 @@ const AMLDashboard: React.FC = () => {
               <span className="material-symbols-outlined text-6xl text-text-secondary mb-2 block">
                 person_search
               </span>
-              <div className="text-text-secondary mb-4">Customer Risk Profiles</div>
+              <div className="text-text-secondary mb-4">고객 위험 프로필</div>
               <p className="text-sm text-text-secondary max-w-md mx-auto">
-                View and manage customer risk profiles, including KYC status, risk scores, and alert history.
+                KYC 상태, 위험 점수, 알림 이력을 포함한 고객 위험 프로필을 조회하고 관리합니다.
               </p>
             </div>
           </Card>
@@ -435,13 +435,13 @@ const AMLDashboard: React.FC = () => {
               <span className="material-symbols-outlined text-6xl text-text-secondary mb-2 block">
                 report
               </span>
-              <div className="text-text-secondary mb-4">Suspicious Transaction Reports</div>
+              <div className="text-text-secondary mb-4">의심거래보고서</div>
               <p className="text-sm text-text-secondary max-w-md mx-auto mb-6">
-                Manage draft and submitted STRs to Korea Financial Intelligence Unit (KoFIU).
+                금융정보분석원(KoFIU)에 제출할 STR 초안 및 제출 내역을 관리합니다.
               </p>
               <Button variant="primary">
                 <span className="material-symbols-outlined text-[20px]">add</span>
-                Generate New STR
+                새 STR 생성
               </Button>
             </div>
           </Card>
@@ -450,15 +450,15 @@ const AMLDashboard: React.FC = () => {
         {/* Configuration Tab */}
         {activeTab === 'config' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-white">AML Thresholds Configuration</h2>
+            <h2 className="text-lg font-bold text-white">AML 임계값 설정</h2>
 
             <Card padding="md">
-              <h3 className="text-sm font-bold text-white mb-3">Transaction Thresholds</h3>
+              <h3 className="text-sm font-bold text-white mb-3">거래 임계값</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2 border-b border-surface-highlight">
                   <div>
-                    <div className="text-sm text-white">CTR Threshold</div>
-                    <div className="text-xs text-text-secondary">Currency Transaction Report</div>
+                    <div className="text-sm text-white">CTR 임계값</div>
+                    <div className="text-xs text-text-secondary">고액현금거래보고</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {formatCurrency(amlComplianceService.getThresholds().ctrThreshold)}
@@ -467,8 +467,8 @@ const AMLDashboard: React.FC = () => {
 
                 <div className="flex items-center justify-between py-2 border-b border-surface-highlight">
                   <div>
-                    <div className="text-sm text-white">Travel Rule Threshold</div>
-                    <div className="text-xs text-text-secondary">Virtual asset transfers</div>
+                    <div className="text-sm text-white">트래블룰 임계값</div>
+                    <div className="text-xs text-text-secondary">가상자산 이체</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {formatCurrency(amlComplianceService.getThresholds().travelRuleThreshold)}
@@ -477,8 +477,8 @@ const AMLDashboard: React.FC = () => {
 
                 <div className="flex items-center justify-between py-2 border-b border-surface-highlight">
                   <div>
-                    <div className="text-sm text-white">High Value Threshold</div>
-                    <div className="text-xs text-text-secondary">Enhanced due diligence</div>
+                    <div className="text-sm text-white">고액 거래 임계값</div>
+                    <div className="text-xs text-text-secondary">강화된 실사 필요</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {formatCurrency(amlComplianceService.getThresholds().highValueThreshold)}
@@ -487,8 +487,8 @@ const AMLDashboard: React.FC = () => {
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <div className="text-sm text-white">Daily Cash Limit</div>
-                    <div className="text-xs text-text-secondary">Maximum daily cash transactions</div>
+                    <div className="text-sm text-white">일일 현금 한도</div>
+                    <div className="text-xs text-text-secondary">일일 최대 현금 거래</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {formatCurrency(amlComplianceService.getThresholds().dailyLimitCash)}
@@ -498,12 +498,12 @@ const AMLDashboard: React.FC = () => {
             </Card>
 
             <Card padding="md">
-              <h3 className="text-sm font-bold text-white mb-3">Velocity Limits</h3>
+              <h3 className="text-sm font-bold text-white mb-3">속도 제한</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2 border-b border-surface-highlight">
                   <div>
-                    <div className="text-sm text-white">Max Hourly Transactions</div>
-                    <div className="text-xs text-text-secondary">Per customer</div>
+                    <div className="text-sm text-white">시간당 최대 거래</div>
+                    <div className="text-xs text-text-secondary">고객당</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {amlComplianceService.getThresholds().maxHourlyTransactions}
@@ -512,8 +512,8 @@ const AMLDashboard: React.FC = () => {
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <div className="text-sm text-white">Max Daily Transactions</div>
-                    <div className="text-xs text-text-secondary">Per customer</div>
+                    <div className="text-sm text-white">일일 최대 거래</div>
+                    <div className="text-xs text-text-secondary">고객당</div>
                   </div>
                   <div className="text-sm font-bold text-blue-500">
                     {amlComplianceService.getThresholds().maxDailyTransactions}
@@ -523,12 +523,12 @@ const AMLDashboard: React.FC = () => {
             </Card>
 
             <Card padding="md">
-              <h3 className="text-sm font-bold text-white mb-3">Risk Score Thresholds</h3>
+              <h3 className="text-sm font-bold text-white mb-3">위험 점수 임계값</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2 border-b border-surface-highlight">
                   <div>
-                    <div className="text-sm text-white">High Risk Score</div>
-                    <div className="text-xs text-text-secondary">Triggers enhanced monitoring</div>
+                    <div className="text-sm text-white">고위험 점수</div>
+                    <div className="text-xs text-text-secondary">강화 모니터링 발동</div>
                   </div>
                   <div className="text-sm font-bold text-orange-500">
                     {amlComplianceService.getThresholds().highRiskScore}+
@@ -537,8 +537,8 @@ const AMLDashboard: React.FC = () => {
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <div className="text-sm text-white">Medium Risk Score</div>
-                    <div className="text-xs text-text-secondary">Requires review</div>
+                    <div className="text-sm text-white">중위험 점수</div>
+                    <div className="text-xs text-text-secondary">검토 필요</div>
                   </div>
                   <div className="text-sm font-bold text-yellow-500">
                     {amlComplianceService.getThresholds().mediumRiskScore}+
@@ -559,7 +559,7 @@ const AMLDashboard: React.FC = () => {
             setSelectedAlert(null);
             setResolutionNotes('');
           }}
-          title="Alert Details"
+          title="알림 상세"
         >
           <div className="space-y-4">
             {/* Alert Header */}
@@ -575,7 +575,7 @@ const AMLDashboard: React.FC = () => {
                     {selectedAlert.severity}
                   </Badge>
                   <span className="text-xs text-text-secondary">
-                    Risk Score: {selectedAlert.riskScore}
+                    위험 점수: {selectedAlert.riskScore}
                   </span>
                 </div>
                 <div className="text-sm font-medium text-white">
@@ -587,33 +587,33 @@ const AMLDashboard: React.FC = () => {
             {/* Alert Info */}
             <div className="space-y-3">
               <div>
-                <div className="text-xs text-text-secondary mb-1">Description</div>
+                <div className="text-xs text-text-secondary mb-1">설명</div>
                 <div className="text-sm text-white">{selectedAlert.description}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <div className="text-xs text-text-secondary mb-1">Subject ID</div>
+                  <div className="text-xs text-text-secondary mb-1">대상 ID</div>
                   <div className="text-sm text-white font-mono break-all">{selectedAlert.subjectId}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-text-secondary mb-1">Subject Type</div>
+                  <div className="text-xs text-text-secondary mb-1">대상 유형</div>
                   <div className="text-sm text-white">{selectedAlert.subjectType}</div>
                 </div>
               </div>
 
               <div>
-                <div className="text-xs text-text-secondary mb-1">Created</div>
+                <div className="text-xs text-text-secondary mb-1">생성일시</div>
                 <div className="text-sm text-white">{formatDate(selectedAlert.createdAt)}</div>
               </div>
 
               <div>
-                <div className="text-xs text-text-secondary mb-1">Related Transactions</div>
-                <div className="text-sm text-white">{selectedAlert.relatedTransactions.length} transactions</div>
+                <div className="text-xs text-text-secondary mb-1">관련 거래</div>
+                <div className="text-sm text-white">{selectedAlert.relatedTransactions.length}건 거래</div>
               </div>
 
               <div>
-                <div className="text-xs text-text-secondary mb-1">Status</div>
+                <div className="text-xs text-text-secondary mb-1">상태</div>
                 <Badge variant={selectedAlert.status === 'OPEN' ? 'warning' : 'info'} size="md">
                   {selectedAlert.status}
                 </Badge>
@@ -625,12 +625,12 @@ const AMLDashboard: React.FC = () => {
               <div className="space-y-3 pt-4 border-t border-surface-highlight">
                 <div>
                   <label className="text-xs text-text-secondary mb-1 block">
-                    Resolution Notes
+                    해결 내용
                   </label>
                   <textarea
                     value={resolutionNotes}
                     onChange={(e) => setResolutionNotes(e.target.value)}
-                    placeholder="Enter investigation notes and resolution details..."
+                    placeholder="조사 내용 및 해결 상세 정보를 입력하세요..."
                     className="w-full h-24 bg-surface border border-surface-highlight rounded-xl px-3 py-2 text-sm text-white placeholder-text-secondary resize-none outline-none focus:border-blue-500"
                   />
                 </div>
@@ -642,7 +642,7 @@ const AMLDashboard: React.FC = () => {
                     onClick={() => handleResolveAlert('FALSE_POSITIVE')}
                     disabled={isResolving || !resolutionNotes.trim()}
                   >
-                    False Positive
+                    오탐
                   </Button>
                   <Button
                     variant="ghost"
@@ -650,7 +650,7 @@ const AMLDashboard: React.FC = () => {
                     onClick={() => handleResolveAlert('CLEARED')}
                     disabled={isResolving || !resolutionNotes.trim()}
                   >
-                    Clear
+                    해제
                   </Button>
                   <Button
                     variant="secondary"
@@ -658,7 +658,7 @@ const AMLDashboard: React.FC = () => {
                     onClick={() => handleResolveAlert('SUSPICIOUS')}
                     disabled={isResolving || !resolutionNotes.trim()}
                   >
-                    Mark Suspicious
+                    의심 표시
                   </Button>
                   <Button
                     variant="danger"
@@ -666,26 +666,26 @@ const AMLDashboard: React.FC = () => {
                     onClick={() => handleResolveAlert('REPORTED_TO_FIU')}
                     disabled={isResolving || !resolutionNotes.trim()}
                   >
-                    Report to FIU
+                    FIU 보고
                   </Button>
                 </div>
               </div>
             ) : selectedAlert.resolution ? (
               <div className="space-y-2 pt-4 border-t border-surface-highlight">
-                <div className="text-xs text-text-secondary">Resolution</div>
+                <div className="text-xs text-text-secondary">해결 정보</div>
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="success" size="md">
                     {selectedAlert.resolution.decision}
                   </Badge>
                   <span className="text-xs text-text-secondary">
-                    by {selectedAlert.resolution.resolvedBy}
+                    담당자: {selectedAlert.resolution.resolvedBy}
                   </span>
                 </div>
                 <div className="text-sm text-white bg-surface rounded-lg p-3">
                   {selectedAlert.resolution.notes}
                 </div>
                 <div className="text-xs text-text-secondary">
-                  Resolved: {formatDate(selectedAlert.resolution.resolvedAt)}
+                  해결일시: {formatDate(selectedAlert.resolution.resolvedAt)}
                 </div>
               </div>
             ) : null}

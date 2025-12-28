@@ -34,27 +34,27 @@ const Profile: React.FC = () => {
 
   const menuSections: MenuSection[] = [
     {
-      title: 'Account & Security',
+      title: '계정 및 보안',
       items: [
-        { icon: 'person_edit', label: 'Edit Profile', color: '#f97316' },
-        { icon: 'face', label: 'Biometric Login', color: '#3b82f6', toggle: true },
-        { icon: 'lock', label: 'Change PIN', color: '#a855f7' },
-        { icon: 'shield', label: 'Wallet Backup', color: theme.accent, badge: 'Required' },
+        { icon: 'person_edit', label: '프로필 수정', color: '#f97316' },
+        { icon: 'face', label: '생체 인증 로그인', color: '#3b82f6', toggle: true },
+        { icon: 'lock', label: 'PIN 변경', color: '#a855f7' },
+        { icon: 'shield', label: '지갑 백업', color: theme.accent, badge: '필수' },
       ],
     },
     {
-      title: 'Preferences',
+      title: '환경설정',
       items: [
-        { icon: 'notifications', label: 'Notifications', color: '#eab308' },
-        { icon: 'payments', label: 'Currency Display', color: '#14b8a6', value: 'KRW' },
-        { icon: 'language', label: 'Language', color: '#6366f1', value: 'Korean' },
+        { icon: 'notifications', label: '알림 설정', color: '#eab308' },
+        { icon: 'payments', label: '통화 표시', color: '#14b8a6', value: 'KRW' },
+        { icon: 'language', label: '언어', color: '#6366f1', value: '한국어' },
       ],
     },
     {
-      title: 'About',
+      title: '정보',
       items: [
-        { icon: 'info', label: 'Terms of Service', color: theme.textMuted },
-        { icon: 'privacy_tip', label: 'Privacy Policy', color: theme.textMuted },
+        { icon: 'info', label: '이용약관', color: theme.textMuted },
+        { icon: 'privacy_tip', label: '개인정보처리방침', color: theme.textMuted },
       ],
     },
   ];
@@ -69,7 +69,7 @@ const Profile: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Profile & Settings</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>프로필 및 설정</h1>
         <button onClick={handleLogout}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>logout</span>
         </button>
@@ -94,12 +94,12 @@ const Profile: React.FC = () => {
                 className="absolute bottom-0 right-0 text-[10px] font-bold px-2 py-0.5 rounded-full"
                 style={{ background: theme.accent, color: '#fff' }}
               >
-                Lvl 2
+                Lv.2
               </div>
             </div>
 
-            <h2 className="text-xl font-bold" style={{ color: theme.text }}>Ji-min Kim</h2>
-            <p className="text-sm mb-3" style={{ color: theme.textMuted }}>Busan Citizen</p>
+            <h2 className="text-xl font-bold" style={{ color: theme.text }}>김지민</h2>
+            <p className="text-sm mb-3" style={{ color: theme.textMuted }}>부산 시민</p>
 
             <button
               onClick={copyWalletAddress}
@@ -116,9 +116,9 @@ const Profile: React.FC = () => {
         <div className="px-5 mb-6">
           <div className="grid grid-cols-3 gap-3">
             {[
-              { icon: 'qr_code_2', label: 'My QR', color: theme.accent, path: '/consumer/scan' },
-              { icon: 'support_agent', label: 'Support', color: '#3b82f6' },
-              { icon: 'share', label: 'Share', color: '#22c55e' },
+              { icon: 'qr_code_2', label: '내 QR', color: theme.accent, path: '/consumer/scan' },
+              { icon: 'support_agent', label: '고객지원', color: '#3b82f6' },
+              { icon: 'share', label: '공유', color: '#22c55e' },
             ].map((action, idx) => (
               <button
                 key={idx}
@@ -189,9 +189,9 @@ const Profile: React.FC = () => {
 
         {/* Version & Logout */}
         <div className="flex flex-col items-center pb-8 gap-4">
-          <p className="text-xs font-mono" style={{ color: theme.textMuted }}>Busan B-Pass v2.1.0</p>
+          <p className="text-xs font-mono" style={{ color: theme.textMuted }}>부산 B-Pass v2.1.0</p>
           <button onClick={handleLogout} className="text-sm font-medium py-2 px-6 rounded-full" style={{ color: theme.accent }}>
-            Log Out
+            로그아웃
           </button>
         </div>
       </main>

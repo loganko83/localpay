@@ -49,7 +49,7 @@ const LoyaltyRedeem: React.FC = () => {
     setTimeout(() => {
       setCustomerId('user-demo-001');
       setScannerActive(false);
-      setSuccess('Customer QR code scanned successfully');
+      setSuccess('고객 QR 코드 스캔 완료');
       setTimeout(() => setSuccess(''), 3000);
     }, 1500);
   };
@@ -59,12 +59,12 @@ const LoyaltyRedeem: React.FC = () => {
     setSuccess('');
 
     if (!customerId) {
-      setError('Please enter customer ID or scan QR code');
+      setError('고객 ID를 입력하거나 QR 코드를 스캔해주세요');
       return;
     }
 
     if (!pointsToRedeem || parseInt(pointsToRedeem) <= 0) {
-      setError('Please enter valid points to redeem');
+      setError('유효한 교환 포인트를 입력해주세요');
       return;
     }
 
@@ -78,7 +78,7 @@ const LoyaltyRedeem: React.FC = () => {
       });
 
       if (result.success && result.transaction) {
-        setSuccess(`Successfully redeemed ${pointsToRedeem} points (${result.krwValue} KRW)`);
+        setSuccess(`${pointsToRedeem} 포인트 교환 완료 (${result.krwValue} 원)`);
         setCustomerId('');
         setPointsToRedeem('');
         setRedemptionAmount('');
@@ -88,10 +88,10 @@ const LoyaltyRedeem: React.FC = () => {
 
         setTimeout(() => setSuccess(''), 5000);
       } else {
-        setError(result.error || 'Redemption failed');
+        setError(result.error || '교환에 실패했습니다');
       }
     } catch (err) {
-      setError('An error occurred during redemption');
+      setError('교환 중 오류가 발생했습니다');
     } finally {
       setLoading(false);
     }
@@ -129,8 +129,8 @@ const LoyaltyRedeem: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.text }}>arrow_back</span>
           </button>
           <div>
-            <h1 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.text }}>Loyalty Point Redemption</h1>
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Redeem customer loyalty points</p>
+            <h1 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.text }}>포인트 교환</h1>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>고객 로열티 포인트 교환</p>
           </div>
         </div>
       </div>
@@ -140,8 +140,8 @@ const LoyaltyRedeem: React.FC = () => {
         <div style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', border: `1px solid ${theme.border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <div>
-              <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '0.25rem' }}>Customer QR Code</h3>
-              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Scan customer's loyalty QR code</p>
+              <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '0.25rem' }}>고객 QR 코드</h3>
+              <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>고객의 로열티 QR 코드 스캔</p>
             </div>
             <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.875rem' }}>
               qr_code_scanner
@@ -171,7 +171,7 @@ const LoyaltyRedeem: React.FC = () => {
                   }}>
                     qr_code_scanner
                   </span>
-                  <p style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>Scanning QR Code...</p>
+                  <p style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>QR 코드 스캔 중...</p>
                 </div>
               </div>
             ) : (
@@ -194,7 +194,7 @@ const LoyaltyRedeem: React.FC = () => {
                   }}>
                     qr_code_2
                   </span>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Tap to scan customer QR code</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>터치하여 고객 QR 코드 스캔</p>
                 </div>
               </div>
             )}
@@ -210,36 +210,36 @@ const LoyaltyRedeem: React.FC = () => {
             <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
               qr_code_scanner
             </span>
-            {scannerActive ? 'Scanning...' : 'Scan QR Code'}
+            {scannerActive ? '스캔 중...' : 'QR 코드 스캔'}
           </Button>
         </div>
 
         {/* Redemption Form */}
         <div style={{ backgroundColor: theme.card, borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', border: `1px solid ${theme.border}` }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>Redemption Details</h3>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '1rem' }}>교환 상세</h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <Input
-              label="Customer ID"
-              placeholder="Enter customer ID"
+              label="고객 ID"
+              placeholder="고객 ID 입력"
               value={customerId}
               onChange={(e) => setCustomerId(e.target.value)}
               icon="person"
             />
 
             <Input
-              label="Points to Redeem"
+              label="교환할 포인트"
               type="number"
-              placeholder="Enter points"
+              placeholder="포인트 입력"
               value={pointsToRedeem}
               onChange={(e) => handlePointsChange(e.target.value)}
               icon="stars"
             />
 
             <Input
-              label="Redemption Amount (KRW)"
+              label="교환 금액 (원)"
               type="number"
-              placeholder="Amount in KRW"
+              placeholder="금액 (원)"
               value={redemptionAmount}
               onChange={(e) => handleAmountChange(e.target.value)}
               icon="payments"
@@ -252,13 +252,13 @@ const LoyaltyRedeem: React.FC = () => {
                   <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '1.25rem' }}>
                     swap_horiz
                   </span>
-                  <span style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>Conversion Rate</span>
+                  <span style={{ fontSize: '0.875rem', color: theme.text, fontWeight: '500' }}>전환율</span>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>
-                    {CONVERSION_RATE} points = {CONVERSION_RATE} KRW
+                    {CONVERSION_RATE} 포인트 = {CONVERSION_RATE} 원
                   </p>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>1 point = 1 KRW</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>1 포인트 = 1 원</p>
                 </div>
               </div>
             </div>
@@ -296,7 +296,7 @@ const LoyaltyRedeem: React.FC = () => {
               <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
                 redeem
               </span>
-              Redeem Points
+              포인트 교환
             </Button>
           </div>
         </div>
@@ -304,7 +304,7 @@ const LoyaltyRedeem: React.FC = () => {
         {/* Recent Redemptions */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>Recent Redemptions</h3>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>최근 교환 내역</h3>
             <Badge variant="default" size="sm">
               {recentRedemptions.length}
             </Badge>
@@ -316,9 +316,9 @@ const LoyaltyRedeem: React.FC = () => {
                 <span className="material-symbols-outlined" style={{ color: theme.textMuted, fontSize: '3rem', marginBottom: '0.75rem', display: 'inline-block' }}>
                   receipt_long
                 </span>
-                <p style={{ fontSize: '0.875rem', color: theme.textSecondary }}>No redemptions yet</p>
+                <p style={{ fontSize: '0.875rem', color: theme.textSecondary }}>아직 교환 내역이 없습니다</p>
                 <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>
-                  Recent redemptions will appear here
+                  최근 교환 내역이 여기에 표시됩니다
                 </p>
               </div>
             </div>
@@ -345,7 +345,7 @@ const LoyaltyRedeem: React.FC = () => {
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {redemption.merchantName || 'Point Redemption'}
+                          {redemption.merchantName || '포인트 교환'}
                         </p>
                         <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
                           {formatDateTime(redemption.timestamp)}
@@ -362,7 +362,7 @@ const LoyaltyRedeem: React.FC = () => {
                         {redemption.points} pts
                       </p>
                       <Badge variant="success" size="sm" className="mt-1">
-                        Redeemed
+                        교환됨
                       </Badge>
                     </div>
                   </div>

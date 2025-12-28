@@ -191,8 +191,8 @@ const SettlementCalendar: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: theme.text }}>arrow_back</span>
             </button>
             <div>
-              <h1 className="text-lg font-bold" style={{ color: theme.text }}>Settlement Calendar</h1>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Track your settlement schedule</p>
+              <h1 className="text-lg font-bold" style={{ color: theme.text }}>정산 일정</h1>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>정산 스케줄 확인</p>
             </div>
           </div>
           <button
@@ -210,7 +210,7 @@ const SettlementCalendar: React.FC = () => {
       <div className="px-4 pt-6 pb-4">
         <div className="grid grid-cols-3 gap-3 mb-4">
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px]" style={{ color: theme.textSecondary }}>This Month</span>
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>이번 달</span>
             <span className="text-sm font-bold" style={{ color: theme.text }}>₩{formatAmount(thisMonthTotal)}</span>
             <div className="flex items-center gap-0.5" style={{ color: theme.accent }}>
               <span className="material-symbols-outlined text-[10px]">trending_up</span>
@@ -219,18 +219,18 @@ const SettlementCalendar: React.FC = () => {
           </Card>
 
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px]" style={{ color: theme.textSecondary }}>Pending</span>
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>대기 중</span>
             <span className="text-sm font-bold" style={{ color: '#eab308' }}>₩{formatAmount(pendingAmount)}</span>
-            <span className="text-[9px]" style={{ color: theme.textMuted }}>{currentMonthSettlements.filter(s => s.status === 'pending').length} items</span>
+            <span className="text-[9px]" style={{ color: theme.textMuted }}>{currentMonthSettlements.filter(s => s.status === 'pending').length}건</span>
           </Card>
 
           <Card padding="md" className="flex flex-col gap-1">
-            <span className="text-[10px]" style={{ color: theme.textSecondary }}>Next</span>
+            <span className="text-[10px]" style={{ color: theme.textSecondary }}>다음</span>
             <span className="text-sm font-bold" style={{ color: '#3b82f6' }}>
               {nextSettlement ? nextSettlement.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'}
             </span>
             <span className="text-[9px]" style={{ color: theme.textMuted }}>
-              {nextSettlement ? `${Math.ceil((nextSettlement.date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days` : 'No schedule'}
+              {nextSettlement ? `${Math.ceil((nextSettlement.date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}일 후` : '일정 없음'}
             </span>
           </Card>
         </div>
@@ -238,13 +238,13 @@ const SettlementCalendar: React.FC = () => {
         {/* Legend */}
         <div className="flex items-center justify-center gap-4 mb-4">
           <div className="flex items-center gap-1.5">
-            <Badge variant="success" size="sm">Settled</Badge>
+            <Badge variant="success" size="sm">정산 완료</Badge>
           </div>
           <div className="flex items-center gap-1.5">
-            <Badge variant="warning" size="sm">Pending</Badge>
+            <Badge variant="warning" size="sm">대기 중</Badge>
           </div>
           <div className="flex items-center gap-1.5">
-            <Badge variant="info" size="sm">Scheduled</Badge>
+            <Badge variant="info" size="sm">예정</Badge>
           </div>
         </div>
       </div>
@@ -293,8 +293,8 @@ const SettlementCalendar: React.FC = () => {
       {/* Recent Settlements */}
       <div className="px-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold" style={{ color: theme.text }}>Recent Settlements</h3>
-          <span className="text-xs" style={{ color: theme.textSecondary }}>{recentSettlements.length} items</span>
+          <h3 className="text-sm font-bold" style={{ color: theme.text }}>최근 정산</h3>
+          <span className="text-xs" style={{ color: theme.textSecondary }}>{recentSettlements.length}건</span>
         </div>
 
         <div className="space-y-3">
@@ -307,11 +307,11 @@ const SettlementCalendar: React.FC = () => {
                       {settlement.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                     <Badge variant={settlement.status === 'settled' ? 'success' : settlement.status === 'pending' ? 'warning' : 'info'} size="sm">
-                      {settlement.status}
+                      {settlement.status === 'settled' ? '완료' : settlement.status === 'pending' ? '대기 중' : '예정'}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2 text-xs" style={{ color: theme.textSecondary }}>
-                    <span>{settlement.transactionCount} transactions</span>
+                    <span>{settlement.transactionCount}건 거래</span>
                     <span>•</span>
                     <span>ID: {settlement.id}</span>
                   </div>
@@ -328,7 +328,7 @@ const SettlementCalendar: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-[16px] filled" style={{ color: theme.accent }}>verified</span>
                       <div>
-                        <p className="text-xs font-medium" style={{ color: theme.text }}>Blockchain Verified</p>
+                        <p className="text-xs font-medium" style={{ color: theme.text }}>블록체인 검증됨</p>
                         <p className="text-[10px] font-mono" style={{ color: theme.textSecondary }}>{settlement.blockchainHash}</p>
                       </div>
                     </div>
@@ -338,7 +338,7 @@ const SettlementCalendar: React.FC = () => {
                       onMouseEnter={(e) => e.currentTarget.style.color = theme.text}
                       onMouseLeave={(e) => e.currentTarget.style.color = theme.accent}
                     >
-                      <span>View</span>
+                      <span>보기</span>
                       <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                     </button>
                   </div>
@@ -350,8 +350,8 @@ const SettlementCalendar: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[16px]" style={{ color: '#eab308' }}>pending</span>
                     <div>
-                      <p className="text-xs font-medium" style={{ color: '#eab308' }}>Processing Settlement</p>
-                      <p className="text-[10px]" style={{ color: theme.textSecondary }}>Expected completion in 1-2 business days</p>
+                      <p className="text-xs font-medium" style={{ color: '#eab308' }}>정산 처리 중</p>
+                      <p className="text-[10px]" style={{ color: theme.textSecondary }}>1-2 영업일 내 완료 예정</p>
                     </div>
                   </div>
                 </div>
@@ -365,7 +365,7 @@ const SettlementCalendar: React.FC = () => {
       <div className="px-4 pt-6 pb-2">
         <Button variant="secondary" fullWidth>
           <span className="material-symbols-outlined text-[20px]">download</span>
-          Export Settlement Report
+          정산 리포트 내보내기
         </Button>
       </div>
     </div>

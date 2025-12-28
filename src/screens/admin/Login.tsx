@@ -34,7 +34,7 @@ const Login: React.FC = () => {
       login(mockAdmin, 'admin');
       navigate('/admin');
     } else {
-      setError('Please enter your credentials');
+      setError('자격 증명을 입력해주세요');
     }
 
     setIsLoading(false);
@@ -47,26 +47,26 @@ const Login: React.FC = () => {
         <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-primary-dark mb-4">
           <span className="material-symbols-outlined text-white text-4xl">admin_panel_settings</span>
         </div>
-        <h1 className="text-2xl font-bold text-white mb-1">Admin Portal</h1>
-        <p className="text-text-secondary">LocalPay Platform Management</p>
+        <h1 className="text-2xl font-bold text-white mb-1">관리자 포털</h1>
+        <p className="text-text-secondary">LocalPay 플랫폼 관리</p>
       </div>
 
       {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-4">
         <Input
-          label="Admin Email"
+          label="관리자 이메일"
           type="email"
           icon="mail"
-          placeholder="Enter your email"
+          placeholder="이메일을 입력하세요"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <Input
-          label="Password"
+          label="비밀번호"
           type="password"
           icon="lock"
-          placeholder="Enter your password"
+          placeholder="비밀번호를 입력하세요"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -74,10 +74,10 @@ const Login: React.FC = () => {
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
             <Toggle checked={rememberMe} onChange={setRememberMe} size="sm" />
-            <span className="text-sm text-text-secondary">Keep me logged in</span>
+            <span className="text-sm text-text-secondary">로그인 상태 유지</span>
           </label>
           <button type="button" className="text-sm text-primary hover:underline">
-            Forgot Password?
+            비밀번호 찾기
           </button>
         </div>
 
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
           size="lg"
           loading={isLoading}
         >
-          Login to Admin Portal
+          관리자 포털 로그인
         </Button>
       </form>
 
@@ -101,10 +101,10 @@ const Login: React.FC = () => {
         <div className="flex items-start gap-3">
           <span className="material-symbols-outlined text-yellow-500">warning</span>
           <div>
-            <p className="text-sm font-medium text-white">Security Notice</p>
+            <p className="text-sm font-medium text-white">보안 안내</p>
             <p className="text-xs text-text-secondary mt-1">
-              This is a restricted area. All activities are logged and monitored.
-              Unauthorized access is prohibited.
+              제한된 영역입니다. 모든 활동이 기록되고 모니터링됩니다.
+              무단 접근은 금지되어 있습니다.
             </p>
           </div>
         </div>
@@ -115,7 +115,7 @@ const Login: React.FC = () => {
         onClick={() => navigate('/')}
         className="mt-6 text-center text-text-muted text-sm hover:text-text-secondary transition-colors"
       >
-        ← Back to App Selection
+        ← 앱 선택으로 돌아가기
       </button>
     </div>
   );

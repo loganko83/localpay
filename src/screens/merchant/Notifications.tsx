@@ -28,8 +28,8 @@ const mockNotifications: Notification[] = [
   {
     id: 'notif-001',
     type: 'payment',
-    title: 'Payment Received',
-    message: 'You received 25,000 P from Customer #8821',
+    title: '결제 수신',
+    message: '고객 #8821로부터 25,000 P를 받았습니다',
     timestamp: new Date(Date.now() - 300000).toISOString(),
     read: false,
     data: { amount: 25000, customerId: '8821' },
@@ -37,8 +37,8 @@ const mockNotifications: Notification[] = [
   {
     id: 'notif-002',
     type: 'payment',
-    title: 'Payment Received',
-    message: 'You received 12,500 P from Customer #4102',
+    title: '결제 수신',
+    message: '고객 #4102로부터 12,500 P를 받았습니다',
     timestamp: new Date(Date.now() - 900000).toISOString(),
     read: false,
     data: { amount: 12500, customerId: '4102' },
@@ -46,8 +46,8 @@ const mockNotifications: Notification[] = [
   {
     id: 'notif-003',
     type: 'settlement',
-    title: 'Settlement Completed',
-    message: 'Your daily settlement of 850,000 P has been transferred to your bank account',
+    title: '정산 완료',
+    message: '일일 정산금 850,000 P가 은행 계좌로 이체되었습니다',
     timestamp: new Date(Date.now() - 3600000).toISOString(),
     read: true,
     data: { amount: 850000 },
@@ -55,24 +55,24 @@ const mockNotifications: Notification[] = [
   {
     id: 'notif-004',
     type: 'system',
-    title: 'System Maintenance',
-    message: 'Scheduled maintenance on Dec 28, 2:00 AM - 4:00 AM KST. Payment processing will be temporarily unavailable.',
+    title: '시스템 점검',
+    message: '12월 28일 오전 2:00 - 4:00 KST 정기 점검 예정. 결제 처리가 일시적으로 중단됩니다.',
     timestamp: new Date(Date.now() - 7200000).toISOString(),
     read: true,
   },
   {
     id: 'notif-005',
     type: 'promo',
-    title: 'Jeonju Winter Festival',
-    message: 'Join the LocalPay Winter Festival promotion! Offer 10% cashback to attract more customers.',
+    title: '전주 겨울 축제',
+    message: 'LocalPay 겨울 축제 프로모션에 참여하세요! 10% 캐시백 제공으로 더 많은 고객을 유치하세요.',
     timestamp: new Date(Date.now() - 86400000).toISOString(),
     read: true,
   },
   {
     id: 'notif-006',
     type: 'payment',
-    title: 'Refund Requested',
-    message: 'Customer #9931 requested a refund for 8,000 P. Please review and respond.',
+    title: '환불 요청',
+    message: '고객 #9931이 8,000 P 환불을 요청했습니다. 검토 후 응답해주세요.',
     timestamp: new Date(Date.now() - 172800000).toISOString(),
     read: true,
     data: { amount: 8000, customerId: '9931' },
@@ -127,34 +127,34 @@ const Notifications: React.FC = () => {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 7) return `${days}일 전`;
     return date.toLocaleDateString('ko-KR');
   };
 
   const filters = [
-    { id: 'all', label: 'All' },
-    { id: 'payment', label: 'Payments' },
-    { id: 'settlement', label: 'Settlements' },
-    { id: 'system', label: 'System' },
-    { id: 'promo', label: 'Promos' },
+    { id: 'all', label: '전체' },
+    { id: 'payment', label: '결제' },
+    { id: 'settlement', label: '정산' },
+    { id: 'system', label: '시스템' },
+    { id: 'promo', label: '프로모션' },
   ];
 
   return (
     <div className="flex flex-col pb-4">
-      <Header title="Notifications" showBack />
+      <Header title="알림" showBack />
 
       {/* Summary */}
       <div className="px-4 py-4 flex items-center justify-between">
         <div>
           <p style={{ color: theme.textSecondary, fontSize: '0.875rem' }}>
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
+            {unreadCount > 0 ? `${unreadCount}개의 읽지 않은 알림` : '모두 확인했습니다!'}
           </p>
         </div>
         {unreadCount > 0 && (
           <Button variant="ghost" size="sm" onClick={markAllAsRead}>
-            Mark all read
+            모두 읽음 처리
           </Button>
         )}
       </div>
@@ -203,7 +203,7 @@ const Notifications: React.FC = () => {
             >
               notifications_off
             </span>
-            <p style={{ color: theme.textSecondary }}>No notifications</p>
+            <p style={{ color: theme.textSecondary }}>알림이 없습니다</p>
           </div>
         ) : (
           filteredNotifications.map((notification) => (
@@ -308,10 +308,10 @@ const Notifications: React.FC = () => {
               </span>
               <div>
                 <p style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>
-                  Notification Settings
+                  알림 설정
                 </p>
                 <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
-                  Manage your notification preferences
+                  알림 환경설정을 관리하세요
                 </p>
               </div>
             </div>

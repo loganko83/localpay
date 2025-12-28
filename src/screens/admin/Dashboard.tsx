@@ -27,36 +27,36 @@ const recentActivity = [
     id: '1',
     type: 'warning',
     icon: 'warning',
-    title: 'High Volume Transaction',
-    description: 'Wallet ID: 0x8a...4f2 detected moving 50M KRW',
-    time: '10m ago',
+    title: '고액 거래 감지',
+    description: '지갑 ID: 0x8a...4f2에서 5천만원 이동 감지',
+    time: '10분 전',
     color: '#ef4444',
   },
   {
     id: '2',
     type: 'info',
     icon: 'add_business',
-    title: 'New Merchant Application',
-    description: "'Seomyeon Coffee' requested validation",
-    time: '25m ago',
+    title: '신규 가맹점 신청',
+    description: "'서면 커피' 검증 요청",
+    time: '25분 전',
     color: '#3b82f6',
   },
   {
     id: '3',
     type: 'success',
     icon: 'published_with_changes',
-    title: 'Policy Update Deployed',
-    description: 'Youth Voucher Q3 parameters active',
-    time: '2h ago',
+    title: '정책 업데이트 배포',
+    description: '청년 바우처 Q3 파라미터 활성화',
+    time: '2시간 전',
     color: '#22c55e',
   },
   {
     id: '4',
     type: 'info',
     icon: 'verified',
-    title: 'Batch Anchoring Complete',
-    description: '1,234 audit logs anchored to Xphere',
-    time: '3h ago',
+    title: '배치 앵커링 완료',
+    description: '1,234개 감사 로그가 Xphere에 앵커링됨',
+    time: '3시간 전',
     color: '#2b8cee',
   },
 ];
@@ -79,9 +79,9 @@ const Dashboard: React.FC = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-white">대시보드</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Welcome back! Here's what's happening with LocalPay.
+            돌아오셨군요! LocalPay 현황입니다.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">analytics</span>
-            View Analytics
+            분석 보기
           </button>
         </div>
       </div>
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Total Issuance"
+          title="총 발행량"
           value={`₩${formatCurrency(metrics?.totalIssuance || 45200000000)}`}
           change="+2.4%"
           positive
@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
           onClick={() => navigate('/admin/analytics')}
         />
         <StatCard
-          title="Active Users"
+          title="활성 사용자"
           value={formatCurrency(metrics?.activeUsers || 342100)}
           change="+1.2%"
           positive
@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
           onClick={() => navigate('/admin/users')}
         />
         <StatCard
-          title="24h Volume"
+          title="24시간 거래량"
           value={`₩${formatCurrency(metrics?.volume24h || 2100000000)}`}
           change="+5.4%"
           positive
@@ -122,9 +122,9 @@ const Dashboard: React.FC = () => {
           onClick={() => navigate('/admin/analytics')}
         />
         <StatCard
-          title="Pending Merchants"
+          title="대기 중 가맹점"
           value={(metrics?.pendingMerchants || 12).toString()}
-          change="Action Required"
+          change="조치 필요"
           positive={false}
           icon="storefront"
           highlight
@@ -138,10 +138,10 @@ const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-white font-semibold">Transaction Volume</h3>
-              <p className="text-gray-500 text-sm">Last 7 days comparison</p>
+              <h3 className="text-white font-semibold">거래량</h3>
+              <p className="text-gray-500 text-sm">최근 7일 비교</p>
             </div>
-            <button className="text-primary text-sm hover:underline">View Report</button>
+            <button className="text-primary text-sm hover:underline">리포트 보기</button>
           </div>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -164,7 +164,7 @@ const Dashboard: React.FC = () => {
                     borderColor: '#334155',
                     borderRadius: 8,
                   }}
-                  formatter={(value) => [`₩${value}M`, 'Volume']}
+                  formatter={(value) => [`₩${value}M`, '거래량']}
                 />
                 <Area
                   type="monotone"
@@ -181,12 +181,12 @@ const Dashboard: React.FC = () => {
         {/* Blockchain Status */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold">Blockchain Status</h3>
+            <h3 className="text-white font-semibold">블록체인 상태</h3>
             <button
               onClick={() => navigate('/admin/blockchain')}
               className="text-primary text-sm hover:underline"
             >
-              Explorer
+              탐색기
             </button>
           </div>
 
@@ -198,7 +198,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-500 font-medium">Xphere Connected</span>
+                  <span className="text-green-500 font-medium">Xphere 연결됨</span>
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
@@ -213,7 +213,7 @@ const Dashboard: React.FC = () => {
 
           {/* Recent Blocks */}
           <div className="space-y-2">
-            <p className="text-gray-400 text-xs font-medium uppercase">Recent Blocks</p>
+            <p className="text-gray-400 text-xs font-medium uppercase">최근 블록</p>
             {recentBlocks?.slice(0, 4).map((block) => (
               <div
                 key={block.number}
@@ -239,12 +239,12 @@ const Dashboard: React.FC = () => {
         {/* Recent Activity */}
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-            <h3 className="text-white font-semibold">Recent Activity</h3>
+            <h3 className="text-white font-semibold">최근 활동</h3>
             <button
               onClick={() => navigate('/admin/audit')}
               className="text-primary text-sm hover:underline"
             >
-              View All
+              전체 보기
             </button>
           </div>
           <div className="divide-y divide-white/5">
@@ -280,36 +280,36 @@ const Dashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Quick Actions</h3>
+          <h3 className="text-white font-semibold mb-4">빠른 작업</h3>
           <div className="grid grid-cols-2 gap-3">
             <QuickAction
               icon="person_add"
-              label="Add User"
+              label="사용자 추가"
               onClick={() => navigate('/admin/users')}
             />
             <QuickAction
               icon="add_business"
-              label="Add Merchant"
+              label="가맹점 추가"
               onClick={() => navigate('/admin/users')}
             />
             <QuickAction
               icon="confirmation_number"
-              label="Issue Voucher"
+              label="바우처 발행"
               onClick={() => navigate('/admin/vouchers')}
             />
             <QuickAction
               icon="lab_profile"
-              label="View Audit"
+              label="감사 로그"
               onClick={() => navigate('/admin/audit')}
             />
             <QuickAction
               icon="policy"
-              label="Policies"
+              label="정책"
               onClick={() => navigate('/admin/policies')}
             />
             <QuickAction
               icon="payments"
-              label="Settlements"
+              label="정산"
               onClick={() => navigate('/admin/settlements')}
             />
           </div>
@@ -317,7 +317,7 @@ const Dashboard: React.FC = () => {
           {/* Category Distribution */}
           <div className="mt-6 pt-6 border-t border-white/5">
             <p className="text-gray-400 text-xs font-medium uppercase mb-3">
-              Merchant Categories
+              가맹점 카테고리
             </p>
             <div className="h-32">
               <ResponsiveContainer width="100%" height="100%">
@@ -350,12 +350,12 @@ const Dashboard: React.FC = () => {
       <div className="flex items-center justify-center gap-4 py-4 text-gray-600 text-xs">
         <span className="flex items-center gap-1">
           <span className="material-symbols-outlined text-[14px]">lock</span>
-          Secure Connection
+          보안 연결
         </span>
         <span>|</span>
-        <span>Session ID: 8X92-22L1-00P</span>
+        <span>세션 ID: 8X92-22L1-00P</span>
         <span>|</span>
-        <span>Xphere BlockchainNet</span>
+        <span>Xphere 블록체인넷</span>
       </div>
     </div>
   );

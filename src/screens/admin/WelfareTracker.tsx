@@ -44,7 +44,7 @@ interface Distribution {
 const mockPrograms: WelfareProgram[] = [
   {
     id: 'WF-001',
-    name: 'Youth Employment Support',
+    name: '청년 취업 지원',
     category: 'youth',
     budget: 5000000000,
     distributed: 3250000000,
@@ -57,7 +57,7 @@ const mockPrograms: WelfareProgram[] = [
   },
   {
     id: 'WF-002',
-    name: 'Senior Citizen Monthly Support',
+    name: '노인 월 생활 지원',
     category: 'senior',
     budget: 8000000000,
     distributed: 7200000000,
@@ -70,7 +70,7 @@ const mockPrograms: WelfareProgram[] = [
   },
   {
     id: 'WF-003',
-    name: 'Cultural Experience Voucher',
+    name: '문화 체험 바우처',
     category: 'culture',
     budget: 2000000000,
     distributed: 1800000000,
@@ -83,7 +83,7 @@ const mockPrograms: WelfareProgram[] = [
   },
   {
     id: 'WF-004',
-    name: 'Education Support Fund',
+    name: '교육 지원금',
     category: 'education',
     budget: 3000000000,
     distributed: 2400000000,
@@ -96,7 +96,7 @@ const mockPrograms: WelfareProgram[] = [
   },
   {
     id: 'WF-005',
-    name: 'Disability Living Allowance',
+    name: '장애인 생활 지원금',
     category: 'disability',
     budget: 4500000000,
     distributed: 4100000000,
@@ -113,9 +113,9 @@ const mockDistributions: Distribution[] = [
   {
     id: 'DIST-001',
     programId: 'WF-001',
-    programName: 'Youth Employment Support',
+    programName: '청년 취업 지원',
     beneficiaryId: 'U-44521',
-    beneficiaryName: 'Kim Minjun',
+    beneficiaryName: '김민준',
     amount: 500000,
     distributedAt: new Date(Date.now() - 86400000),
     usedAmount: 320000,
@@ -126,9 +126,9 @@ const mockDistributions: Distribution[] = [
   {
     id: 'DIST-002',
     programId: 'WF-002',
-    programName: 'Senior Citizen Monthly Support',
+    programName: '노인 월 생활 지원',
     beneficiaryId: 'U-88234',
-    beneficiaryName: 'Park Youngsoo',
+    beneficiaryName: '박영수',
     amount: 200000,
     distributedAt: new Date(Date.now() - 172800000),
     usedAmount: 200000,
@@ -139,9 +139,9 @@ const mockDistributions: Distribution[] = [
   {
     id: 'DIST-003',
     programId: 'WF-003',
-    programName: 'Cultural Experience Voucher',
+    programName: '문화 체험 바우처',
     beneficiaryId: 'U-55612',
-    beneficiaryName: 'Lee Soojin',
+    beneficiaryName: '이수진',
     amount: 150000,
     distributedAt: new Date(Date.now() - 259200000),
     usedAmount: 0,
@@ -151,9 +151,9 @@ const mockDistributions: Distribution[] = [
   {
     id: 'DIST-004',
     programId: 'WF-004',
-    programName: 'Education Support Fund',
+    programName: '교육 지원금',
     beneficiaryId: 'U-33109',
-    beneficiaryName: 'Choi Jihye',
+    beneficiaryName: '최지혜',
     amount: 800000,
     distributedAt: new Date(Date.now() - 604800000),
     usedAmount: 800000,
@@ -173,12 +173,12 @@ const categoryColors: Record<WelfareProgram['category'], string> = {
 };
 
 const monthlyData = [
-  { month: 'Jul', distributed: 2100, used: 1850 },
-  { month: 'Aug', distributed: 2400, used: 2100 },
-  { month: 'Sep', distributed: 2200, used: 2000 },
-  { month: 'Oct', distributed: 2800, used: 2450 },
-  { month: 'Nov', distributed: 3100, used: 2700 },
-  { month: 'Dec', distributed: 1900, used: 1200 },
+  { month: '7월', distributed: 2100, used: 1850 },
+  { month: '8월', distributed: 2400, used: 2100 },
+  { month: '9월', distributed: 2200, used: 2000 },
+  { month: '10월', distributed: 2800, used: 2450 },
+  { month: '11월', distributed: 3100, used: 2700 },
+  { month: '12월', distributed: 1900, used: 1200 },
 ];
 
 const WelfareTracker: React.FC = () => {
@@ -216,19 +216,19 @@ const WelfareTracker: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Welfare Distribution Tracker</h1>
+          <h1 className="text-2xl font-bold text-white">복지 배분 추적</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Track government subsidies and welfare fund distribution with blockchain verification
+            블록체인 검증과 함께 정부 보조금 및 복지 기금 배분 추적
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
             <span className="material-symbols-outlined text-[18px]">download</span>
-            Export Report
+            보고서 내보내기
           </button>
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/80 transition-colors">
             <span className="material-symbols-outlined text-[18px]">add</span>
-            New Program
+            새 프로그램
           </button>
         </div>
       </div>
@@ -236,32 +236,32 @@ const WelfareTracker: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <SummaryCard
-          title="Total Budget"
+          title="총 예산"
           value={`${formatCurrency(totalBudget)}`}
           icon="account_balance"
           color="#3b82f6"
-          subtitle="All active programs"
+          subtitle="모든 활성 프로그램"
         />
         <SummaryCard
-          title="Distributed"
+          title="배분액"
           value={`${formatCurrency(totalDistributed)}`}
           icon="payments"
           color="#22c55e"
-          subtitle={`${((totalDistributed / totalBudget) * 100).toFixed(1)}% of budget`}
+          subtitle={`예산 대비 ${((totalDistributed / totalBudget) * 100).toFixed(1)}%`}
         />
         <SummaryCard
-          title="Beneficiaries"
+          title="수혜자"
           value={totalBeneficiaries.toLocaleString()}
           icon="groups"
           color="#8b5cf6"
-          subtitle="Total recipients"
+          subtitle="총 수혜자 수"
         />
         <SummaryCard
-          title="Utilization Rate"
+          title="활용률"
           value={`${avgUtilization.toFixed(1)}%`}
           icon="trending_up"
           color="#f59e0b"
-          subtitle="Average across programs"
+          subtitle="프로그램 평균"
         />
       </div>
 
@@ -269,7 +269,7 @@ const WelfareTracker: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Distribution by Category */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Distribution by Category</h3>
+          <h3 className="text-white font-semibold mb-4">카테고리별 배분</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -312,7 +312,7 @@ const WelfareTracker: React.FC = () => {
 
         {/* Monthly Trend */}
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Monthly Distribution & Usage (M KRW)</h3>
+          <h3 className="text-white font-semibold mb-4">월별 배분 및 사용 현황 (백만원)</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={monthlyData}>
@@ -347,7 +347,7 @@ const WelfareTracker: React.FC = () => {
                   stroke="#3b82f6"
                   strokeWidth={2}
                   fill="url(#colorDistributed)"
-                  name="Distributed"
+                  name="배분"
                 />
                 <Area
                   type="monotone"
@@ -355,7 +355,7 @@ const WelfareTracker: React.FC = () => {
                   stroke="#22c55e"
                   strokeWidth={2}
                   fill="url(#colorUsed)"
-                  name="Used"
+                  name="사용"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -363,11 +363,11 @@ const WelfareTracker: React.FC = () => {
           <div className="flex justify-center gap-6 mt-2">
             <div className="flex items-center gap-2 text-xs">
               <div className="w-3 h-0.5 bg-blue-500 rounded" />
-              <span className="text-gray-400">Distributed</span>
+              <span className="text-gray-400">배분</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
               <div className="w-3 h-0.5 bg-green-500 rounded" />
-              <span className="text-gray-400">Used</span>
+              <span className="text-gray-400">사용</span>
             </div>
           </div>
         </div>
@@ -385,9 +385,9 @@ const WelfareTracker: React.FC = () => {
                 : 'border-transparent text-gray-400 hover:text-white'
             }`}
           >
-            {tab === 'programs' && 'Active Programs'}
-            {tab === 'distributions' && 'Recent Distributions'}
-            {tab === 'analytics' && 'Impact Analytics'}
+            {tab === 'programs' && '활성 프로그램'}
+            {tab === 'distributions' && '최근 배분'}
+            {tab === 'analytics' && '성과 분석'}
           </button>
         ))}
       </div>
@@ -421,7 +421,7 @@ const WelfareTracker: React.FC = () => {
               <div className="space-y-3">
                 <div>
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-gray-500">Distribution Progress</span>
+                    <span className="text-gray-500">배분 진행률</span>
                     <span className="text-white">
                       {((program.distributed / program.budget) * 100).toFixed(0)}%
                     </span>
@@ -437,11 +437,11 @@ const WelfareTracker: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400">Beneficiaries</span>
+                  <span className="text-gray-400">수혜자</span>
                   <span className="text-white">{program.beneficiaries.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400">Utilization</span>
+                  <span className="text-gray-400">활용률</span>
                   <span
                     className={
                       program.utilizationRate >= 80
@@ -471,25 +471,25 @@ const WelfareTracker: React.FC = () => {
                     ID
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Program
+                    프로그램
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Beneficiary
+                    수혜자
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Amount
+                    금액
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Used
+                    사용액
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Status
+                    상태
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
                     DID
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Blockchain
+                    블록체인
                   </th>
                 </tr>
               </thead>
@@ -527,14 +527,14 @@ const WelfareTracker: React.FC = () => {
                           <span className="material-symbols-outlined text-[16px]">
                             verified
                           </span>
-                          Verified
+                          검증됨
                         </span>
                       ) : (
                         <span className="text-yellow-500 flex items-center gap-1 text-sm">
                           <span className="material-symbols-outlined text-[16px]">
                             pending
                           </span>
-                          Pending
+                          대기 중
                         </span>
                       )}
                     </td>
@@ -564,7 +564,7 @@ const WelfareTracker: React.FC = () => {
       {selectedTab === 'analytics' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4">Program Utilization</h3>
+            <h3 className="text-white font-semibold mb-4">프로그램 활용률</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={mockPrograms} layout="vertical">
@@ -583,7 +583,7 @@ const WelfareTracker: React.FC = () => {
                       borderColor: '#334155',
                       borderRadius: 8,
                     }}
-                    formatter={(value) => [`${value}%`, 'Utilization']}
+                    formatter={(value) => [`${value}%`, '활용률']}
                   />
                   <Bar dataKey="utilizationRate" fill="#22c55e" radius={[0, 4, 4, 0]} />
                 </BarChart>
@@ -592,30 +592,30 @@ const WelfareTracker: React.FC = () => {
           </div>
 
           <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4">Impact Metrics</h3>
+            <h3 className="text-white font-semibold mb-4">성과 지표</h3>
             <div className="space-y-4">
               <ImpactMetric
-                label="Economic Multiplier"
-                value="1.8x"
-                description="Local spending amplification effect"
+                label="경제 승수효과"
+                value="1.8배"
+                description="지역 내 소비 증폭 효과"
                 trend="+0.2"
               />
               <ImpactMetric
-                label="Capital Retention"
+                label="자금 잔류율"
                 value="94.2%"
-                description="Funds staying in local economy"
+                description="지역 경제 내 잔류 자금"
                 trend="+2.1"
               />
               <ImpactMetric
-                label="DID Verification Rate"
+                label="DID 검증률"
                 value="87.5%"
-                description="Beneficiaries with verified identity"
+                description="신원 검증 완료 수혜자"
                 trend="+5.3"
               />
               <ImpactMetric
-                label="Blockchain Anchored"
+                label="블록체인 앵커링"
                 value="99.8%"
-                description="Transactions recorded on-chain"
+                description="온체인 기록 거래"
                 trend="+0.1"
               />
             </div>
@@ -653,33 +653,33 @@ const WelfareTracker: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <InfoCard
-                  label="Budget"
-                  value={`${formatCurrency(selectedProgram.budget)} KRW`}
+                  label="예산"
+                  value={`${formatCurrency(selectedProgram.budget)} 원`}
                 />
                 <InfoCard
-                  label="Distributed"
-                  value={`${formatCurrency(selectedProgram.distributed)} KRW`}
+                  label="배분액"
+                  value={`${formatCurrency(selectedProgram.distributed)} 원`}
                 />
                 <InfoCard
-                  label="Beneficiaries"
+                  label="수혜자"
                   value={selectedProgram.beneficiaries.toLocaleString()}
                 />
                 <InfoCard
-                  label="Utilization"
+                  label="활용률"
                   value={`${selectedProgram.utilizationRate}%`}
                 />
                 <InfoCard
-                  label="Start Date"
+                  label="시작일"
                   value={selectedProgram.startDate.toLocaleDateString()}
                 />
                 <InfoCard
-                  label="End Date"
+                  label="종료일"
                   value={selectedProgram.endDate.toLocaleDateString()}
                 />
               </div>
 
               <div>
-                <p className="text-gray-500 text-xs uppercase mb-2">Distribution Progress</p>
+                <p className="text-gray-500 text-xs uppercase mb-2">배분 진행률</p>
                 <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all"
@@ -691,7 +691,7 @@ const WelfareTracker: React.FC = () => {
                 </div>
                 <p className="text-gray-400 text-sm mt-2">
                   {((selectedProgram.distributed / selectedProgram.budget) * 100).toFixed(1)}%
-                  distributed
+                  배분 완료
                 </p>
               </div>
 
@@ -706,8 +706,8 @@ const WelfareTracker: React.FC = () => {
                   <span className="material-symbols-outlined text-[18px]">verified_user</span>
                   <span className="text-sm">
                     {selectedProgram.verificationRequired
-                      ? 'DID Verification Required'
-                      : 'No Verification'}
+                      ? 'DID 검증 필수'
+                      : '검증 불필요'}
                   </span>
                 </div>
                 <div

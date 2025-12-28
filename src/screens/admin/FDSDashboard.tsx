@@ -21,10 +21,10 @@ const FDSDashboard: React.FC = () => {
   const highRiskEntities = getHighRiskEntities(70);
 
   const severityData = [
-    { name: 'Critical', value: stats.bySeverity.critical, color: '#ef4444' },
-    { name: 'High', value: stats.bySeverity.high, color: '#f97316' },
-    { name: 'Medium', value: stats.bySeverity.medium, color: '#eab308' },
-    { name: 'Low', value: stats.bySeverity.low, color: '#22c55e' },
+    { name: '심각', value: stats.bySeverity.critical, color: '#ef4444' },
+    { name: '높음', value: stats.bySeverity.high, color: '#f97316' },
+    { name: '중간', value: stats.bySeverity.medium, color: '#eab308' },
+    { name: '낮음', value: stats.bySeverity.low, color: '#22c55e' },
   ];
 
   const typeData = Object.entries(stats.byType).map(([type, count]) => ({
@@ -52,19 +52,19 @@ const FDSDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Fraud Detection System</h1>
+          <h1 className="text-2xl font-bold text-white">이상거래 탐지 시스템</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Real-time monitoring and anomaly detection for local currency transactions
+            지역화폐 거래의 실시간 모니터링 및 이상 탐지
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
             <span className="material-symbols-outlined text-[18px]">tune</span>
-            Configure
+            설정
           </button>
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
             <span className="material-symbols-outlined text-[18px]">notification_important</span>
-            {stats.byStatus.new} New Alerts
+            {stats.byStatus.new}건 신규 경고
           </button>
         </div>
       </div>
@@ -72,32 +72,32 @@ const FDSDashboard: React.FC = () => {
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Total Alerts"
+          title="전체 경고"
           value={stats.total}
           icon="warning"
           color="#ef4444"
-          subtitle="Active monitoring"
+          subtitle="활성 모니터링"
         />
         <StatCard
-          title="Critical"
+          title="심각"
           value={stats.bySeverity.critical}
           icon="error"
           color="#ef4444"
-          subtitle="Immediate action required"
+          subtitle="즉시 조치 필요"
         />
         <StatCard
-          title="Under Investigation"
+          title="조사 중"
           value={stats.byStatus.investigating}
           icon="search"
           color="#f97316"
-          subtitle="Being reviewed"
+          subtitle="검토 중"
         />
         <StatCard
-          title="High Risk Entities"
+          title="고위험 대상"
           value={highRiskEntities.length}
           icon="shield_person"
           color="#eab308"
-          subtitle="Score > 70"
+          subtitle="점수 70 이상"
         />
       </div>
 
@@ -105,7 +105,7 @@ const FDSDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Severity Distribution */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Alert Severity</h3>
+          <h3 className="text-white font-semibold mb-4">경고 심각도</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -142,7 +142,7 @@ const FDSDashboard: React.FC = () => {
 
         {/* Alert Types */}
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Alert Types Distribution</h3>
+          <h3 className="text-white font-semibold mb-4">경고 유형별 분포</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={typeData} layout="vertical">
@@ -174,7 +174,7 @@ const FDSDashboard: React.FC = () => {
         {/* Alert List */}
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-            <h3 className="text-white font-semibold">Alert Queue</h3>
+            <h3 className="text-white font-semibold">경고 대기열</h3>
             <div className="flex items-center gap-2">
               {(['all', 'new', 'investigating', 'confirmed', 'dismissed'] as const).map(
                 (status) => (
@@ -187,7 +187,7 @@ const FDSDashboard: React.FC = () => {
                         : 'bg-white/5 text-gray-400 hover:bg-white/10'
                     }`}
                   >
-                    {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
+                    {status === 'all' ? '전체' : status === 'new' ? '신규' : status === 'investigating' ? '조사 중' : status === 'confirmed' ? '확인됨' : '기각됨'}
                   </button>
                 )
               )}
@@ -266,8 +266,8 @@ const FDSDashboard: React.FC = () => {
         {/* High Risk Entities */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5">
-            <h3 className="text-white font-semibold">High Risk Entities</h3>
-            <p className="text-gray-500 text-xs mt-1">Risk score above 70</p>
+            <h3 className="text-white font-semibold">고위험 대상</h3>
+            <p className="text-gray-500 text-xs mt-1">위험 점수 70 이상</p>
           </div>
           <div className="divide-y divide-white/5">
             {highRiskEntities.map((entity) => (
@@ -353,27 +353,27 @@ const FDSDashboard: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white/5 rounded-lg p-4">
-                  <p className="text-gray-500 text-xs uppercase mb-1">Subject</p>
+                  <p className="text-gray-500 text-xs uppercase mb-1">대상</p>
                   <p className="text-white">
                     {selectedAlert.subjectType}: {selectedAlert.subjectId}
                   </p>
                 </div>
                 <div className="bg-white/5 rounded-lg p-4">
-                  <p className="text-gray-500 text-xs uppercase mb-1">Type</p>
+                  <p className="text-gray-500 text-xs uppercase mb-1">유형</p>
                   <p className="text-white">{getAlertTypeLabel(selectedAlert.type)}</p>
                 </div>
                 <div className="bg-white/5 rounded-lg p-4">
-                  <p className="text-gray-500 text-xs uppercase mb-1">Created</p>
+                  <p className="text-gray-500 text-xs uppercase mb-1">생성일</p>
                   <p className="text-white">{selectedAlert.createdAt.toLocaleString()}</p>
                 </div>
                 <div className="bg-white/5 rounded-lg p-4">
-                  <p className="text-gray-500 text-xs uppercase mb-1">Status</p>
+                  <p className="text-gray-500 text-xs uppercase mb-1">상태</p>
                   <p className="text-white capitalize">{selectedAlert.status}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-gray-500 text-xs uppercase mb-2">Details</p>
+                <p className="text-gray-500 text-xs uppercase mb-2">상세 정보</p>
                 <div className="bg-white/5 rounded-lg p-4 font-mono text-sm">
                   <pre className="text-gray-300 whitespace-pre-wrap">
                     {JSON.stringify(selectedAlert.details, null, 2)}
@@ -386,19 +386,19 @@ const FDSDashboard: React.FC = () => {
                   onClick={() => handleStatusUpdate(selectedAlert.id, 'investigating')}
                   className="flex-1 py-2 rounded-lg bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 transition-colors"
                 >
-                  Investigate
+                  조사
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedAlert.id, 'confirmed')}
                   className="flex-1 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
                 >
-                  Confirm Fraud
+                  사기 확정
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedAlert.id, 'dismissed')}
                   className="flex-1 py-2 rounded-lg bg-gray-500/20 text-gray-400 hover:bg-gray-500/30 transition-colors"
                 >
-                  Dismiss
+                  기각
                 </button>
               </div>
             </div>

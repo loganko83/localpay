@@ -4,47 +4,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-LocalPay is a blockchain-based local digital currency payment platform for Busan, Korea. The platform serves three user types:
-- **Consumer**: Citizens paying with B-Coin
-- **Merchant**: Local businesses receiving payments
-- **Admin**: Platform operators managing the system
-
----
+LocalPay is a blockchain-based local digital currency payment platform for Busan/Jeonbuk, Korea. The platform serves three user types with distinct UIs:
+- **Consumer** (`/consumer`): Citizens paying with B-Coin - Red theme (#ed2630)
+- **Merchant** (`/merchant`): Local businesses receiving payments - Green theme (#13ec5b)
+- **Admin** (`/admin`): Platform operators with web dashboard - Blue theme (#2b8cee)
 
 ## CRITICAL: Business & Legal Structure
 
-### Partnership Model (IBK Bank Open Innovation)
+### Core Principle: "Money handled by bank, Proof handled by technology"
 
-This platform operates as a **non-financial technology partner** with IBK Bank.
-**Core Principle: "Money handled by bank, Proof handled by technology"**
+This platform operates as a **non-financial technology partner** with IBK Bank under Korean Electronic Financial Transactions Act.
 
-### Role Separation (Mandatory for Legal Compliance)
+| Our Platform Does | IBK Bank Does |
+|-------------------|---------------|
+| User app/web UI | Prepaid instrument issuance |
+| Policy engine | Deposit custody |
+| Merchant management | Payment approval |
+| DID/VC/Signatures | Refund execution |
+| Audit logs/Blockchain | Settlement |
 
-| Responsibility | IBK Bank | Our Platform |
-|----------------|----------|--------------|
-| Prepaid instrument issuance | O | X |
-| Deposit custody | O | X |
-| Payment approval | O | X |
-| Refund execution | O | X |
-| User app/web | - | O |
-| Policy engine | - | O |
-| Merchant management | - | O |
-| DID/VC/Signatures | - | O |
-| Audit logs/Blockchain | - | O |
-
-### Architecture Principle
+### Architecture Flow
 ```
 [User] -> [Our App] -> [Bank API] -> [IBK] -> [Trust Account]
 
 Our DB: "Logical balance display" ONLY
 Actual funds: Bank's trust account (we never touch money)
 ```
-
-### Code Implications
-- `walletStore.balance` = Display value from Bank API, NOT our managed value
-- All payment/refund actions = API calls to Bank, we don't execute
-- Blockchain = Audit trail only, NOT a payment ledger
-- Settlement data = Auxiliary/reporting only, NOT authoritative
 
 ### Prohibited Code Patterns
 ```typescript
@@ -60,76 +45,111 @@ wallet.balance = result.newBalance;  // Display what bank returns
 - Use: "balance display", "policy management", "audit logging"
 - Never use: "payment processing", "balance management", "refund execution"
 
-See `.speckit/constitution.md` and `.speckit/ibk-proposal.md` for full details.
+See `.speckit/constitution.md` for full regulatory details.
 
 ---
 
 ## Commands
 
 ```bash
-npm install       # Install dependencies
-npm run dev       # Start dev server on port 3000
-npm run build     # Production build with Vite
-npm run preview   # Preview production build
+npm install          # Install dependencies
+npm run dev          # Start dev server (port 3003)
+npm run build        # TypeScript check + Vite production build
+npm run lint         # TypeScript type checking (tsc --noEmit)
+npm run preview      # Preview production build
 ```
 
-## Spec-Kit Documentation
-
-Project specifications are maintained using Spec-Kit format:
-
-```
-.speckit/
-  constitution.md       # Project principles and guidelines
-  implementation-plan.md # Technical architecture
-  tasks.md              # Actionable task list
-
-specs/
-  consumer-app.md       # Consumer feature specification
-  merchant-app.md       # Merchant feature specification
-  admin-app.md          # Admin feature specification
+### E2E Testing (Playwright)
+```bash
+npx playwright test                    # Run all tests
+npx playwright test --project=chromium # Single browser
+npx playwright test screens.spec.ts    # Single test file
 ```
 
-**Always refer to these specs before implementing new features.**
+---
 
 ## Architecture
 
-**Tech Stack**: React 19 + TypeScript + Vite + Recharts + react-router-dom + Zustand
+### Tech Stack
+React 19 + TypeScript 5.8 + Vite 6 + Zustand + TanStack Query + Recharts + ethers.js
 
-**User Type Themes**:
-| Type | Primary Color | Usage |
-|------|--------------|-------|
-| Consumer | #ed2630 (Red) | B-Coin payment app |
-| Merchant | #13ec5b (Green) | Business management |
-| Admin | #2b8cee (Blue) | Platform operations |
+### Three-Layout System
 
-**Target Project Structure** (see `.speckit/implementation-plan.md`):
+1. **ConsumerLayout** / **MerchantLayout** (`src/components/layout/`)
+   - Mobile-first (max-width: 448px)
+   - BottomNav with role-specific tabs
+   - Lazy-loaded screens with Suspense
+
+2. **AdminLayout** (`src/components/admin/`)
+   - Web-first responsive design
+   - Collapsible sidebar navigation
+   - TopBar with search and notifications
+
+### Service Layer (`src/services/`)
+
+| Layer | Services |
+|-------|----------|
+| **Blockchain** | `blockchain/xphere.ts` (Xphere EVM), `blockchain/auditAnchor.ts` (Merkle proofs) |
+| **Identity** | `did/client.ts` (DID-BaaS), `identity.ts` (VC management) |
+| **Compliance** | `fds/detector.ts` (Fraud Detection), `aml/screening.ts` (KoFIU AML) |
+| **Core** | `bankAPI.ts` (IBK integration), `policyEngine.ts` (spending rules) |
+| **Phase 6-11** | `programmableMoney.ts`, `carbonPoints.ts`, `touristWallet.ts`, etc. |
+
+### State Management (`src/store/`)
+- `authStore.ts` - User authentication state
+- `walletStore.ts` - Balance display and bank API sync
+- `transactionStore.ts` - Transaction history
+- `toastStore.ts` - UI notifications
+
+### Blockchain Integration
+- **Xphere**: EVM Layer1 (chainId: 20250217, RPC: https://en-bkk.x-phere.com)
+- **Tamsa Explorer**: https://xp.tamsa.io
+- **DID-BaaS**: https://trendy.storydot.kr/did-baas/api/v1
+
+---
+
+## Environment Variables
+
+```env
+VITE_XPHERE_RPC_URL=https://en-bkk.x-phere.com
+VITE_XPHERE_EXPLORER_URL=https://xp.tamsa.io
+VITE_DID_BAAS_URL=https://trendy.storydot.kr/did-baas/api/v1
 ```
-src/
-  components/common/    # Shared UI (Button, Card, Input, Modal)
-  components/layout/    # Layout, Header, BottomNav
-  screens/consumer/     # Consumer screens
-  screens/merchant/     # Merchant screens
-  screens/admin/        # Admin screens
-  store/                # Zustand stores
-  hooks/                # Custom hooks
-  types/                # TypeScript types
-  router/               # Route configuration
+
+---
+
+## Routing Structure
+
+Routes defined in `src/router/index.tsx`. All screens are lazy-loaded.
+
+| Path | Layout | Screens |
+|------|--------|---------|
+| `/` | None | AppSelector (user type chooser) |
+| `/consumer/*` | ConsumerLayout | 19 screens (Home, Wallet, Scan, History, etc.) |
+| `/merchant/*` | MerchantLayout | 13 screens (Dashboard, Payments, Employees, etc.) |
+| `/admin/*` | AdminLayout | 19 screens (Dashboard, Analytics, FDS, AML, etc.) |
+| `/debug` | None | DebugDashboard (dev only) |
+
+---
+
+## Spec-Kit Documentation
+
+```
+.speckit/
+  constitution.md       # Legal/business principles (MUST READ)
+  implementation-plan.md # Technical architecture
+  tasks.md              # Sprint task tracking
+  ibk-proposal.md       # IBK partnership details
 ```
 
-**Path Alias**: `@/*` maps to project root
+**Always refer to specs before implementing new features.**
 
-**UI Framework**: Tailwind-style utility classes + Material Symbols icons
-
-## Design Prototypes
-
-HTML prototypes in subdirectories (`*_screen/code.html`) are design references:
-- `home/main_screen/` - Consumer home
-- `merchant_dashboard_*/` - Merchant dashboards
-- `admin_dashboard/` - Admin dashboard
-- 35+ total screen prototypes
+---
 
 ## Code Standards
 
 - English only in source code (no Korean in comments/variables)
 - No emojis in source files
 - Korean text only in user-facing strings
+- Path alias: `@/*` maps to `src/`
+- Icons: Material Symbols (class="material-symbols-outlined")

@@ -64,7 +64,7 @@ const Scan: React.FC = () => {
               <span className="material-symbols-outlined text-3xl">close</span>
             </button>
             <h2 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center" style={{ color: theme.text }}>
-              Receive Payment
+              결제 받기
             </h2>
             <div className="flex w-12 items-center justify-end">
               <button
@@ -87,7 +87,7 @@ const Scan: React.FC = () => {
                 className="flex flex-col items-center justify-center gap-2 px-4"
                 style={{ opacity: activeTab === 'myqr' ? 1 : 0.5 }}
               >
-                <span className="text-sm font-bold tracking-wide" style={{ color: theme.text }}>Show QR</span>
+                <span className="text-sm font-bold tracking-wide" style={{ color: theme.text }}>QR 보여주기</span>
                 <div
                   className="h-1 w-1 rounded-full"
                   style={{
@@ -101,7 +101,7 @@ const Scan: React.FC = () => {
                 className="flex flex-col items-center justify-center gap-2 px-4 transition-opacity"
                 style={{ opacity: activeTab === 'scan' ? 1 : 0.5 }}
               >
-                <span className="text-sm font-medium tracking-wide" style={{ color: theme.text }}>Scan QR</span>
+                <span className="text-sm font-medium tracking-wide" style={{ color: theme.text }}>QR 스캔</span>
                 <div
                   className="h-1 w-1 rounded-full"
                   style={{
@@ -122,7 +122,7 @@ const Scan: React.FC = () => {
               className="tracking-wide text-lg font-medium text-center mb-8"
               style={{ color: theme.text, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
             >
-              Scan customer's QR code
+              고객의 QR 코드를 스캔하세요
             </h3>
 
             {/* Scanner Frame */}
@@ -207,7 +207,7 @@ const Scan: React.FC = () => {
                 <span className="material-symbols-outlined text-3xl" style={{ color: theme.accent }}>storefront</span>
               </div>
 
-              <h2 className="text-xl font-bold" style={{ color: theme.text }}>Busan Store #42</h2>
+              <h2 className="text-xl font-bold" style={{ color: theme.text }}>부산 매장 #42</h2>
               <p className="text-sm mb-4" style={{ color: theme.textMuted }}>
                 ID: 8821-4402
               </p>
@@ -215,7 +215,7 @@ const Scan: React.FC = () => {
               {/* Amount Input */}
               <div className="w-full mb-4">
                 <label className="block text-xs font-medium mb-2 text-center" style={{ color: theme.textMuted }}>
-                  Enter Amount (Optional)
+                  금액 입력 (선택사항)
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: theme.textMuted }}>
@@ -253,13 +253,13 @@ const Scan: React.FC = () => {
                   style={{ background: theme.accentSoft }}
                 >
                   <span className="text-sm font-bold" style={{ color: theme.accent }}>
-                    Amount: ₩{formatAmount(amount)}
+                    금액: ₩{formatAmount(amount)}
                   </span>
                 </div>
               )}
 
               <p className="text-sm text-center px-4 mb-4" style={{ color: theme.textMuted }}>
-                Customer scans this code to pay you
+                고객이 이 코드를 스캔하여 결제합니다
               </p>
 
               <div className="flex gap-3 w-full">
@@ -268,14 +268,14 @@ const Scan: React.FC = () => {
                   style={{ background: theme.cardHover, color: theme.text }}
                 >
                   <span className="material-symbols-outlined text-[18px]">share</span>
-                  Share
+                  공유
                 </button>
                 <button
                   className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
                   style={{ background: theme.cardHover, color: theme.text }}
                 >
                   <span className="material-symbols-outlined text-[18px]">download</span>
-                  Save
+                  저장
                 </button>
               </div>
             </div>
@@ -298,7 +298,7 @@ const Scan: React.FC = () => {
             }}
           >
             <span className="material-symbols-outlined text-xl">keyboard</span>
-            <span className="text-sm font-bold tracking-wide">Enter Amount Manually</span>
+            <span className="text-sm font-bold tracking-wide">금액 직접 입력</span>
           </button>
 
           {/* Camera Controls */}
@@ -313,7 +313,7 @@ const Scan: React.FC = () => {
               >
                 <span className="material-symbols-outlined text-2xl">photo_library</span>
               </div>
-              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>Gallery</span>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>갤러리</span>
             </button>
 
             {/* Shutter Button */}
@@ -337,7 +337,7 @@ const Scan: React.FC = () => {
               >
                 <span className="material-symbols-outlined text-2xl">history</span>
               </div>
-              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>History</span>
+              <span className="text-[10px] font-medium" style={{ color: theme.textSecondary }}>내역</span>
             </button>
           </div>
         </div>

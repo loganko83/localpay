@@ -41,13 +41,13 @@ const Wallet: React.FC = () => {
 
   const getFundTypeName = (fundType: PolicyFundType): string => {
     const nameMap: Record<PolicyFundType, string> = {
-      DISASTER_RELIEF: 'Disaster Relief',
-      CHILD_MEAL: 'Child Meal Support',
-      YOUTH_ALLOWANCE: 'Youth Allowance',
-      SENIOR_WELFARE: 'Senior Welfare',
-      FARMER_SUPPORT: 'Farmer Support',
-      TRADITIONAL_MARKET: 'Traditional Market',
-      GENERAL: 'General Fund',
+      DISASTER_RELIEF: '재난지원금',
+      CHILD_MEAL: '아동급식 지원',
+      YOUTH_ALLOWANCE: '청년수당',
+      SENIOR_WELFARE: '노인복지',
+      FARMER_SUPPORT: '농민지원',
+      TRADITIONAL_MARKET: '전통시장',
+      GENERAL: '일반자금',
     };
     return nameMap[fundType] || fundType;
   };
@@ -58,10 +58,10 @@ const Wallet: React.FC = () => {
     const diffMs = now.getTime() - date.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `Today`;
-    if (diffHours < 48) return `Yesterday`;
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diffHours < 1) return '방금';
+    if (diffHours < 24) return '오늘';
+    if (diffHours < 48) return '어제';
+    return date.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
   };
 
   return (
@@ -74,7 +74,7 @@ const Wallet: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h2 className="text-lg font-bold" style={{ color: theme.text }}>My Wallet</h2>
+        <h2 className="text-lg font-bold" style={{ color: theme.text }}>내 지갑</h2>
         <button onClick={() => navigate('/consumer/profile')}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.textSecondary }}>notifications</span>
         </button>
@@ -82,11 +82,11 @@ const Wallet: React.FC = () => {
 
       {/* Total Balance */}
       <div className="flex flex-col items-center pt-6 pb-4 px-5">
-        <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Total Balance</p>
+        <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>총 잔액</p>
         <h1 className="text-4xl font-bold tracking-tight" style={{ color: theme.text }}>
           {formatAmount(wallet?.balance || 150000)}
         </h1>
-        <p className="text-sm mt-1" style={{ color: theme.textMuted }}>B-Coin</p>
+        <p className="text-sm mt-1" style={{ color: theme.textMuted }}>B코인</p>
       </div>
 
       {/* Card Carousel */}
@@ -102,10 +102,10 @@ const Wallet: React.FC = () => {
           <div className="relative h-full flex flex-col justify-between p-5 text-white">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider opacity-80">Busan Digital Wallet</span>
+                <span className="text-xs font-bold uppercase tracking-wider opacity-80">부산 디지털 지갑</span>
                 <div className="flex items-center gap-1 mt-1">
                   <span className="material-symbols-outlined text-sm">verified_user</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.2)' }}>Verified</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.2)' }}>인증됨</span>
                 </div>
               </div>
               <span className="material-symbols-outlined text-3xl opacity-80">account_balance_wallet</span>
@@ -136,7 +136,7 @@ const Wallet: React.FC = () => {
                   <span className="text-xs font-bold uppercase tracking-wider opacity-80">{card.name}</span>
                   <div className="flex items-center gap-1 mt-1">
                     <span className="material-symbols-outlined text-sm">link</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.2)' }}>Linked</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.2)' }}>연결됨</span>
                   </div>
                 </div>
               </div>
@@ -163,17 +163,17 @@ const Wallet: React.FC = () => {
           onClick={() => navigate('/consumer/add-card')}
         >
           <span className="material-symbols-outlined text-3xl">add</span>
-          <span className="text-xs font-bold text-center mt-1">Add</span>
+          <span className="text-xs font-bold text-center mt-1">추가</span>
         </div>
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 gap-3 px-5 mb-6">
         {[
-          { icon: 'add_card', label: 'Top Up', path: '/consumer/topup', primary: true },
-          { icon: 'qr_code_scanner', label: 'QR Pay', path: '/consumer/scan' },
-          { icon: 'history', label: 'History', path: '/consumer/history' },
-          { icon: 'settings', label: 'Manage', path: '/consumer/profile' },
+          { icon: 'add_card', label: '충전', path: '/consumer/topup', primary: true },
+          { icon: 'qr_code_scanner', label: 'QR결제', path: '/consumer/scan' },
+          { icon: 'history', label: '내역', path: '/consumer/history' },
+          { icon: 'settings', label: '관리', path: '/consumer/profile' },
         ].map((action, idx) => (
           <button
             key={idx}
@@ -203,7 +203,7 @@ const Wallet: React.FC = () => {
       {programmableTokens.length > 0 && (
         <div className="px-5 mb-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-base font-bold" style={{ color: theme.text }}>Programmable Money</h3>
+            <h3 className="text-base font-bold" style={{ color: theme.text }}>프로그래머블 머니</h3>
             <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: theme.accentSoft, color: theme.accent }}>
               {programmableTokens.length}
             </span>
@@ -227,7 +227,7 @@ const Wallet: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium" style={{ color: theme.text }}>{getFundTypeName(token.fundType)}</p>
-                        <p className="text-xs" style={{ color: theme.textMuted }}>Expires in {daysUntilExpiry}d</p>
+                        <p className="text-xs" style={{ color: theme.textMuted }}>{daysUntilExpiry}일 후 만료</p>
                       </div>
                     </div>
                     <p className="text-lg font-bold" style={{ color: theme.text }}>{formatAmount(token.amount)}</p>
@@ -242,9 +242,9 @@ const Wallet: React.FC = () => {
       {/* Recent Activity */}
       <div className="px-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base font-bold" style={{ color: theme.text }}>Recent Activity</h3>
+          <h3 className="text-base font-bold" style={{ color: theme.text }}>최근 활동</h3>
           <button onClick={() => navigate('/consumer/history')} style={{ color: theme.accent }} className="text-sm font-medium">
-            View All
+            전체보기
           </button>
         </div>
 
@@ -254,7 +254,7 @@ const Wallet: React.FC = () => {
               <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: theme.accentSoft }}>
                 <span className="material-symbols-outlined text-2xl" style={{ color: theme.accent }}>receipt_long</span>
               </div>
-              <p className="text-sm" style={{ color: theme.textMuted }}>No recent transactions</p>
+              <p className="text-sm" style={{ color: theme.textMuted }}>최근 거래 내역이 없습니다</p>
             </div>
           ) : (
             recentTransactions.map((tx) => {

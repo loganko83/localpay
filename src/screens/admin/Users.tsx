@@ -47,7 +47,7 @@ const Users: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-4" style={{ background: theme.bg }}>
-      <Header title="User Management" />
+      <Header title="사용자 관리" />
 
       {/* Tabs */}
       <div className="px-4 mb-4">
@@ -57,14 +57,14 @@ const Users: React.FC = () => {
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'citizens' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
               }`}
           >
-            Citizens
+            시민
           </button>
           <button
             onClick={() => setActiveTab('merchants')}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'merchants' ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
               }`}
           >
-            Merchants
+            가맹점
           </button>
         </div>
       </div>
@@ -73,7 +73,7 @@ const Users: React.FC = () => {
       <div className="px-4 mb-4">
         <Input
           icon="search"
-          placeholder="Search by wallet ID or business number..."
+          placeholder="지갑 ID 또는 사업자번호로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -87,7 +87,7 @@ const Users: React.FC = () => {
           onClick={() => setStatusFilter(statusFilter === 'pending' ? 'all' : 'pending')}
         >
           <p className="text-2xl font-bold text-yellow-500">{stats.pending}</p>
-          <p className="text-xs text-text-secondary">Pending</p>
+          <p className="text-xs text-text-secondary">대기 중</p>
         </Card>
         <Card
           padding="sm"
@@ -95,7 +95,7 @@ const Users: React.FC = () => {
           onClick={() => setStatusFilter(statusFilter === 'active' ? 'all' : 'active')}
         >
           <p className="text-2xl font-bold text-primary">{stats.active.toLocaleString()}</p>
-          <p className="text-xs text-text-secondary">Active</p>
+          <p className="text-xs text-text-secondary">활성</p>
         </Card>
         <Card
           padding="sm"
@@ -103,14 +103,14 @@ const Users: React.FC = () => {
           onClick={() => setStatusFilter(statusFilter === 'suspended' ? 'all' : 'suspended')}
         >
           <p className="text-2xl font-bold text-red-500">{stats.suspended}</p>
-          <p className="text-xs text-text-secondary">Suspended</p>
+          <p className="text-xs text-text-secondary">정지</p>
         </Card>
       </div>
 
       {/* Pending Applications */}
       {(statusFilter === 'all' || statusFilter === 'pending') && pendingApplications.length > 0 && (
         <div className="px-4 mb-6">
-          <h3 className="text-sm font-bold text-white mb-3">Pending Applications</h3>
+          <h3 className="text-sm font-bold text-white mb-3">대기 중 신청</h3>
           <div className="space-y-3">
             {pendingApplications.map((app) => (
               <Card key={app.id} padding="md">
@@ -118,19 +118,19 @@ const Users: React.FC = () => {
                   <div>
                     <p className="text-sm font-bold text-white">{app.name}</p>
                     <p className="text-xs text-text-secondary">
-                      {app.businessNumber} • Applied {app.appliedAt}
+                      {app.businessNumber} • 신청: {app.appliedAt}
                     </p>
                   </div>
-                  <Badge variant="warning" size="sm">{app.documents} docs</Badge>
+                  <Badge variant="warning" size="sm">{app.documents}개 문서</Badge>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="primary" size="sm" className="flex-1">
                     <span className="material-symbols-outlined text-[16px] mr-1">check</span>
-                    Approve
+                    승인
                   </Button>
                   <Button variant="secondary" size="sm" className="flex-1">
                     <span className="material-symbols-outlined text-[16px] mr-1">close</span>
-                    Decline
+                    거절
                   </Button>
                 </div>
               </Card>
@@ -142,7 +142,7 @@ const Users: React.FC = () => {
       {/* Merchant List */}
       <div className="px-4">
         <h3 className="text-sm font-bold text-white mb-3">
-          {activeTab === 'merchants' ? 'Registered Merchants' : 'Registered Citizens'}
+          {activeTab === 'merchants' ? '등록된 가맹점' : '등록된 시민'}
         </h3>
         <div className="space-y-3">
           {filteredMerchants.map((merchant) => (
@@ -165,7 +165,7 @@ const Users: React.FC = () => {
                     </button>
                   </div>
                   <p className="text-xs text-text-muted mt-1">
-                    {merchant.type} • Last tx: {merchant.lastTx}
+                    {merchant.type} • 마지막 거래: {merchant.lastTx}
                   </p>
                 </div>
                 <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">

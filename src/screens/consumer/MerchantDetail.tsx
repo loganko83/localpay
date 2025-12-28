@@ -5,23 +5,23 @@ import { theme } from '../../styles/theme';
 
 const mockMerchant = {
   id: '1',
-  name: 'Jeonju Bibimbap House',
-  category: 'Restaurant',
-  description: 'Traditional Jeonju bibimbap and Korean cuisine',
+  name: '전주 비빔밥 본가',
+  category: '음식점',
+  description: '전통 전주 비빔밥과 한정식 전문점',
   rating: 4.8,
   reviewCount: 120,
   isOpen: true,
-  address: '123 Hanok Village Road, Jeonju',
+  address: '전주시 완산구 한옥마을길 123',
   phone: '063-123-4567',
-  hours: '11:00 AM - 10:00 PM',
+  hours: '오전 11:00 - 오후 10:00',
   imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1470&auto=format&fit=crop',
   cashbackRate: 5,
   popularItems: [
-    { name: 'Grilled Fish Set', price: 35000, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=300' },
-    { name: 'Seafood Stew', price: 28000, image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=300' },
-    { name: 'Sashimi Platter', price: 55000, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=300' },
+    { name: '생선구이 정식', price: 35000, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=300' },
+    { name: '해물탕', price: 28000, image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=300' },
+    { name: '모둠회', price: 55000, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=300' },
   ],
-  amenities: ['Parking', 'WiFi', 'Card Payment', 'Reservations'],
+  amenities: ['주차', 'WiFi', '카드결제', '예약가능'],
 };
 
 const MerchantDetail: React.FC = () => {
@@ -64,7 +64,7 @@ const MerchantDetail: React.FC = () => {
               color: '#fff',
             }}
           >
-            {mockMerchant.isOpen ? 'OPEN' : 'CLOSED'}
+            {mockMerchant.isOpen ? '영업중' : '영업종료'}
           </span>
         </div>
       </div>
@@ -80,7 +80,7 @@ const MerchantDetail: React.FC = () => {
             <div className="flex items-center gap-1">
               <span className="material-symbols-outlined text-[18px]" style={{ color: '#facc15' }}>star</span>
               <span className="text-sm font-bold" style={{ color: theme.text }}>{mockMerchant.rating}</span>
-              <span className="text-sm" style={{ color: theme.textSecondary }}>({mockMerchant.reviewCount} reviews)</span>
+              <span className="text-sm" style={{ color: theme.textSecondary }}>({mockMerchant.reviewCount}개 리뷰)</span>
             </div>
           </div>
         </div>
@@ -88,10 +88,10 @@ const MerchantDetail: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex gap-3 mb-6">
           {[
-            { icon: 'call', label: 'Call' },
-            { icon: 'directions', label: 'Route' },
-            { icon: 'language', label: 'Website' },
-            { icon: 'share', label: 'Share' },
+            { icon: 'call', label: '전화' },
+            { icon: 'directions', label: '길찾기' },
+            { icon: 'language', label: '웹사이트' },
+            { icon: 'share', label: '공유' },
           ].map((action) => (
             <button
               key={action.label}
@@ -116,8 +116,8 @@ const MerchantDetail: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.accent }}>local_offer</span>
           </div>
           <div>
-            <p className="text-sm font-bold" style={{ color: theme.accent }}>{mockMerchant.cashbackRate}% Cashback</p>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>Pay with LocalPay and earn rewards</p>
+            <p className="text-sm font-bold" style={{ color: theme.accent }}>{mockMerchant.cashbackRate}% 캐시백</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>LocalPay로 결제하고 리워드를 받으세요</p>
           </div>
         </div>
 
@@ -127,7 +127,7 @@ const MerchantDetail: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>location_on</span>
             <div>
               <p className="text-sm" style={{ color: theme.text }}>{mockMerchant.address}</p>
-              <button className="text-xs mt-1" style={{ color: theme.accent }}>View on Map</button>
+              <button className="text-xs mt-1" style={{ color: theme.accent }}>지도에서 보기</button>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ const MerchantDetail: React.FC = () => {
 
         {/* Popular Items */}
         <div className="mb-6">
-          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Popular Items</h3>
+          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>인기 메뉴</h3>
           <div className="flex gap-3 overflow-x-auto no-scrollbar">
             {mockMerchant.popularItems.map((item, idx) => (
               <div key={idx} className="flex-shrink-0 w-36">
@@ -158,7 +158,7 @@ const MerchantDetail: React.FC = () => {
 
         {/* Amenities */}
         <div className="mb-6">
-          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Amenities</h3>
+          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>편의시설</h3>
           <div className="flex flex-wrap gap-2">
             {mockMerchant.amenities.map((amenity) => (
               <span
@@ -190,7 +190,7 @@ const MerchantDetail: React.FC = () => {
           style={{ background: theme.accent }}
         >
           <span className="material-symbols-outlined">qr_code_scanner</span>
-          Pay with LocalPay
+          LocalPay로 결제
         </button>
       </div>
     </div>

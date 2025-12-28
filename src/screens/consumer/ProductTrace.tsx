@@ -102,8 +102,8 @@ const ProductTrace: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.text }}>arrow_back</span>
           </button>
           <div>
-            <h1 className="text-xl font-bold" style={{ color: theme.text }}>Product Traceability</h1>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>Farm-to-Table Tracking</p>
+            <h1 className="text-xl font-bold" style={{ color: theme.text }}>상품 이력</h1>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>농장에서 식탁까지</p>
           </div>
         </div>
         <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: theme.accentSoft }}>
@@ -119,9 +119,9 @@ const ProductTrace: React.FC = () => {
               <div className="h-24 w-24 mx-auto mb-4 rounded-3xl flex items-center justify-center" style={{ background: theme.accentSoft }}>
                 <span className="material-symbols-outlined text-5xl" style={{ color: theme.accent }}>qr_code_scanner</span>
               </div>
-              <h2 className="text-lg font-bold mb-2" style={{ color: theme.text }}>Scan Product QR Code</h2>
+              <h2 className="text-lg font-bold mb-2" style={{ color: theme.text }}>상품 QR 코드 스캔</h2>
               <p className="text-sm mb-6" style={{ color: theme.textSecondary }}>
-                Trace the complete journey from farm to your table
+                농장에서 식탁까지 전체 여정을 추적하세요
               </p>
               <button
                 onClick={handleScanProduct}
@@ -129,7 +129,7 @@ const ProductTrace: React.FC = () => {
                 style={{ background: theme.accent, color: '#fff' }}
               >
                 <span className="material-symbols-outlined">qr_code_scanner</span>
-                Scan Product
+                상품 스캔
               </button>
             </div>
           </div>
@@ -137,7 +137,7 @@ const ProductTrace: React.FC = () => {
           {/* Recent Scans */}
           {recentScans.length > 0 && (
             <div className="mt-6">
-              <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Recent Scans</h3>
+              <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>최근 스캔</h3>
               <div className="space-y-3">
                 {recentScans.map((scan) => (
                   <button
@@ -183,7 +183,7 @@ const ProductTrace: React.FC = () => {
             style={{ color: theme.accent }}
           >
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            Back to Scanner
+            스캐너로 돌아가기
           </button>
 
           {/* Product Header */}
@@ -218,7 +218,7 @@ const ProductTrace: React.FC = () => {
           {/* Producer Profile Card */}
           <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Producer Information</h3>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>생산자 정보</h3>
               <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>verified_user</span>
             </div>
             <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ const ProductTrace: React.FC = () => {
                 </div>
               </div>
               <button className="text-sm font-medium" style={{ color: theme.accent }}>
-                View Profile
+                프로필 보기
               </button>
             </div>
           </div>
@@ -241,19 +241,19 @@ const ProductTrace: React.FC = () => {
           {/* Freshness Indicator */}
           <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Freshness Status</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#22c55e20', color: '#22c55e' }}>Fresh</span>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>신선도 상태</h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#22c55e20', color: '#22c55e' }}>신선</span>
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Days from Harvest</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>수확 후 경과일</p>
                   <p className="text-2xl font-bold" style={{ color: getFreshnessColor(selectedProduct.daysFromHarvest) }}>
-                    {selectedProduct.daysFromHarvest} days
+                    {selectedProduct.daysFromHarvest}일
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Harvest Date</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>수확일</p>
                   <p className="text-sm font-bold" style={{ color: theme.text }}>{selectedProduct.harvestDate}</p>
                 </div>
               </div>
@@ -261,7 +261,7 @@ const ProductTrace: React.FC = () => {
               {/* Freshness Gauge */}
               <div>
                 <div className="flex justify-between text-xs mb-2" style={{ color: theme.textSecondary }}>
-                  <span>Freshness Indicator</span>
+                  <span>신선도 지표</span>
                   <span>{Math.round(getFreshnessGauge(selectedProduct.daysFromHarvest))}%</span>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
@@ -274,7 +274,7 @@ const ProductTrace: React.FC = () => {
                   />
                 </div>
                 <p className="text-xs mt-2" style={{ color: theme.textSecondary }}>
-                  Best consumed within 14 days of harvest
+                  수확 후 14일 이내 섭취 권장
                 </p>
               </div>
             </div>
@@ -284,8 +284,8 @@ const ProductTrace: React.FC = () => {
           <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="text-sm font-bold mb-1" style={{ color: theme.text }}>Quality Score</h3>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>Based on tracking data</p>
+                <h3 className="text-sm font-bold mb-1" style={{ color: theme.text }}>품질 점수</h3>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>추적 데이터 기반</p>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2">
@@ -304,9 +304,9 @@ const ProductTrace: React.FC = () => {
           {/* Supply Chain Timeline */}
           <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Supply Chain Journey</h3>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>공급망 여정</h3>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#3b82f620', color: '#3b82f6' }}>
-                {selectedProduct.journeySteps.length} steps
+                {selectedProduct.journeySteps.length}단계
               </span>
             </div>
 
@@ -350,11 +350,11 @@ const ProductTrace: React.FC = () => {
           {/* Verification Status */}
           <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold" style={{ color: theme.text }}>Blockchain Verification</h3>
+              <h3 className="text-sm font-bold" style={{ color: theme.text }}>블록체인 검증</h3>
               {selectedProduct.blockchainVerified && (
                 <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#22c55e20', color: '#22c55e' }}>
                   <span className="material-symbols-outlined text-[10px]">check_circle</span>
-                  Verified
+                  검증됨
                 </span>
               )}
             </div>
@@ -364,7 +364,7 @@ const ProductTrace: React.FC = () => {
                   <span className="material-symbols-outlined" style={{ color: '#3b82f6' }}>link</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Anchored on Xphere</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Xphere에 기록됨</p>
                   <p className="text-xs font-mono truncate" style={{ color: theme.text }}>
                     0x7a8f...4e2b
                   </p>
@@ -376,7 +376,7 @@ const ProductTrace: React.FC = () => {
                 style={{ background: theme.cardHover, color: theme.text, border: `1px solid ${theme.border}` }}
               >
                 <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                View Full Verification
+                전체 검증 보기
               </button>
             </div>
           </div>
@@ -388,7 +388,7 @@ const ProductTrace: React.FC = () => {
               style={{ background: theme.cardHover, color: theme.text, border: `1px solid ${theme.border}` }}
             >
               <span className="material-symbols-outlined text-[20px]">share</span>
-              Share
+              공유
             </button>
             <button
               onClick={handleClose}
@@ -396,7 +396,7 @@ const ProductTrace: React.FC = () => {
               style={{ background: theme.accent, color: '#fff' }}
             >
               <span className="material-symbols-outlined text-[20px]">qr_code_scanner</span>
-              Scan Another
+              다른 상품 스캔
             </button>
           </div>
         </div>
@@ -450,7 +450,7 @@ const ProductTrace: React.FC = () => {
                 <span className="material-symbols-outlined">close</span>
               </button>
               <div className="px-4 py-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <span className="text-sm font-medium">Scan Product QR</span>
+                <span className="text-sm font-medium">상품 QR 스캔</span>
               </div>
               <div className="w-10" />
             </div>
@@ -458,14 +458,14 @@ const ProductTrace: React.FC = () => {
             <div className="text-center space-y-6">
               <div className="space-y-2">
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                  Align product QR code within the frame
+                  상품 QR 코드를 프레임 안에 맞춰주세요
                 </p>
                 {scanning && (
                   <div className="flex items-center justify-center gap-2" style={{ color: theme.accent }}>
                     <span className="material-symbols-outlined animate-spin text-[20px]">
                       progress_activity
                     </span>
-                    <span className="text-sm font-medium">Scanning...</span>
+                    <span className="text-sm font-medium">스캔 중...</span>
                   </div>
                 )}
               </div>
@@ -478,7 +478,7 @@ const ProductTrace: React.FC = () => {
                   >
                     <span className="material-symbols-outlined">image</span>
                   </div>
-                  <span className="text-xs font-medium" style={{ color: theme.text }}>Gallery</span>
+                  <span className="text-xs font-medium" style={{ color: theme.text }}>갤러리</span>
                 </button>
               </div>
             </div>
@@ -504,7 +504,7 @@ const ProductTrace: React.FC = () => {
             style={{ background: theme.card }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold" style={{ color: theme.text }}>Blockchain Verification</h3>
+              <h3 className="text-lg font-bold" style={{ color: theme.text }}>블록체인 검증</h3>
               <button onClick={() => setShowVerification(false)}>
                 <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
@@ -515,40 +515,40 @@ const ProductTrace: React.FC = () => {
                 <div className="h-16 w-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: '#3b82f620' }}>
                   <span className="material-symbols-outlined text-3xl" style={{ color: '#3b82f6' }}>verified</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: theme.text }}>Verified on Xphere</h3>
+                <h3 className="text-lg font-bold mb-2" style={{ color: theme.text }}>Xphere에서 검증됨</h3>
                 <p className="text-sm" style={{ color: theme.textSecondary }}>
-                  This product's journey has been permanently recorded on the blockchain
+                  이 상품의 여정이 블록체인에 영구적으로 기록되었습니다
                 </p>
               </div>
 
               <div className="space-y-3">
                 <div className="p-3 rounded-xl" style={{ background: theme.cardHover }}>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Transaction Hash</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>트랜잭션 해시</p>
                   <p className="text-xs font-mono break-all" style={{ color: theme.text }}>
                     0x7a8f9c2b4d6e8f1a3c5e7b9d2f4a6c8e0b1d3f5a7c9e2b4d6f8a1c3e5b7d9f4e2b
                   </p>
                 </div>
 
                 <div className="p-3 rounded-xl" style={{ background: theme.cardHover }}>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Block Number</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>블록 번호</p>
                   <p className="text-sm font-bold" style={{ color: theme.text }}>12,345,678</p>
                 </div>
 
                 <div className="p-3 rounded-xl" style={{ background: theme.cardHover }}>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Timestamp</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>타임스탬프</p>
                   <p className="text-sm font-bold" style={{ color: theme.text }}>
                     {new Date().toLocaleString('ko-KR')}
                   </p>
                 </div>
 
                 <div className="p-3 rounded-xl" style={{ background: theme.cardHover }}>
-                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Verification Status</p>
+                  <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>검증 상태</p>
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#22c55e20', color: '#22c55e' }}>
                       <span className="material-symbols-outlined text-[10px]">check_circle</span>
-                      Confirmed
+                      확인됨
                     </span>
-                    <span className="text-xs" style={{ color: theme.textSecondary }}>32 confirmations</span>
+                    <span className="text-xs" style={{ color: theme.textSecondary }}>32회 확인</span>
                   </div>
                 </div>
               </div>
@@ -558,7 +558,7 @@ const ProductTrace: React.FC = () => {
                 style={{ background: theme.cardHover, color: theme.text, border: `1px solid ${theme.border}` }}
               >
                 <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                View on Explorer
+                익스플로러에서 보기
               </button>
             </div>
           </div>

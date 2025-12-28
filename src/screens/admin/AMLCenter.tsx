@@ -13,12 +13,12 @@ import {
 } from '../../services/aml/screening';
 
 const trendData = [
-  { month: 'Jul', cases: 12, resolved: 10 },
-  { month: 'Aug', cases: 18, resolved: 15 },
-  { month: 'Sep', cases: 14, resolved: 14 },
-  { month: 'Oct', cases: 22, resolved: 18 },
-  { month: 'Nov', cases: 16, resolved: 16 },
-  { month: 'Dec', cases: 8, resolved: 4 },
+  { month: '7월', cases: 12, resolved: 10 },
+  { month: '8월', cases: 18, resolved: 15 },
+  { month: '9월', cases: 14, resolved: 14 },
+  { month: '10월', cases: 22, resolved: 18 },
+  { month: '11월', cases: 16, resolved: 16 },
+  { month: '12월', cases: 8, resolved: 4 },
 ];
 
 const AMLCenter: React.FC = () => {
@@ -30,11 +30,11 @@ const AMLCenter: React.FC = () => {
   const reports = getReports();
 
   const statusData = [
-    { name: 'Pending', value: metrics.pendingReview, color: '#eab308' },
-    { name: 'Investigating', value: metrics.underInvestigation, color: '#3b82f6' },
-    { name: 'Escalated', value: metrics.escalated, color: '#ef4444' },
-    { name: 'Cleared', value: metrics.cleared, color: '#22c55e' },
-    { name: 'Reported', value: metrics.reported, color: '#8b5cf6' },
+    { name: '대기 중', value: metrics.pendingReview, color: '#eab308' },
+    { name: '조사 중', value: metrics.underInvestigation, color: '#3b82f6' },
+    { name: '상신됨', value: metrics.escalated, color: '#ef4444' },
+    { name: '해제됨', value: metrics.cleared, color: '#22c55e' },
+    { name: '신고됨', value: metrics.reported, color: '#8b5cf6' },
   ];
 
   const handleStatusUpdate = (caseId: string, newStatus: AMLCase['status']) => {
@@ -44,8 +44,8 @@ const AMLCenter: React.FC = () => {
 
   const formatTimeAgo = (date: Date) => {
     const hours = Math.floor((Date.now() - date.getTime()) / 3600000);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
+    if (hours < 24) return `${hours}시간 전`;
+    return `${Math.floor(hours / 24)}일 전`;
   };
 
   return (
@@ -53,9 +53,9 @@ const AMLCenter: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">AML Compliance Center</h1>
+          <h1 className="text-2xl font-bold text-white">자금세탁방지 센터</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Anti-Money Laundering monitoring and regulatory reporting (KoFIU)
+            자금세탁 모니터링 및 규제 보고 (금융정보분석원)
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -65,12 +65,12 @@ const AMLCenter: React.FC = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
             </span>
             <span className="text-green-400 text-sm font-medium">
-              {metrics.complianceRate}% Compliance
+              준수율 {metrics.complianceRate}%
             </span>
           </div>
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/80 transition-colors">
             <span className="material-symbols-outlined text-[18px]">add</span>
-            New Report
+            새 보고서
           </button>
         </div>
       </div>
@@ -78,35 +78,35 @@ const AMLCenter: React.FC = () => {
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <MetricCard
-          title="Total Cases"
+          title="전체 건수"
           value={metrics.totalCases}
           icon="folder_open"
           color="#3b82f6"
         />
         <MetricCard
-          title="Pending Review"
+          title="대기 중"
           value={metrics.pendingReview}
           icon="pending"
           color="#eab308"
           highlight={metrics.pendingReview > 0}
         />
         <MetricCard
-          title="CTR Filed"
+          title="CTR 제출"
           value={metrics.ctrCount}
           icon="receipt_long"
           color="#22c55e"
-          subtitle="This Month"
+          subtitle="이번 달"
         />
         <MetricCard
-          title="STR Filed"
+          title="STR 제출"
           value={metrics.strCount}
           icon="report"
           color="#ef4444"
-          subtitle="This Month"
+          subtitle="이번 달"
         />
         <MetricCard
-          title="Avg Resolution"
-          value={`${metrics.avgResolutionTime}h`}
+          title="평균 처리시간"
+          value={`${metrics.avgResolutionTime}시간`}
           icon="schedule"
           color="#8b5cf6"
         />
@@ -116,7 +116,7 @@ const AMLCenter: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Case Status Distribution */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Case Status</h3>
+          <h3 className="text-white font-semibold mb-4">건별 상태</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -153,7 +153,7 @@ const AMLCenter: React.FC = () => {
 
         {/* Trend Chart */}
         <div className="lg:col-span-2 bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Case Trend (6 Months)</h3>
+          <h3 className="text-white font-semibold mb-4">건수 추이 (6개월)</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
@@ -177,7 +177,7 @@ const AMLCenter: React.FC = () => {
                   stroke="#ef4444"
                   strokeWidth={2}
                   dot={false}
-                  name="New Cases"
+                  name="신규 건수"
                 />
                 <Line
                   type="monotone"
@@ -185,7 +185,7 @@ const AMLCenter: React.FC = () => {
                   stroke="#22c55e"
                   strokeWidth={2}
                   dot={false}
-                  name="Resolved"
+                  name="처리 완료"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -193,11 +193,11 @@ const AMLCenter: React.FC = () => {
           <div className="flex justify-center gap-6 mt-2">
             <div className="flex items-center gap-2 text-xs">
               <div className="w-3 h-0.5 bg-red-500 rounded" />
-              <span className="text-gray-400">New Cases</span>
+              <span className="text-gray-400">신규 건수</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
               <div className="w-3 h-0.5 bg-green-500 rounded" />
-              <span className="text-gray-400">Resolved</span>
+              <span className="text-gray-400">처리 완료</span>
             </div>
           </div>
         </div>
@@ -215,9 +215,9 @@ const AMLCenter: React.FC = () => {
                 : 'border-transparent text-gray-400 hover:text-white'
             }`}
           >
-            {tab === 'cases' && 'Active Cases'}
-            {tab === 'reports' && 'Regulatory Reports'}
-            {tab === 'thresholds' && 'Thresholds'}
+            {tab === 'cases' && '활성 건수'}
+            {tab === 'reports' && '규제 보고서'}
+            {tab === 'thresholds' && '임계값'}
           </button>
         ))}
       </div>
@@ -230,28 +230,28 @@ const AMLCenter: React.FC = () => {
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Case ID
+                    건 ID
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Subject
+                    대상
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Type
+                    유형
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Risk
+                    위험
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Amount
+                    금액
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Status
+                    상태
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Created
+                    생성일
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Actions
+                    조치
                   </th>
                 </tr>
               </thead>
@@ -310,7 +310,7 @@ const AMLCenter: React.FC = () => {
                         }}
                         className="text-primary hover:text-primary/80 text-sm"
                       >
-                        Review
+                        검토
                       </button>
                     </td>
                   </tr>
@@ -328,25 +328,25 @@ const AMLCenter: React.FC = () => {
               <thead>
                 <tr className="border-b border-white/5">
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Report ID
+                    보고서 ID
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Type
+                    유형
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Subject
+                    대상
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Amount
+                    금액
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Submitted
+                    제출일
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    Status
+                    상태
                   </th>
                   <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    KoFIU Ref
+                    금융정보분석원 참조
                   </th>
                 </tr>
               </thead>
@@ -414,23 +414,23 @@ const AMLCenter: React.FC = () => {
           <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
             <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">gavel</span>
-              Korean AML Thresholds (KoFIU)
+              한국 자금세탁방지 임계값 (금융정보분석원)
             </h3>
             <div className="space-y-4">
               <ThresholdItem
-                label="CTR Threshold"
+                label="CTR 임계값"
                 value={formatCurrency(AML_THRESHOLDS.CTR_THRESHOLD)}
-                description="Cash transactions above this require reporting"
+                description="이 금액 이상의 현금 거래는 보고 필수"
               />
               <ThresholdItem
-                label="High Value Alert"
+                label="고액 거래 경보"
                 value={formatCurrency(AML_THRESHOLDS.HIGH_VALUE_THRESHOLD)}
-                description="Additional scrutiny threshold"
+                description="추가 심사 임계값"
               />
               <ThresholdItem
-                label="Daily Limit"
+                label="일일 한도"
                 value={formatCurrency(AML_THRESHOLDS.DAILY_LIMIT)}
-                description="Maximum daily transaction volume"
+                description="일일 최대 거래량"
               />
             </div>
           </div>
@@ -438,23 +438,23 @@ const AMLCenter: React.FC = () => {
           <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
             <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-yellow-500">pattern</span>
-              Pattern Detection Settings
+              패턴 탐지 설정
             </h3>
             <div className="space-y-4">
               <ThresholdItem
-                label="Structuring Window"
-                value="24 hours"
-                description="Time window for detecting split transactions"
+                label="구조화 탐지 기간"
+                value="24시간"
+                description="분할 거래 탐지 시간 범위"
               />
               <ThresholdItem
-                label="Structuring Count"
-                value={`${AML_THRESHOLDS.STRUCTURING_COUNT} transactions`}
-                description="Minimum transactions to trigger alert"
+                label="구조화 탐지 건수"
+                value={`${AML_THRESHOLDS.STRUCTURING_COUNT}건`}
+                description="경보 발생 최소 거래 건수"
               />
               <ThresholdItem
-                label="Velocity Alert"
-                value="5x average"
-                description="Volume spike detection multiplier"
+                label="급증 경보"
+                value="평균 대비 5배"
+                description="거래량 급증 탐지 배수"
               />
             </div>
           </div>
@@ -493,14 +493,14 @@ const AMLCenter: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <InfoBox label="Type" value={getCaseTypeLabel(selectedCase.type)} />
-                <InfoBox label="Amount" value={formatCurrency(selectedCase.amount)} />
-                <InfoBox label="Subject ID" value={selectedCase.subjectId} />
-                <InfoBox label="Status" value={selectedCase.status.replace('_', ' ')} />
+                <InfoBox label="유형" value={getCaseTypeLabel(selectedCase.type)} />
+                <InfoBox label="금액" value={formatCurrency(selectedCase.amount)} />
+                <InfoBox label="대상 ID" value={selectedCase.subjectId} />
+                <InfoBox label="상태" value={selectedCase.status.replace('_', ' ')} />
               </div>
 
               <div>
-                <p className="text-gray-500 text-xs uppercase mb-2">Risk Flags</p>
+                <p className="text-gray-500 text-xs uppercase mb-2">위험 플래그</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedCase.flags.map((flag) => (
                     <span
@@ -514,12 +514,12 @@ const AMLCenter: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <InfoBox label="Created" value={selectedCase.createdAt.toLocaleString()} />
-                <InfoBox label="Last Updated" value={selectedCase.updatedAt.toLocaleString()} />
+                <InfoBox label="생성일" value={selectedCase.createdAt.toLocaleString()} />
+                <InfoBox label="최종 수정" value={selectedCase.updatedAt.toLocaleString()} />
               </div>
 
               {selectedCase.assignedTo && (
-                <InfoBox label="Assigned To" value={selectedCase.assignedTo} />
+                <InfoBox label="담당자" value={selectedCase.assignedTo} />
               )}
 
               <div className="flex items-center gap-3 pt-4 border-t border-white/10">
@@ -527,25 +527,25 @@ const AMLCenter: React.FC = () => {
                   onClick={() => handleStatusUpdate(selectedCase.id, 'under_investigation')}
                   className="flex-1 py-2.5 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors text-sm font-medium"
                 >
-                  Investigate
+                  조사
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedCase.id, 'escalated')}
                   className="flex-1 py-2.5 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 transition-colors text-sm font-medium"
                 >
-                  Escalate
+                  상신
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedCase.id, 'reported')}
                   className="flex-1 py-2.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors text-sm font-medium"
                 >
-                  File Report
+                  신고
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedCase.id, 'cleared')}
                   className="flex-1 py-2.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors text-sm font-medium"
                 >
-                  Clear
+                  해제
                 </button>
               </div>
             </div>

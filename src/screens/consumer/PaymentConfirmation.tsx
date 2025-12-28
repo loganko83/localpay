@@ -22,7 +22,7 @@ const PaymentConfirmation: React.FC = () => {
   const [result] = useState<PaymentResult>({
     success: true,
     transactionId: 'TX-2024-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-    merchantName: 'Jeonju Bibimbap House',
+    merchantName: '전주 비빔밥 본가',
     amount: 25000,
     discount: 2500,
     finalAmount: 22500,
@@ -75,9 +75,9 @@ const PaymentConfirmation: React.FC = () => {
               </div>
             </div>
 
-            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Payment Successful</h1>
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>결제 완료</h1>
             <p className="text-center mb-6" style={{ color: theme.textSecondary }}>
-              Your payment has been processed successfully
+              결제가 성공적으로 처리되었습니다
             </p>
 
             {/* Amount Display */}
@@ -95,7 +95,7 @@ const PaymentConfirmation: React.FC = () => {
                     className="text-xs font-bold px-2 py-1 rounded"
                     style={{ background: '#22c55e20', color: '#22c55e' }}
                   >
-                    -{formatAmount(result.discount)} saved
+                    -{formatAmount(result.discount)} 절약
                   </span>
                 </div>
               )}
@@ -112,9 +112,9 @@ const PaymentConfirmation: React.FC = () => {
                 cancel
               </span>
             </div>
-            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Payment Failed</h1>
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>결제 실패</h1>
             <p className="text-center mb-6" style={{ color: theme.textSecondary }}>
-              Something went wrong. Please try again.
+              문제가 발생했습니다. 다시 시도해 주세요.
             </p>
           </>
         )}
@@ -142,21 +142,21 @@ const PaymentConfirmation: React.FC = () => {
             {/* Transaction Details */}
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span style={{ color: theme.textSecondary }}>Transaction ID</span>
+                <span style={{ color: theme.textSecondary }}>거래 ID</span>
                 <span className="font-mono text-xs" style={{ color: theme.text }}>{result.transactionId}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span style={{ color: theme.textSecondary }}>Original Amount</span>
+                <span style={{ color: theme.textSecondary }}>원래 금액</span>
                 <span style={{ color: theme.text }}>{formatAmount(result.amount)} P</span>
               </div>
               {result.discount && result.discount > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span style={{ color: theme.textSecondary }}>Discount</span>
+                  <span style={{ color: theme.textSecondary }}>할인</span>
                   <span style={{ color: '#22c55e' }}>-{formatAmount(result.discount)} P</span>
                 </div>
               )}
               <div className="flex justify-between text-sm font-bold pt-2" style={{ borderTop: `1px solid ${theme.border}` }}>
-                <span style={{ color: theme.text }}>Total Paid</span>
+                <span style={{ color: theme.text }}>결제 금액</span>
                 <span style={{ color: theme.accent }}>{formatAmount(result.finalAmount)} P</span>
               </div>
             </div>
@@ -169,7 +169,7 @@ const PaymentConfirmation: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-lg" style={{ color: '#22c55e' }}>verified</span>
-                <span className="text-sm" style={{ color: theme.text }}>Blockchain Verified</span>
+                <span className="text-sm" style={{ color: theme.text }}>블록체인 인증됨</span>
               </div>
               <span className="material-symbols-outlined text-sm" style={{ color: theme.textSecondary }}>
                 {showDetails ? 'expand_less' : 'expand_more'}
@@ -179,11 +179,11 @@ const PaymentConfirmation: React.FC = () => {
             {showDetails && (
               <div className="rounded-xl p-3 space-y-2 text-xs" style={{ background: theme.bg }}>
                 <div className="flex justify-between">
-                  <span style={{ color: theme.textSecondary }}>Block Hash</span>
+                  <span style={{ color: theme.textSecondary }}>블록 해시</span>
                   <span className="font-mono" style={{ color: theme.text }}>{result.blockchainHash}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span style={{ color: theme.textSecondary }}>Status</span>
+                  <span style={{ color: theme.textSecondary }}>상태</span>
                   <span
                     className="font-bold px-2 py-0.5 rounded"
                     style={{
@@ -191,11 +191,11 @@ const PaymentConfirmation: React.FC = () => {
                       color: result.verificationStatus === 'verified' ? '#22c55e' : theme.textSecondary,
                     }}
                   >
-                    {result.verificationStatus === 'verified' ? 'Verified' : 'Pending'}
+                    {result.verificationStatus === 'verified' ? '인증됨' : '대기 중'}
                   </span>
                 </div>
                 <p className="pt-2" style={{ color: theme.textMuted, borderTop: `1px solid ${theme.border}` }}>
-                  This transaction is recorded on the Xphere blockchain for immutable audit trail.
+                  이 거래는 불변의 감사 추적을 위해 Xphere 블록체인에 기록됩니다.
                 </p>
               </div>
             )}
@@ -211,7 +211,7 @@ const PaymentConfirmation: React.FC = () => {
             style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
             <span className="material-symbols-outlined text-lg">share</span>
-            Share
+            공유
           </button>
           <button
             onClick={() => navigate('/consumer/history')}
@@ -219,7 +219,7 @@ const PaymentConfirmation: React.FC = () => {
             style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
             <span className="material-symbols-outlined text-lg">receipt_long</span>
-            History
+            내역
           </button>
         </div>
         <button
@@ -227,7 +227,7 @@ const PaymentConfirmation: React.FC = () => {
           className="w-full py-4 rounded-xl font-bold text-white"
           style={{ background: theme.accent }}
         >
-          Back to Home
+          홈으로
         </button>
       </div>
     </div>

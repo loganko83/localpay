@@ -33,7 +33,7 @@ const Settings: React.FC = () => {
         >
           <span className="material-symbols-outlined text-2xl">arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold flex-1 text-center pr-10" style={{ color: theme.text }}>Profile Settings</h1>
+        <h1 className="text-lg font-bold flex-1 text-center pr-10" style={{ color: theme.text }}>프로필 설정</h1>
       </header>
 
       <div className="flex-1 overflow-y-auto">
@@ -54,10 +54,10 @@ const Settings: React.FC = () => {
               <span className="material-symbols-outlined text-[18px]" style={{ color: theme.text }}>edit</span>
             </button>
           </div>
-          <h2 className="text-2xl font-bold text-center" style={{ color: theme.text }}>Busan Seafood House</h2>
+          <h2 className="text-2xl font-bold text-center" style={{ color: theme.text }}>부산 해산물 하우스</h2>
           <div className="flex items-center gap-1 mt-1">
             <span className="material-symbols-outlined text-[16px]" style={{ color: theme.accent }}>verified</span>
-            <p className="text-sm" style={{ color: theme.textSecondary }}>ID: 0x8F...2A | Verified Merchant</p>
+            <p className="text-sm" style={{ color: theme.textSecondary }}>ID: 0x8F...2A | 인증된 가맹점</p>
           </div>
         </div>
 
@@ -89,17 +89,17 @@ const Settings: React.FC = () => {
 
         {/* Business Details Section */}
         <div className="px-4 pt-4 pb-2">
-          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Business Details</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>사업장 정보</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-4">
           {/* Business Name */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Business Name</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>상호명</p>
             <div className="relative">
               <input
                 type="text"
-                defaultValue="Busan Seafood House"
+                defaultValue="부산 해산물 하우스"
                 className="w-full h-12 rounded-xl px-4 pr-10 focus:outline-none focus:ring-2 transition-all"
                 style={{
                   background: theme.card,
@@ -118,7 +118,7 @@ const Settings: React.FC = () => {
 
           {/* Store Address */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Store Address</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>매장 주소</p>
             <div className="relative">
               <input
                 type="text"
@@ -155,14 +155,14 @@ const Settings: React.FC = () => {
                 style={{ background: 'rgba(255,255,255,0.9)', color: theme.bg }}
               >
                 <span className="material-symbols-outlined text-sm">edit_location</span>
-                Edit Location
+                위치 수정
               </button>
             </div>
           </div>
 
           {/* Contact Number */}
           <label className="flex flex-col">
-            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Contact Number</p>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>연락처</p>
             <div className="relative">
               <input
                 type="tel"
@@ -186,7 +186,7 @@ const Settings: React.FC = () => {
 
         {/* Operations Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Operations</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>운영</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-3">
@@ -203,8 +203,8 @@ const Settings: React.FC = () => {
                 <span className="material-symbols-outlined" style={{ color: theme.accent }}>schedule</span>
               </div>
               <div>
-                <span className="font-medium" style={{ color: theme.text }}>Operating Hours</span>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>Mon-Sun: 10:00 AM - 10:00 PM</p>
+                <span className="font-medium" style={{ color: theme.text }}>영업시간</span>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>월-일: 오전 10:00 - 오후 10:00</p>
               </div>
             </div>
             <span className="material-symbols-outlined" style={{ color: theme.textMuted }}>chevron_right</span>
@@ -223,8 +223,8 @@ const Settings: React.FC = () => {
                 <span className="material-symbols-outlined" style={{ color: theme.accent }}>door_open</span>
               </div>
               <div>
-                <span className="font-medium" style={{ color: theme.text }}>Currently Open</span>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>Visible on map</p>
+                <span className="font-medium" style={{ color: theme.text }}>현재 영업 중</span>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>지도에 표시됨</p>
               </div>
             </div>
             <button
@@ -242,7 +242,7 @@ const Settings: React.FC = () => {
 
         {/* Financials Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Financials & Settlement</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>재정 및 정산</h3>
         </div>
 
         <div className="px-4 flex flex-col gap-3">
@@ -254,25 +254,25 @@ const Settings: React.FC = () => {
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined" style={{ color: theme.textMuted }}>account_balance</span>
-                <span className="font-medium text-sm" style={{ color: theme.text }}>Settlement Account</span>
+                <span className="font-medium text-sm" style={{ color: theme.text }}>정산 계좌</span>
               </div>
-              <button className="text-xs font-bold uppercase tracking-wide" style={{ color: theme.accent }}>Change</button>
+              <button className="text-xs font-bold uppercase tracking-wide" style={{ color: theme.accent }}>변경</button>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-bold text-lg" style={{ color: theme.text }}>Busan Bank</p>
+                <p className="font-bold text-lg" style={{ color: theme.text }}>부산은행</p>
                 <p className="text-sm" style={{ color: theme.textSecondary }}>**** **** **** 8821</p>
               </div>
               <span
                 className="text-xs px-2 py-1 rounded"
                 style={{ background: theme.accentSoft, color: theme.accent, border: `1px solid ${theme.accent}` }}
               >
-                Active
+                활성
               </span>
             </div>
             <p className="text-xs mt-3 flex items-center gap-1" style={{ color: theme.textMuted }}>
               <span className="material-symbols-outlined text-[14px]">lock</span>
-              Secured by blockchain ledger
+              블록체인 원장으로 보호됨
             </p>
           </div>
 
@@ -294,8 +294,8 @@ const Settings: React.FC = () => {
                   <span className="material-symbols-outlined" style={{ color: theme.accent }}>currency_bitcoin</span>
                 </div>
                 <div>
-                  <p className="font-medium" style={{ color: theme.text }}>Busan Coin</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Zero fees</p>
+                  <p className="font-medium" style={{ color: theme.text }}>부산 코인</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>수수료 없음</p>
                 </div>
               </div>
               <button
@@ -320,8 +320,8 @@ const Settings: React.FC = () => {
                   <span className="material-symbols-outlined" style={{ color: theme.accent }}>qr_code_scanner</span>
                 </div>
                 <div>
-                  <p className="font-medium" style={{ color: theme.text }}>QR Pay</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Standard rate</p>
+                  <p className="font-medium" style={{ color: theme.text }}>QR 결제</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>기본 수수료</p>
                 </div>
               </div>
               <button
@@ -340,7 +340,7 @@ const Settings: React.FC = () => {
 
         {/* Notifications Section */}
         <div className="px-4 pt-6 pb-2">
-          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Notifications</h3>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>알림</h3>
         </div>
 
         <div className="px-4 pb-4">
@@ -352,7 +352,7 @@ const Settings: React.FC = () => {
               className="p-4 flex items-center justify-between"
               style={{ borderBottom: `1px solid ${theme.border}` }}
             >
-              <span className="font-medium" style={{ color: theme.text }}>Push Notifications</span>
+              <span className="font-medium" style={{ color: theme.text }}>푸시 알림</span>
               <button
                 onClick={() => setPushNotifications(!pushNotifications)}
                 className="relative w-11 h-6 rounded-full transition-colors"
@@ -365,7 +365,7 @@ const Settings: React.FC = () => {
               </button>
             </div>
             <div className="p-4 flex items-center justify-between">
-              <span className="font-medium" style={{ color: theme.text }}>Daily Sales Report</span>
+              <span className="font-medium" style={{ color: theme.text }}>일일 매출 리포트</span>
               <button
                 onClick={() => setDailyReport(!dailyReport)}
                 className="relative w-11 h-6 rounded-full transition-colors"
@@ -388,7 +388,7 @@ const Settings: React.FC = () => {
             style={{ background: theme.accentSoft, color: theme.accent, border: `1px solid ${theme.accent}` }}
           >
             <span className="material-symbols-outlined text-[20px]">logout</span>
-            Logout
+            로그아웃
           </button>
         </div>
       </div>
@@ -410,7 +410,7 @@ const Settings: React.FC = () => {
             boxShadow: `0 8px 20px -4px ${theme.accentSoft}`,
           }}
         >
-          Save Changes
+          변경사항 저장
           <span className="material-symbols-outlined text-[20px]">check</span>
         </button>
       </div>

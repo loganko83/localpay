@@ -84,16 +84,16 @@ const Vouchers: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-24" style={{ background: theme.bg }}>
-      <Header title="Voucher Management" />
+      <Header title="바우처 관리" />
 
       {/* Stats */}
       <div className="px-4 mb-4 grid grid-cols-2 gap-3">
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Total Issued Value</p>
+          <p className="text-xs text-text-secondary mb-1">총 발행 금액</p>
           <p className="text-xl font-bold text-primary">₩{formatAmount(totalIssued)}</p>
         </Card>
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Active Campaigns</p>
+          <p className="text-xs text-text-secondary mb-1">활성 캠페인</p>
           <p className="text-xl font-bold text-white">{totalActive}</p>
         </Card>
       </div>
@@ -101,16 +101,21 @@ const Vouchers: React.FC = () => {
       {/* Status Filters */}
       <div className="px-4 mb-4">
         <div className="flex gap-2">
-          {['all', 'active', 'paused', 'expired'].map((filter) => (
+          {[
+            { key: 'all', label: '전체' },
+            { key: 'active', label: '활성' },
+            { key: 'paused', label: '일시정지' },
+            { key: 'expired', label: '만료' }
+          ].map((filter) => (
             <button
-              key={filter}
-              onClick={() => setStatusFilter(filter as typeof statusFilter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize ${statusFilter === filter
+              key={filter.key}
+              onClick={() => setStatusFilter(filter.key as typeof statusFilter)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${statusFilter === filter.key
                   ? 'bg-primary text-background'
                   : 'bg-surface-highlight text-text-secondary hover:text-white'
                 }`}
             >
-              {filter}
+              {filter.label}
             </button>
           ))}
         </div>
@@ -135,7 +140,7 @@ const Vouchers: React.FC = () => {
                   </Badge>
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5">
-                  Code: <span className="font-mono text-white">{voucher.code}</span>
+                  코드: <span className="font-mono text-white">{voucher.code}</span>
                 </p>
               </div>
               <p className="text-lg font-bold text-primary">₩{formatAmount(voucher.amount)}</p>
@@ -144,7 +149,7 @@ const Vouchers: React.FC = () => {
             {/* Progress */}
             <div className="mb-3">
               <div className="flex justify-between text-xs text-text-secondary mb-1">
-                <span>Usage: {voucher.usageCount.toLocaleString()} / {voucher.usageLimit.toLocaleString()}</span>
+                <span>사용량: {voucher.usageCount.toLocaleString()} / {voucher.usageLimit.toLocaleString()}</span>
                 <span>{Math.round((voucher.usageCount / voucher.usageLimit) * 100)}%</span>
               </div>
               <div className="h-2 bg-surface-highlight rounded-full overflow-hidden">
@@ -159,17 +164,17 @@ const Vouchers: React.FC = () => {
             {/* Validity */}
             <div className="flex items-center justify-between text-xs">
               <span className="text-text-muted">
-                Valid: {voucher.validFrom} ~ {voucher.validUntil}
+                유효기간: {voucher.validFrom} ~ {voucher.validUntil}
               </span>
               {voucher.status === 'active' && (
                 <div className="flex gap-2">
                   <Button variant="ghost" size="sm">
                     <span className="material-symbols-outlined text-[16px] mr-1">pause</span>
-                    Pause
+                    일시정지
                   </Button>
                   <Button variant="ghost" size="sm">
                     <span className="material-symbols-outlined text-[16px] mr-1">edit</span>
-                    Edit
+                    수정
                   </Button>
                 </div>
               )}
@@ -190,38 +195,43 @@ const Vouchers: React.FC = () => {
       <Modal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        title="Create New Voucher"
+        title="새 바우처 생성"
       >
         <div className="space-y-4">
-          <Input label="Campaign Name" placeholder="e.g., Summer Festival 2024" />
-          <Input label="Voucher Code" placeholder="e.g., SUMMER50" />
+          <Input label="캠페인 이름" placeholder="예: 여름 축제 2024" />
+          <Input label="바우처 코드" placeholder="예: SUMMER50" />
 
           <div className="grid grid-cols-2 gap-3">
-            <Input label="Amount (₩)" placeholder="10000" type="number" />
-            <Input label="Usage Limit" placeholder="1000" type="number" />
+            <Input label="금액 (₩)" placeholder="10000" type="number" />
+            <Input label="사용 한도" placeholder="1000" type="number" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Voucher Type</label>
+            <label className="block text-sm font-medium text-text-secondary mb-2">바우처 유형</label>
             <div className="grid grid-cols-2 gap-2">
-              {['Welcome', 'Promo', 'Subsidy', 'Partner'].map((type) => (
+              {[
+                { key: 'Welcome', label: '웰컴' },
+                { key: 'Promo', label: '프로모션' },
+                { key: 'Subsidy', label: '보조금' },
+                { key: 'Partner', label: '파트너' }
+              ].map((type) => (
                 <button
-                  key={type}
+                  key={type.key}
                   className="p-3 rounded-xl bg-surface-highlight text-white text-sm font-medium hover:bg-surface transition-colors border border-transparent hover:border-primary"
                 >
-                  {type}
+                  {type.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Input label="Valid From" type="date" />
-            <Input label="Valid Until" type="date" />
+            <Input label="시작일" type="date" />
+            <Input label="종료일" type="date" />
           </div>
 
           <Button variant="primary" fullWidth size="lg">
-            Create Voucher
+            바우처 생성
           </Button>
         </div>
       </Modal>

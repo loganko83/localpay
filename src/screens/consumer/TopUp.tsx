@@ -7,8 +7,8 @@ import { theme } from '../../styles/theme';
 const quickAmounts = [10000, 50000, 100000, 500000];
 
 const linkedAccounts = [
-  { id: '1', bank: 'IBK Bank', accountNumber: '****-****-4402', type: 'savings', isDefault: true },
-  { id: '2', bank: 'Jeonbuk Bank', accountNumber: '****-****-1234', type: 'checking', isDefault: false },
+  { id: '1', bank: 'IBK 기업은행', accountNumber: '****-****-4402', type: 'savings', isDefault: true },
+  { id: '2', bank: '전북은행', accountNumber: '****-****-1234', type: 'checking', isDefault: false },
 ];
 
 const TopUp: React.FC = () => {
@@ -61,7 +61,7 @@ const TopUp: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Top Up</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>충전</h1>
         <div className="w-8" />
       </header>
 
@@ -70,7 +70,7 @@ const TopUp: React.FC = () => {
         <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Current Balance</p>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>현재 잔액</p>
               <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
                 {formatAmount(wallet?.balance || 0)} <span className="text-lg">P</span>
               </h2>
@@ -88,7 +88,7 @@ const TopUp: React.FC = () => {
       {/* Amount Input */}
       <div className="px-5 mb-4">
         <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
-          Top-up Amount
+          충전 금액
         </label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: theme.textSecondary }}>
@@ -131,18 +131,18 @@ const TopUp: React.FC = () => {
           <div className="rounded-xl p-4" style={{ background: theme.accentSoft, border: `1px solid ${theme.accent}30` }}>
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>redeem</span>
-              <span className="text-sm font-bold" style={{ color: theme.accent }}>5% Bonus Included!</span>
+              <span className="text-sm font-bold" style={{ color: theme.accent }}>5% 보너스 포함!</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span style={{ color: theme.textSecondary }}>Top-up amount</span>
-              <span style={{ color: theme.text }}>W{formatAmount(numericAmount)}</span>
+              <span style={{ color: theme.textSecondary }}>충전 금액</span>
+              <span style={{ color: theme.text }}>₩{formatAmount(numericAmount)}</span>
             </div>
             <div className="flex justify-between text-sm mt-1">
-              <span style={{ color: theme.textSecondary }}>Bonus (5%)</span>
-              <span style={{ color: theme.accent }}>+W{formatAmount(bonusAmount)}</span>
+              <span style={{ color: theme.textSecondary }}>보너스 (5%)</span>
+              <span style={{ color: theme.accent }}>+₩{formatAmount(bonusAmount)}</span>
             </div>
             <div className="mt-2 pt-2 flex justify-between" style={{ borderTop: `1px solid ${theme.accent}30` }}>
-              <span className="text-sm font-bold" style={{ color: theme.text }}>You'll receive</span>
+              <span className="text-sm font-bold" style={{ color: theme.text }}>받으실 금액</span>
               <span className="text-lg font-bold" style={{ color: theme.accent }}>{formatAmount(totalAmount)} B</span>
             </div>
           </div>
@@ -151,7 +151,7 @@ const TopUp: React.FC = () => {
 
       {/* Payment Source */}
       <div className="px-5 mb-6">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>From Bank Account</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>결제 계좌</h3>
         <div className="space-y-3">
           {linkedAccounts.map((account) => (
             <button
@@ -184,7 +184,7 @@ const TopUp: React.FC = () => {
             style={{ border: `2px dashed ${theme.border}`, color: theme.textSecondary }}
           >
             <span className="material-symbols-outlined">add</span>
-            <span className="text-sm font-medium">Link New Account</span>
+            <span className="text-sm font-medium">새 계좌 연결</span>
           </button>
         </div>
       </div>
@@ -203,16 +203,16 @@ const TopUp: React.FC = () => {
           {isProcessing ? (
             <>
               <span className="material-symbols-outlined animate-spin">progress_activity</span>
-              Processing...
+              처리 중...
             </>
           ) : numericAmount < 1000 ? (
-            'Enter amount (min W1,000)'
+            '금액을 입력하세요 (최소 ₩1,000)'
           ) : (
-            `Top Up W${formatAmount(numericAmount)}`
+            `₩${formatAmount(numericAmount)} 충전하기`
           )}
         </button>
         <p className="text-xs text-center mt-3" style={{ color: theme.textMuted }}>
-          Funds will be transferred from your bank account instantly
+          연결된 계좌에서 즉시 이체됩니다
         </p>
       </div>
     </div>

@@ -4,20 +4,20 @@ import { useWalletStore } from '../../store';
 
 import { theme } from '../../styles/theme';
 
-const categories = ['All', 'Food', 'Cafe', 'Shopping', 'Beauty', 'Entertainment'];
+const categories = ['전체', '음식', '카페', '쇼핑', '뷰티', '엔터테인먼트'];
 
 const hotDeals = [
   {
     id: '1',
-    title: '10% Cashback',
-    subtitle: 'All restaurants in Seomyeon',
+    title: '10% 캐시백',
+    subtitle: '서면 전 음식점',
     image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600',
     validUntil: '2024-12-31',
   },
   {
     id: '2',
-    title: 'Double Points',
-    subtitle: 'Weekend shopping spree',
+    title: '포인트 2배',
+    subtitle: '주말 쇼핑 혜택',
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=600',
     validUntil: '2024-12-25',
   },
@@ -26,43 +26,43 @@ const hotDeals = [
 const nearbyOffers = [
   {
     id: '1',
-    merchantName: 'Starbucks Haeundae',
-    category: 'Cafe',
+    merchantName: '스타벅스 해운대점',
+    category: '카페',
     distance: '150m',
     offerType: 'cashback',
     offerValue: '5%',
     imageUrl: 'https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=200',
-    expiresIn: '3 days',
+    expiresIn: '3일 후',
   },
   {
     id: '2',
-    merchantName: 'Olive Young',
-    category: 'Beauty',
+    merchantName: '올리브영',
+    category: '뷰티',
     distance: '300m',
     offerType: 'coupon',
-    offerValue: '5,000 off',
+    offerValue: '5,000원 할인',
     imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=200',
-    expiresIn: '7 days',
+    expiresIn: '7일 후',
   },
   {
     id: '3',
-    merchantName: 'CGV Cinema',
-    category: 'Entertainment',
+    merchantName: 'CGV 영화관',
+    category: '엔터테인먼트',
     distance: '500m',
     offerType: 'discount',
     offerValue: '20%',
     imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=200',
-    expiresIn: '5 days',
+    expiresIn: '5일 후',
   },
   {
     id: '4',
-    merchantName: 'Paris Baguette',
-    category: 'Food',
+    merchantName: '파리바게뜨',
+    category: '음식',
     distance: '200m',
     offerType: 'cashback',
     offerValue: '3%',
     imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=200',
-    expiresIn: '10 days',
+    expiresIn: '10일 후',
   },
 ];
 
@@ -75,7 +75,7 @@ const Offers: React.FC = () => {
     return new Intl.NumberFormat('ko-KR').format(amount);
   };
 
-  const filteredOffers = activeCategory === 'All'
+  const filteredOffers = activeCategory === '전체'
     ? nearbyOffers
     : nearbyOffers.filter(offer => offer.category === activeCategory);
 
@@ -97,8 +97,8 @@ const Offers: React.FC = () => {
       {/* Header */}
       <div className="px-5 py-4 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: theme.text }}>Exclusive Benefits</h1>
-          <p className="text-sm" style={{ color: theme.textSecondary }}>Discover deals near you</p>
+          <h1 className="text-xl font-bold" style={{ color: theme.text }}>특별 혜택</h1>
+          <p className="text-sm" style={{ color: theme.textSecondary }}>내 주변 혜택을 찾아보세요</p>
         </div>
         <div className="px-3 py-1.5 rounded-full" style={{ background: theme.accentSoft }}>
           <span className="text-sm font-bold" style={{ color: theme.accent }}>
@@ -158,7 +158,7 @@ const Offers: React.FC = () => {
 
       {/* Nearby Offers */}
       <div className="px-5">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Nearby Offers</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>근처 혜택</h3>
         <div className="space-y-3">
           {filteredOffers.map((offer) => (
             <button
@@ -194,13 +194,13 @@ const Offers: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between mt-3">
                     <span className="text-xs" style={{ color: theme.textMuted }}>
-                      Expires in {offer.expiresIn}
+                      {offer.expiresIn} 만료
                     </span>
                     <span
                       className="text-xs font-bold px-3 py-1.5 rounded-lg"
                       style={{ background: theme.accent, color: '#fff' }}
                     >
-                      {offer.offerType === 'coupon' ? 'Get Coupon' : 'Visit'}
+                      {offer.offerType === 'coupon' ? '쿠폰 받기' : '방문하기'}
                     </span>
                   </div>
                 </div>

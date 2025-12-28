@@ -11,27 +11,27 @@ interface NavItem {
 }
 
 const consumerNav: NavItem[] = [
-  { icon: 'home', label: 'Home', path: '/consumer' },
-  { icon: 'account_balance_wallet', label: 'Wallet', path: '/consumer/wallet' },
-  { icon: 'qr_code_scanner', label: 'Scan', path: '/consumer/scan', isFab: true },
-  { icon: 'map', label: 'Map', path: '/consumer/merchant-map' },
-  { icon: 'settings', label: 'Settings', path: '/consumer/profile' },
+  { icon: 'home', label: '홈', path: '/consumer' },
+  { icon: 'account_balance_wallet', label: '지갑', path: '/consumer/wallet' },
+  { icon: 'qr_code_scanner', label: '스캔', path: '/consumer/scan', isFab: true },
+  { icon: 'map', label: '지도', path: '/consumer/merchant-map' },
+  { icon: 'settings', label: '설정', path: '/consumer/profile' },
 ];
 
 const merchantNav: NavItem[] = [
-  { icon: 'grid_view', label: 'Home', path: '/merchant' },
-  { icon: 'account_balance_wallet', label: 'Wallet', path: '/merchant/wallet' },
-  { icon: 'qr_code_scanner', label: 'Scan', path: '/merchant/scan', isFab: true },
-  { icon: 'group', label: 'Staff', path: '/merchant/employees' },
-  { icon: 'settings', label: 'Settings', path: '/merchant/settings' },
+  { icon: 'grid_view', label: '홈', path: '/merchant' },
+  { icon: 'account_balance_wallet', label: '지갑', path: '/merchant/wallet' },
+  { icon: 'qr_code_scanner', label: '스캔', path: '/merchant/scan', isFab: true },
+  { icon: 'group', label: '직원', path: '/merchant/employees' },
+  { icon: 'settings', label: '설정', path: '/merchant/settings' },
 ];
 
 const adminNav: NavItem[] = [
-  { icon: 'dashboard', label: 'Dashboard', path: '/admin' },
-  { icon: 'group', label: 'Users', path: '/admin/users' },
-  { icon: 'verified_user', label: 'Audit', path: '/admin/audit', isFab: true },
-  { icon: 'payments', label: 'Settle', path: '/admin/settlements' },
-  { icon: 'redeem', label: 'Vouchers', path: '/admin/vouchers' },
+  { icon: 'dashboard', label: '대시보드', path: '/admin' },
+  { icon: 'group', label: '사용자', path: '/admin/users' },
+  { icon: 'verified_user', label: '감사', path: '/admin/audit', isFab: true },
+  { icon: 'payments', label: '정산', path: '/admin/settlements' },
+  { icon: 'redeem', label: '바우처', path: '/admin/vouchers' },
 ];
 
 // Theme colors for bottom nav - unified dark theme

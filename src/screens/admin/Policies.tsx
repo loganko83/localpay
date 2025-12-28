@@ -125,15 +125,15 @@ const Policies: React.FC = () => {
 
   const getRuleTypeLabel = (type: PolicyRuleType) => {
     switch (type) {
-      case 'REGION_RESTRICTION': return 'Region Restriction';
-      case 'MERCHANT_CATEGORY': return 'Merchant Category';
-      case 'USAGE_LIMIT_DAILY': return 'Daily Limit';
-      case 'USAGE_LIMIT_MONTHLY': return 'Monthly Limit';
-      case 'USAGE_LIMIT_TRANSACTION': return 'Transaction Limit';
-      case 'TIME_RESTRICTION': return 'Time Restriction';
-      case 'USER_ELIGIBILITY': return 'User Eligibility';
-      case 'DISCOUNT_RATE': return 'Discount Rate';
-      case 'EXPIRATION': return 'Expiration';
+      case 'REGION_RESTRICTION': return '지역 제한';
+      case 'MERCHANT_CATEGORY': return '가맹점 업종';
+      case 'USAGE_LIMIT_DAILY': return '일일 한도';
+      case 'USAGE_LIMIT_MONTHLY': return '월간 한도';
+      case 'USAGE_LIMIT_TRANSACTION': return '거래 한도';
+      case 'TIME_RESTRICTION': return '시간 제한';
+      case 'USER_ELIGIBILITY': return '사용자 자격';
+      case 'DISCOUNT_RATE': return '할인율';
+      case 'EXPIRATION': return '만료';
       default: return type;
     }
   };
@@ -169,7 +169,7 @@ const Policies: React.FC = () => {
       case 'USAGE_LIMIT_DAILY':
       case 'USAGE_LIMIT_MONTHLY':
       case 'USAGE_LIMIT_TRANSACTION':
-        return `Max ${(params.maxAmount as number).toLocaleString()}`;
+        return `최대 ${(params.maxAmount as number).toLocaleString()}`;
       case 'REGION_RESTRICTION':
         return (params.regions as string[]).join(', ');
       case 'MERCHANT_CATEGORY':
@@ -190,8 +190,8 @@ const Policies: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">Policy Management</h1>
-          <p className="text-text-secondary text-sm">Manage local currency usage policies</p>
+          <h1 className="text-xl font-bold text-white">정책 관리</h1>
+          <p className="text-text-secondary text-sm">지역화폐 사용 정책 관리</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -206,9 +206,9 @@ const Policies: React.FC = () => {
         <div className="flex items-start gap-2">
           <span className="material-symbols-outlined text-primary text-lg">info</span>
           <div>
-            <div className="text-sm font-medium text-primary">Prepaid Operator Regulations</div>
+            <div className="text-sm font-medium text-primary">선불수단 규정</div>
             <div className="text-xs text-primary/80 mt-1">
-              Max balance: 3,000,000 KRW | Daily charge: 500,000 KRW | Monthly: 2,000,000 KRW
+              최대 잔액: 3,000,000원 | 일일 충전: 500,000원 | 월간: 2,000,000원
             </div>
           </div>
         </div>
@@ -257,7 +257,7 @@ const Policies: React.FC = () => {
             <div className="flex items-center gap-4 mt-3 pt-3 border-t border-background">
               <div className="flex items-center gap-1">
                 <span className="material-symbols-outlined text-text-secondary text-sm">rule</span>
-                <span className="text-xs text-text-secondary">{policy.rules.length} rules</span>
+                <span className="text-xs text-text-secondary">{policy.rules.length}개 규칙</span>
               </div>
               <div className="flex items-center gap-1">
                 <span className="material-symbols-outlined text-text-secondary text-sm">location_city</span>
@@ -279,7 +279,7 @@ const Policies: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end">
           <div className="w-full max-w-md mx-auto bg-surface rounded-t-3xl p-4 space-y-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Policy Details</h2>
+              <h2 className="text-lg font-bold text-white">정책 상세</h2>
               <button
                 onClick={() => setSelectedPolicy(null)}
                 className="p-2 hover:bg-background rounded-lg transition-colors"
@@ -302,33 +302,33 @@ const Policies: React.FC = () => {
             {/* Metadata */}
             <div className="bg-background rounded-xl p-3 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Policy ID</span>
+                <span className="text-text-secondary">정책 ID</span>
                 <span className="text-white font-mono text-xs">{selectedPolicy.id}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Municipality</span>
+                <span className="text-text-secondary">지자체</span>
                 <span className="text-white">{selectedPolicy.municipalityId}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Effective From</span>
+                <span className="text-text-secondary">시행일</span>
                 <span className="text-white">
                   {new Date(selectedPolicy.effectiveFrom).toLocaleDateString('ko-KR')}
                 </span>
               </div>
               {selectedPolicy.effectiveUntil && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-text-secondary">Effective Until</span>
+                  <span className="text-text-secondary">종료일</span>
                   <span className="text-white">
                     {new Date(selectedPolicy.effectiveUntil).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Created By</span>
+                <span className="text-text-secondary">생성자</span>
                 <span className="text-white">{selectedPolicy.createdBy}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Last Updated</span>
+                <span className="text-text-secondary">최종 수정</span>
                 <span className="text-white">
                   {new Date(selectedPolicy.updatedAt).toLocaleDateString('ko-KR')}
                 </span>
@@ -337,7 +337,7 @@ const Policies: React.FC = () => {
 
             {/* Rules */}
             <div>
-              <h3 className="font-medium text-white mb-3">Policy Rules ({selectedPolicy.rules.length})</h3>
+              <h3 className="font-medium text-white mb-3">정책 규칙 ({selectedPolicy.rules.length}개)</h3>
               <div className="space-y-2">
                 {selectedPolicy.rules.map((rule) => (
                   <div
@@ -373,15 +373,15 @@ const Policies: React.FC = () => {
             {/* Actions */}
             <div className="grid grid-cols-2 gap-3">
               <button className="py-3 bg-background text-white rounded-xl font-medium hover:bg-surface-highlight transition-colors">
-                Edit Policy
+                정책 수정
               </button>
               {selectedPolicy.status === 'active' ? (
                 <button className="py-3 bg-yellow-500/20 text-yellow-500 rounded-xl font-medium">
-                  Pause Policy
+                  정책 일시정지
                 </button>
               ) : (
                 <button className="py-3 bg-green-500/20 text-green-500 rounded-xl font-medium">
-                  Activate Policy
+                  정책 활성화
                 </button>
               )}
             </div>
@@ -390,7 +390,7 @@ const Policies: React.FC = () => {
               onClick={() => setSelectedPolicy(null)}
               className="w-full py-3 bg-surface-highlight text-white rounded-xl font-medium"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>
@@ -401,7 +401,7 @@ const Policies: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end">
           <div className="w-full max-w-md mx-auto bg-surface rounded-t-3xl p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Create New Policy</h2>
+              <h2 className="text-lg font-bold text-white">새 정책 생성</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="p-2 hover:bg-background rounded-lg transition-colors"
@@ -412,42 +412,42 @@ const Policies: React.FC = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Policy Name</label>
+                <label className="text-sm text-text-secondary block mb-2">정책명</label>
                 <input
                   type="text"
-                  placeholder="Enter policy name"
+                  placeholder="정책명을 입력하세요"
                   className="w-full bg-background text-white rounded-xl px-4 py-3 border border-surface focus:border-primary outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Description</label>
+                <label className="text-sm text-text-secondary block mb-2">설명</label>
                 <textarea
-                  placeholder="Enter policy description"
+                  placeholder="정책 설명을 입력하세요"
                   rows={3}
                   className="w-full bg-background text-white rounded-xl px-4 py-3 border border-surface focus:border-primary outline-none resize-none"
                 />
               </div>
 
               <div>
-                <label className="text-sm text-text-secondary block mb-2">Municipality</label>
+                <label className="text-sm text-text-secondary block mb-2">지자체</label>
                 <select className="w-full bg-background text-white rounded-xl px-4 py-3 border border-surface focus:border-primary outline-none">
-                  <option value="jeonju">Jeonju</option>
-                  <option value="wanju">Wanju</option>
-                  <option value="gunsan">Gunsan</option>
+                  <option value="jeonju">전주</option>
+                  <option value="wanju">완주</option>
+                  <option value="gunsan">군산</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm text-text-secondary block mb-2">Effective From</label>
+                  <label className="text-sm text-text-secondary block mb-2">시행일</label>
                   <input
                     type="date"
                     className="w-full bg-background text-white rounded-xl px-4 py-3 border border-surface focus:border-primary outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-text-secondary block mb-2">Effective Until</label>
+                  <label className="text-sm text-text-secondary block mb-2">종료일</label>
                   <input
                     type="date"
                     className="w-full bg-background text-white rounded-xl px-4 py-3 border border-surface focus:border-primary outline-none"
@@ -460,13 +460,13 @@ const Policies: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">lightbulb</span>
                 <span className="text-sm text-primary">
-                  Add rules after creating the policy
+                  정책 생성 후 규칙을 추가하세요
                 </span>
               </div>
             </div>
 
             <button className="w-full py-3 bg-primary text-background rounded-xl font-medium">
-              Create Policy
+              정책 생성
             </button>
           </div>
         </div>

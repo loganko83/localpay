@@ -8,12 +8,12 @@ interface SettingSection {
 }
 
 const sections: SettingSection[] = [
-  { id: 'general', title: 'General', icon: 'settings' },
-  { id: 'blockchain', title: 'Blockchain', icon: 'token' },
+  { id: 'general', title: '일반', icon: 'settings' },
+  { id: 'blockchain', title: '블록체인', icon: 'token' },
   { id: 'did', title: 'DID-BaaS', icon: 'fingerprint' },
-  { id: 'notifications', title: 'Notifications', icon: 'notifications' },
-  { id: 'security', title: 'Security', icon: 'security' },
-  { id: 'api', title: 'API Keys', icon: 'key' },
+  { id: 'notifications', title: '알림', icon: 'notifications' },
+  { id: 'security', title: '보안', icon: 'security' },
+  { id: 'api', title: 'API 키', icon: 'key' },
 ];
 
 const Settings: React.FC = () => {
@@ -65,9 +65,9 @@ const Settings: React.FC = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <h1 className="text-2xl font-bold text-white">설정</h1>
         <p className="text-gray-400 text-sm mt-1">
-          Configure platform settings and integrations
+          플랫폼 설정 및 연동 구성
         </p>
       </div>
 
@@ -95,36 +95,36 @@ const Settings: React.FC = () => {
         {/* Content */}
         <div className="flex-1">
           {activeSection === 'general' && (
-            <SettingsCard title="General Settings" icon="settings">
+            <SettingsCard title="일반 설정" icon="settings">
               <SettingInput
-                label="Platform Name"
+                label="플랫폼 이름"
                 value={settings.platformName}
                 onChange={(v) => handleChange('platformName', v)}
               />
               <SettingSelect
-                label="Timezone"
+                label="시간대"
                 value={settings.timezone}
                 options={[
-                  { value: 'Asia/Seoul', label: 'Asia/Seoul (KST)' },
+                  { value: 'Asia/Seoul', label: '아시아/서울 (KST)' },
                   { value: 'UTC', label: 'UTC' },
                 ]}
                 onChange={(v) => handleChange('timezone', v)}
               />
               <SettingSelect
-                label="Language"
+                label="언어"
                 value={settings.language}
                 options={[
-                  { value: 'ko', label: 'Korean' },
-                  { value: 'en', label: 'English' },
+                  { value: 'ko', label: '한국어' },
+                  { value: 'en', label: '영어' },
                 ]}
                 onChange={(v) => handleChange('language', v)}
               />
               <SettingSelect
-                label="Currency"
+                label="통화"
                 value={settings.currency}
                 options={[
-                  { value: 'KRW', label: 'Korean Won (KRW)' },
-                  { value: 'USD', label: 'US Dollar (USD)' },
+                  { value: 'KRW', label: '원화 (KRW)' },
+                  { value: 'USD', label: '미국 달러 (USD)' },
                 ]}
                 onChange={(v) => handleChange('currency', v)}
               />
@@ -133,41 +133,41 @@ const Settings: React.FC = () => {
 
           {activeSection === 'blockchain' && (
             <div className="space-y-6">
-              <SettingsCard title="Xphere Blockchain" icon="token">
+              <SettingsCard title="Xphere 블록체인" icon="token">
                 <SettingToggle
-                  label="Enable Blockchain Integration"
-                  description="Connect to Xphere network for audit anchoring"
+                  label="블록체인 연동 활성화"
+                  description="감사 앵커링을 위해 Xphere 네트워크에 연결"
                   enabled={settings.xphereEnabled}
                   onChange={() => handleToggle('xphereEnabled')}
                 />
                 <SettingToggle
-                  label="Auto-Anchor Logs"
-                  description="Automatically anchor audit logs to blockchain"
+                  label="로그 자동 앵커링"
+                  description="감사 로그를 블록체인에 자동으로 앵커링"
                   enabled={settings.autoAnchor}
                   onChange={() => handleToggle('autoAnchor')}
                 />
                 <SettingInput
-                  label="Batch Size"
+                  label="배치 크기"
                   type="number"
                   value={settings.anchorBatchSize.toString()}
                   onChange={(v) => handleChange('anchorBatchSize', parseInt(v))}
-                  suffix="logs"
+                  suffix="로그"
                 />
                 <SettingInput
-                  label="Anchor Interval"
+                  label="앵커링 간격"
                   type="number"
                   value={settings.anchorInterval.toString()}
                   onChange={(v) => handleChange('anchorInterval', parseInt(v))}
-                  suffix="seconds"
+                  suffix="초"
                 />
               </SettingsCard>
 
-              <SettingsCard title="Network Configuration" icon="lan">
+              <SettingsCard title="네트워크 구성" icon="lan">
                 <div className="space-y-3">
-                  <InfoRow label="Chain ID" value={XPHERE_CONFIG.chainId.toString()} />
+                  <InfoRow label="체인 ID" value={XPHERE_CONFIG.chainId.toString()} />
                   <InfoRow label="RPC URL" value={XPHERE_CONFIG.rpcUrl} copyable />
-                  <InfoRow label="Explorer" value={XPHERE_CONFIG.explorerUrl} copyable />
-                  <InfoRow label="Native Currency" value={XPHERE_CONFIG.nativeCurrency.symbol} />
+                  <InfoRow label="탐색기" value={XPHERE_CONFIG.explorerUrl} copyable />
+                  <InfoRow label="네이티브 통화" value={XPHERE_CONFIG.nativeCurrency.symbol} />
                 </div>
               </SettingsCard>
             </div>
@@ -175,31 +175,31 @@ const Settings: React.FC = () => {
 
           {activeSection === 'did' && (
             <div className="space-y-6">
-              <SettingsCard title="DID-BaaS Integration" icon="fingerprint">
+              <SettingsCard title="DID-BaaS 연동" icon="fingerprint">
                 <SettingToggle
-                  label="Enable DID-BaaS"
-                  description="Use DID-BaaS for identity management"
+                  label="DID-BaaS 활성화"
+                  description="신원 관리에 DID-BaaS 사용"
                   enabled={settings.didBaasEnabled}
                   onChange={() => handleToggle('didBaasEnabled')}
                 />
                 <SettingToggle
-                  label="Auto-Verify Credentials"
-                  description="Automatically verify credentials on creation"
+                  label="자격증명 자동 검증"
+                  description="생성 시 자격증명 자동 검증"
                   enabled={settings.autoVerify}
                   onChange={() => handleToggle('autoVerify')}
                 />
                 <SettingInput
-                  label="Credential Expiry"
+                  label="자격증명 만료"
                   type="number"
                   value={settings.credentialExpiry.toString()}
                   onChange={(v) => handleChange('credentialExpiry', parseInt(v))}
-                  suffix="days"
+                  suffix="일"
                 />
               </SettingsCard>
 
-              <SettingsCard title="DID-BaaS Endpoints" icon="api">
+              <SettingsCard title="DID-BaaS 엔드포인트" icon="api">
                 <div className="space-y-3">
-                  <InfoRow label="Base URL" value={DID_BAAS_CONFIG.baseUrl} copyable />
+                  <InfoRow label="기본 URL" value={DID_BAAS_CONFIG.baseUrl} copyable />
                   <InfoRow label="Swagger UI" value={DID_BAAS_CONFIG.swaggerUrl} link />
                 </div>
               </SettingsCard>
@@ -207,94 +207,94 @@ const Settings: React.FC = () => {
           )}
 
           {activeSection === 'notifications' && (
-            <SettingsCard title="Notification Settings" icon="notifications">
+            <SettingsCard title="알림 설정" icon="notifications">
               <SettingToggle
-                label="Email Notifications"
-                description="Receive alerts via email"
+                label="이메일 알림"
+                description="이메일로 경고 수신"
                 enabled={settings.emailNotifications}
                 onChange={() => handleToggle('emailNotifications')}
               />
               <SettingToggle
-                label="Slack Notifications"
-                description="Send alerts to Slack channel"
+                label="Slack 알림"
+                description="Slack 채널로 경고 전송"
                 enabled={settings.slackNotifications}
                 onChange={() => handleToggle('slackNotifications')}
               />
               <SettingInput
-                label="Alert Threshold"
+                label="경고 임계값"
                 type="number"
                 value={settings.alertThreshold.toString()}
                 onChange={(v) => handleChange('alertThreshold', parseInt(v))}
-                suffix="KRW"
-                description="Notify for transactions above this amount"
+                suffix="원"
+                description="이 금액 이상의 거래 시 알림"
               />
             </SettingsCard>
           )}
 
           {activeSection === 'security' && (
-            <SettingsCard title="Security Settings" icon="security">
+            <SettingsCard title="보안 설정" icon="security">
               <SettingToggle
-                label="Require 2FA"
-                description="Require two-factor authentication for all admins"
+                label="2단계 인증 필수"
+                description="모든 관리자에게 2단계 인증 필수"
                 enabled={settings.twoFactorRequired}
                 onChange={() => handleToggle('twoFactorRequired')}
               />
               <SettingInput
-                label="Session Timeout"
+                label="세션 타임아웃"
                 type="number"
                 value={settings.sessionTimeout.toString()}
                 onChange={(v) => handleChange('sessionTimeout', parseInt(v))}
-                suffix="seconds"
+                suffix="초"
               />
               <SettingInput
-                label="IP Whitelist"
+                label="IP 화이트리스트"
                 value={settings.ipWhitelist}
                 onChange={(v) => handleChange('ipWhitelist', v)}
-                placeholder="e.g., 192.168.1.0/24, 10.0.0.1"
-                description="Comma-separated list of allowed IPs (empty = all)"
+                placeholder="예: 192.168.1.0/24, 10.0.0.1"
+                description="허용된 IP 목록, 쉼표로 구분 (비어 있으면 전체 허용)"
               />
             </SettingsCard>
           )}
 
           {activeSection === 'api' && (
-            <SettingsCard title="API Keys" icon="key">
+            <SettingsCard title="API 키" icon="key">
               <div className="space-y-4">
                 <div className="p-4 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-medium">Production API Key</span>
+                    <span className="text-white font-medium">운영 API 키</span>
                     <span className="px-2 py-1 rounded-full bg-green-500/20 text-green-500 text-xs">
-                      Active
+                      활성
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 text-gray-400 text-sm font-mono">
                       lpk_prod_****************************
                     </code>
-                    <button className="text-primary hover:underline text-sm">Reveal</button>
-                    <button className="text-primary hover:underline text-sm">Regenerate</button>
+                    <button className="text-primary hover:underline text-sm">표시</button>
+                    <button className="text-primary hover:underline text-sm">재생성</button>
                   </div>
-                  <p className="text-gray-500 text-xs mt-2">Created: 2024-12-01</p>
+                  <p className="text-gray-500 text-xs mt-2">생성일: 2024-12-01</p>
                 </div>
 
                 <div className="p-4 rounded-lg bg-white/5 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-medium">Test API Key</span>
+                    <span className="text-white font-medium">테스트 API 키</span>
                     <span className="px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-500 text-xs">
-                      Test Mode
+                      테스트 모드
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 text-gray-400 text-sm font-mono">
                       lpk_test_****************************
                     </code>
-                    <button className="text-primary hover:underline text-sm">Reveal</button>
-                    <button className="text-primary hover:underline text-sm">Regenerate</button>
+                    <button className="text-primary hover:underline text-sm">표시</button>
+                    <button className="text-primary hover:underline text-sm">재생성</button>
                   </div>
-                  <p className="text-gray-500 text-xs mt-2">Created: 2024-12-01</p>
+                  <p className="text-gray-500 text-xs mt-2">생성일: 2024-12-01</p>
                 </div>
 
                 <button className="w-full py-3 rounded-lg border border-dashed border-white/20 text-gray-400 hover:border-primary hover:text-primary transition-colors">
-                  + Create New API Key
+                  + 새 API 키 생성
                 </button>
               </div>
             </SettingsCard>
@@ -303,10 +303,10 @@ const Settings: React.FC = () => {
           {/* Save Button */}
           <div className="mt-6 flex justify-end gap-3">
             <button className="px-6 py-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 transition-colors">
-              Reset
+              초기화
             </button>
             <button className="px-6 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors">
-              Save Changes
+              변경사항 저장
             </button>
           </div>
         </div>
@@ -441,7 +441,7 @@ const InfoRow: React.FC<InfoRowProps> = ({ label, value, copyable, link }) => (
           rel="noopener noreferrer"
           className="text-primary text-sm hover:underline"
         >
-          Open
+          열기
         </a>
       ) : (
         <span className="text-white text-sm font-mono">{value}</span>

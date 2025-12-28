@@ -121,11 +121,11 @@ const Security: React.FC = () => {
 
   const getEventTypeLabel = (type: string) => {
     switch (type) {
-      case 'login_attempt': return 'Login Attempt';
-      case 'login_success': return 'Login Success';
-      case 'login_failure': return 'Login Failed';
-      case 'password_change': return 'Password Changed';
-      case 'suspicious_activity': return 'Suspicious Activity';
+      case 'login_attempt': return '로그인 시도';
+      case 'login_success': return '로그인 성공';
+      case 'login_failure': return '로그인 실패';
+      case 'password_change': return '비밀번호 변경';
+      case 'suspicious_activity': return '의심스러운 활동';
       default: return type;
     }
   };
@@ -157,8 +157,8 @@ const Security: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">Security Center</h1>
-          <p className="text-text-secondary text-sm">Monitor and manage platform security</p>
+          <h1 className="text-xl font-bold text-white">보안 센터</h1>
+          <p className="text-text-secondary text-sm">플랫폼 보안 모니터링 및 관리</p>
         </div>
         <button className="p-2 bg-surface rounded-lg">
           <span className="material-symbols-outlined text-text-secondary">refresh</span>
@@ -169,19 +169,19 @@ const Security: React.FC = () => {
       <div className="grid grid-cols-4 gap-2">
         <div className="bg-surface rounded-xl p-3 text-center">
           <div className="text-lg font-bold text-white">{stats.totalEvents}</div>
-          <div className="text-[10px] text-text-secondary">Total Events</div>
+          <div className="text-[10px] text-text-secondary">전체 이벤트</div>
         </div>
         <div className="bg-surface rounded-xl p-3 text-center">
           <div className="text-lg font-bold text-red-500">{stats.unhandledAlerts}</div>
-          <div className="text-[10px] text-text-secondary">Unhandled</div>
+          <div className="text-[10px] text-text-secondary">미처리</div>
         </div>
         <div className="bg-surface rounded-xl p-3 text-center">
           <div className="text-lg font-bold text-orange-500">{stats.highRiskEvents}</div>
-          <div className="text-[10px] text-text-secondary">High Risk</div>
+          <div className="text-[10px] text-text-secondary">고위험</div>
         </div>
         <div className="bg-surface rounded-xl p-3 text-center">
           <div className="text-lg font-bold text-green-500">{stats.activeSessions}</div>
-          <div className="text-[10px] text-text-secondary">Sessions</div>
+          <div className="text-[10px] text-text-secondary">세션</div>
         </div>
       </div>
 
@@ -197,9 +197,9 @@ const Security: React.FC = () => {
                 : 'text-text-secondary hover:text-white'
             }`}
           >
-            {tab === 'events' && 'Events'}
-            {tab === 'sessions' && 'Sessions'}
-            {tab === 'settings' && 'Settings'}
+            {tab === 'events' && '이벤트'}
+            {tab === 'sessions' && '세션'}
+            {tab === 'settings' && '설정'}
           </button>
         ))}
       </div>
@@ -248,7 +248,7 @@ const Security: React.FC = () => {
                       </span>
                     </div>
                     <div className="text-xs text-text-secondary mt-1">
-                      User: {event.userId}
+                      사용자: {event.userId}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-[10px] text-text-muted">
                       <span>{event.ipAddress}</span>
@@ -293,26 +293,26 @@ const Security: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${session.isActive ? 'bg-green-500' : 'bg-gray-500'}`} />
                   <span className="text-xs text-text-secondary">
-                    {session.isActive ? 'Active' : 'Inactive'}
+                    {session.isActive ? '활성' : '비활성'}
                   </span>
                 </div>
               </div>
 
               <div className="mt-3 pt-3 border-t border-background space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-text-secondary">IP Address</span>
+                  <span className="text-text-secondary">IP 주소</span>
                   <span className="text-white">{session.ipAddress}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-text-secondary">Device</span>
+                  <span className="text-text-secondary">기기</span>
                   <span className="text-white">{session.deviceId}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-text-secondary">Last Active</span>
+                  <span className="text-text-secondary">마지막 활동</span>
                   <span className="text-white">{formatTime(session.lastActiveAt)}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-text-secondary">Expires</span>
+                  <span className="text-text-secondary">만료 시간</span>
                   <span className="text-white">
                     {new Date(session.expiresAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
                   </span>
@@ -320,7 +320,7 @@ const Security: React.FC = () => {
               </div>
 
               <button className="w-full mt-3 py-2 bg-red-500/20 text-red-500 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-colors">
-                Revoke Session
+                세션 취소
               </button>
             </div>
           ))}
@@ -332,12 +332,12 @@ const Security: React.FC = () => {
         <div className="space-y-4">
           {/* Authentication Settings */}
           <div className="bg-surface rounded-xl p-4">
-            <h3 className="font-medium text-white mb-3">Authentication</h3>
+            <h3 className="font-medium text-white mb-3">인증</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-white">Two-Factor Authentication</div>
-                  <div className="text-xs text-text-secondary">Require 2FA for admin access</div>
+                  <div className="text-sm text-white">2단계 인증</div>
+                  <div className="text-xs text-text-secondary">관리자 접근 시 2FA 필수</div>
                 </div>
                 <div className="w-12 h-6 bg-primary rounded-full relative">
                   <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
@@ -345,24 +345,24 @@ const Security: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-white">Session Timeout</div>
-                  <div className="text-xs text-text-secondary">Auto logout after inactivity</div>
+                  <div className="text-sm text-white">세션 타임아웃</div>
+                  <div className="text-xs text-text-secondary">비활성 시 자동 로그아웃</div>
                 </div>
                 <select className="bg-background text-white text-sm rounded-lg px-3 py-1.5 border border-surface">
-                  <option>30 min</option>
-                  <option>1 hour</option>
-                  <option>2 hours</option>
+                  <option>30분</option>
+                  <option>1시간</option>
+                  <option>2시간</option>
                 </select>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-white">Login Attempt Limit</div>
-                  <div className="text-xs text-text-secondary">Lock after failed attempts</div>
+                  <div className="text-sm text-white">로그인 시도 제한</div>
+                  <div className="text-xs text-text-secondary">실패 후 잠금</div>
                 </div>
                 <select className="bg-background text-white text-sm rounded-lg px-3 py-1.5 border border-surface">
-                  <option>3 attempts</option>
-                  <option>5 attempts</option>
-                  <option>10 attempts</option>
+                  <option>3회</option>
+                  <option>5회</option>
+                  <option>10회</option>
                 </select>
               </div>
             </div>
@@ -370,12 +370,12 @@ const Security: React.FC = () => {
 
           {/* DID/VC Settings */}
           <div className="bg-surface rounded-xl p-4">
-            <h3 className="font-medium text-white mb-3">DID Identity</h3>
+            <h3 className="font-medium text-white mb-3">DID 신원</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-white">DID Verification</div>
-                  <div className="text-xs text-text-secondary">Require DID for admin actions</div>
+                  <div className="text-sm text-white">DID 검증</div>
+                  <div className="text-xs text-text-secondary">관리자 작업 시 DID 필수</div>
                 </div>
                 <div className="w-12 h-6 bg-primary rounded-full relative">
                   <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
@@ -383,13 +383,13 @@ const Security: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-white">Credential Expiry</div>
-                  <div className="text-xs text-text-secondary">VC validity period</div>
+                  <div className="text-sm text-white">자격증명 만료</div>
+                  <div className="text-xs text-text-secondary">VC 유효 기간</div>
                 </div>
                 <select className="bg-background text-white text-sm rounded-lg px-3 py-1.5 border border-surface">
-                  <option>90 days</option>
-                  <option>180 days</option>
-                  <option>365 days</option>
+                  <option>90일</option>
+                  <option>180일</option>
+                  <option>365일</option>
                 </select>
               </div>
             </div>
@@ -398,17 +398,17 @@ const Security: React.FC = () => {
           {/* IP Allowlist */}
           <div className="bg-surface rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-white">IP Allowlist</h3>
-              <button className="text-xs text-primary">+ Add IP</button>
+              <h3 className="font-medium text-white">IP 허용 목록</h3>
+              <button className="text-xs text-primary">+ IP 추가</button>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between bg-background rounded-lg p-2">
                 <span className="text-sm text-white">192.168.1.0/24</span>
-                <span className="text-xs text-text-secondary">Office Network</span>
+                <span className="text-xs text-text-secondary">사무실 네트워크</span>
               </div>
               <div className="flex items-center justify-between bg-background rounded-lg p-2">
                 <span className="text-sm text-white">10.0.0.0/8</span>
-                <span className="text-xs text-text-secondary">VPN Network</span>
+                <span className="text-xs text-text-secondary">VPN 네트워크</span>
               </div>
             </div>
           </div>
@@ -420,7 +420,7 @@ const Security: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end">
           <div className="w-full max-w-md mx-auto bg-surface rounded-t-3xl p-4 space-y-4 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Security Event</h2>
+              <h2 className="text-lg font-bold text-white">보안 이벤트</h2>
               <button
                 onClick={() => setSelectedEvent(null)}
                 className="p-2 hover:bg-background rounded-lg transition-colors"
@@ -440,44 +440,44 @@ const Security: React.FC = () => {
                   {getEventTypeLabel(selectedEvent.type)}
                 </div>
                 <div className={`text-sm ${getRiskColor(selectedEvent.risk).split(' ')[0]}`}>
-                  {selectedEvent.risk.toUpperCase()} Risk
+                  {selectedEvent.risk.toUpperCase()} 위험
                 </div>
               </div>
             </div>
 
             <div className="bg-background rounded-xl p-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">Event ID</span>
+                <span className="text-text-secondary text-sm">이벤트 ID</span>
                 <span className="text-white text-sm font-mono">{selectedEvent.id}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">User ID</span>
+                <span className="text-text-secondary text-sm">사용자 ID</span>
                 <span className="text-white text-sm">{selectedEvent.userId}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">Timestamp</span>
+                <span className="text-text-secondary text-sm">시간</span>
                 <span className="text-white text-sm">
                   {new Date(selectedEvent.timestamp).toLocaleString('ko-KR')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">IP Address</span>
+                <span className="text-text-secondary text-sm">IP 주소</span>
                 <span className="text-white text-sm font-mono">{selectedEvent.ipAddress}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">Location</span>
+                <span className="text-text-secondary text-sm">위치</span>
                 <span className="text-white text-sm">{selectedEvent.location}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary text-sm">Status</span>
+                <span className="text-text-secondary text-sm">상태</span>
                 <span className={`text-sm ${selectedEvent.handled ? 'text-green-500' : 'text-red-500'}`}>
-                  {selectedEvent.handled ? 'Handled' : 'Pending'}
+                  {selectedEvent.handled ? '처리됨' : '대기 중'}
                 </span>
               </div>
             </div>
 
             <div className="bg-background rounded-xl p-4">
-              <div className="text-text-secondary text-sm mb-2">User Agent</div>
+              <div className="text-text-secondary text-sm mb-2">사용자 에이전트</div>
               <div className="text-white text-xs font-mono break-all">
                 {selectedEvent.userAgent}
               </div>
@@ -486,10 +486,10 @@ const Security: React.FC = () => {
             {!selectedEvent.handled && (
               <div className="grid grid-cols-2 gap-3">
                 <button className="py-3 bg-yellow-500/20 text-yellow-500 rounded-xl font-medium">
-                  Flag as False Positive
+                  오탐으로 표시
                 </button>
                 <button className="py-3 bg-red-500 text-white rounded-xl font-medium">
-                  Block User
+                  사용자 차단
                 </button>
               </div>
             )}
@@ -498,7 +498,7 @@ const Security: React.FC = () => {
               onClick={() => setSelectedEvent(null)}
               className="w-full py-3 bg-surface-highlight text-white rounded-xl font-medium"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>

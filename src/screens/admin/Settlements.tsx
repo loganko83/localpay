@@ -108,20 +108,24 @@ const Settlements: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-4">
-      <Header title="Settlement Management" />
+      <Header title="정산 관리" />
 
       {/* Period Filter */}
       <div className="px-4 mb-4">
         <div className="flex gap-2 p-1 bg-surface rounded-xl">
-          {(['daily', 'weekly', 'monthly'] as const).map((period) => (
+          {[
+            { key: 'daily', label: '일별' },
+            { key: 'weekly', label: '주별' },
+            { key: 'monthly', label: '월별' }
+          ].map((period) => (
             <button
-              key={period}
-              onClick={() => setPeriodFilter(period)}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors capitalize ${
-                periodFilter === period ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
+              key={period.key}
+              onClick={() => setPeriodFilter(period.key as 'daily' | 'weekly' | 'monthly')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                periodFilter === period.key ? 'bg-primary text-background' : 'text-text-secondary hover:text-white'
               }`}
             >
-              {period}
+              {period.label}
             </button>
           ))}
         </div>
@@ -131,16 +135,16 @@ const Settlements: React.FC = () => {
       <div className="px-4 mb-4">
         <Card variant="balance" padding="lg">
           <div className="text-center mb-4">
-            <p className="text-sm text-text-secondary mb-1">Total Settled</p>
+            <p className="text-sm text-text-secondary mb-1">총 정산액</p>
             <h2 className="text-3xl font-bold text-white">₩{formatAmount(totalSettled)}</h2>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-surface-highlight rounded-xl">
-              <p className="text-xs text-text-secondary mb-1">Pending</p>
+              <p className="text-xs text-text-secondary mb-1">대기 중</p>
               <p className="text-lg font-bold text-yellow-500">₩{formatAmount(pendingAmount)}</p>
             </div>
             <div className="text-center p-3 bg-surface-highlight rounded-xl">
-              <p className="text-xs text-text-secondary mb-1">Error Rate</p>
+              <p className="text-xs text-text-secondary mb-1">오류율</p>
               <p className="text-lg font-bold text-red-500">
                 {((errorCount / batches.length) * 100).toFixed(1)}%
               </p>
@@ -155,12 +159,12 @@ const Settlements: React.FC = () => {
           <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
             <span className="material-symbols-outlined text-red-500">warning</span>
             <div className="flex-1">
-              <p className="text-sm font-bold text-red-500">Discrepancy Detected</p>
+              <p className="text-sm font-bold text-red-500">불일치 감지</p>
               <p className="text-xs text-text-secondary">
-                {errorCount} batch(es) require manual verification
+                {errorCount}개 배치에 수동 검증이 필요합니다
               </p>
             </div>
-            <Button variant="danger" size="sm">Review</Button>
+            <Button variant="danger" size="sm">검토</Button>
           </div>
         </div>
       )}
@@ -169,7 +173,7 @@ const Settlements: React.FC = () => {
       <div className="px-4 mb-4">
         <Input
           icon="search"
-          placeholder="Search by Merchant ID or Batch #..."
+          placeholder="가맹점 ID 또는 배치번호로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -177,7 +181,7 @@ const Settlements: React.FC = () => {
 
       {/* Batch List */}
       <div className="px-4">
-        <h3 className="text-sm font-bold text-white mb-3">Recent Batches</h3>
+        <h3 className="text-sm font-bold text-white mb-3">최근 배치</h3>
         <div className="space-y-3">
           {filteredBatches.map((batch) => (
             <Card key={batch.id} variant="transaction" padding="md">
@@ -205,18 +209,18 @@ const Settlements: React.FC = () => {
 
               <div className="flex items-center justify-between pt-2 border-t border-surface-highlight">
                 <span className="text-xs text-text-muted">
-                  {batch.transactionCount} transactions • {new Date(batch.createdAt).toLocaleDateString('ko-KR')}
+                  {batch.transactionCount}건 거래 • {new Date(batch.createdAt).toLocaleDateString('ko-KR')}
                 </span>
                 {batch.status === 'processing' && (
                   <Button variant="primary" size="sm">
                     <span className="material-symbols-outlined text-[16px] mr-1">verified</span>
-                    Verify
+                    검증
                   </Button>
                 )}
                 {batch.status === 'error' && (
                   <Button variant="danger" size="sm">
                     <span className="material-symbols-outlined text-[16px] mr-1">build</span>
-                    Fix
+                    수정
                   </Button>
                 )}
               </div>
@@ -229,7 +233,7 @@ const Settlements: React.FC = () => {
       <div className="px-4 mt-6">
         <Button variant="secondary" fullWidth>
           <span className="material-symbols-outlined mr-2">download</span>
-          Download Daily Report
+          일일 리포트 다운로드
         </Button>
       </div>
     </div>

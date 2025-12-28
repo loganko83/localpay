@@ -64,16 +64,22 @@ const mockEmployees: Employee[] = [
   },
 ];
 
-const statusFilters = ['All', 'Active', 'Pending', 'Revoked'];
+const statusFilters = ['전체', '활성', '대기 중', '해제됨'];
 
 const Employees: React.FC = () => {
   const [employees] = useState<Employee[]>(mockEmployees);
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
 
   const filteredEmployees = employees.filter((emp) => {
-    if (activeFilter !== 'All' && emp.status !== activeFilter.toLowerCase()) return false;
+    const statusMap: Record<string, string> = {
+      '전체': 'all',
+      '활성': 'active',
+      '대기 중': 'pending',
+      '해제됨': 'revoked'
+    };
+    if (activeFilter !== '전체' && emp.status !== statusMap[activeFilter]) return false;
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       return emp.name.toLowerCase().includes(query) || emp.email.toLowerCase().includes(query);
@@ -92,28 +98,28 @@ const Employees: React.FC = () => {
 
   const getRoleLabel = (role: Employee['role']) => {
     switch (role) {
-      case 'owner': return 'Owner';
-      case 'manager': return 'Manager';
-      case 'cashier': return 'Cashier';
+      case 'owner': return '대표';
+      case 'manager': return '매니저';
+      case 'cashier': return '캐셔';
       default: return role;
     }
   };
 
   const getPermissionLabel = (permissions: Employee['permissions']) => {
-    if (permissions.includes('full_access')) return 'Full Access';
-    if (permissions.includes('view_reports')) return 'POS + Reports';
-    return 'POS Only';
+    if (permissions.includes('full_access')) return '전체 권한';
+    if (permissions.includes('view_reports')) return 'POS + 리포트';
+    return 'POS 전용';
   };
 
   return (
     <div className="flex flex-col pb-24">
-      <Header title="Team Members" />
+      <Header title="팀원 관리" />
 
       {/* Search */}
       <div className="px-4 mb-4">
         <Input
           icon="search"
-          placeholder="Search employees..."
+          placeholder="직원 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -155,19 +161,19 @@ const Employees: React.FC = () => {
             <p className="text-2xl font-bold" style={{ color: theme.accent }}>
               {employees.filter((e) => e.status === 'active').length}
             </p>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>Active</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>활성</p>
           </Card>
           <Card padding="sm" className="text-center">
             <p className="text-2xl font-bold" style={{ color: '#ffa502' }}>
               {employees.filter((e) => e.status === 'pending').length}
             </p>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>Pending</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>대기 중</p>
           </Card>
           <Card padding="sm" className="text-center">
             <p className="text-2xl font-bold" style={{ color: theme.textMuted }}>
               {employees.filter((e) => e.status === 'revoked').length}
             </p>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>Revoked</p>
+            <p className="text-xs" style={{ color: theme.textSecondary }}>해제됨</p>
           </Card>
         </div>
       </div>
@@ -241,17 +247,17 @@ const Employees: React.FC = () => {
       <Modal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        title="Add Team Member"
+        title="팀원 추가"
       >
         <div className="space-y-4">
-          <Input label="Full Name" placeholder="Enter employee name" />
-          <Input label="Email" type="email" placeholder="Enter email address" />
-          <Input label="Phone" placeholder="010-0000-0000" />
+          <Input label="이름" placeholder="직원 이름을 입력하세요" />
+          <Input label="이메일" type="email" placeholder="이메일 주소를 입력하세요" />
+          <Input label="전화번호" placeholder="010-0000-0000" />
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Role</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>역할</label>
             <div className="grid grid-cols-2 gap-2">
-              {['Manager', 'Cashier'].map((role) => (
+              {['매니저', '캐셔'].map((role) => (
                 <button
                   key={role}
                   className="p-3 rounded-xl text-sm font-medium transition-colors border"
@@ -276,9 +282,9 @@ const Employees: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Permissions</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>권한</label>
             <div className="space-y-2">
-              {['POS Only', 'View Reports', 'Full Access'].map((perm) => (
+              {['POS 전용', '리포트 보기', '전체 권한'].map((perm) => (
                 <label
                   key={perm}
                   className="flex items-center gap-3 p-3 rounded-xl cursor-pointer"
@@ -296,7 +302,7 @@ const Employees: React.FC = () => {
           </div>
 
           <Button variant="primary" fullWidth size="lg">
-            Send Invitation
+            초대장 보내기
           </Button>
         </div>
       </Modal>

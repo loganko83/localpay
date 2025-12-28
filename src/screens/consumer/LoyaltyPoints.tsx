@@ -47,12 +47,12 @@ const LoyaltyPoints: React.FC = () => {
 
   const handleRedeemPoints = async () => {
     if (!userId || !selectedMerchant || !pointsToRedeem) {
-      setRedeemError('Please select a merchant and enter points amount');
+      setRedeemError('가맹점을 선택하고 포인트 금액을 입력해주세요');
       return;
     }
     const points = parseInt(pointsToRedeem);
     if (isNaN(points) || points <= 0) {
-      setRedeemError('Invalid points amount');
+      setRedeemError('유효하지 않은 포인트 금액입니다');
       return;
     }
     setIsRedeeming(true);
@@ -63,9 +63,9 @@ const LoyaltyPoints: React.FC = () => {
       setPointsToRedeem('');
       setSelectedMerchant('');
       loadMemberData();
-      alert(`Successfully redeemed ${points} points (${formatAmount(result.krwValue || 0)} KRW)`);
+      alert(`${points} 포인트 사용 완료 (${formatAmount(result.krwValue || 0)} 원)`);
     } else {
-      setRedeemError(result.error || 'Redemption failed');
+      setRedeemError(result.error || '포인트 사용 실패');
     }
   };
 
@@ -109,7 +109,7 @@ const LoyaltyPoints: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen" style={{ background: theme.bg }}>
         <span className="material-symbols-outlined text-6xl animate-spin" style={{ color: theme.accent }}>progress_activity</span>
-        <p className="mt-4" style={{ color: theme.textSecondary }}>Loading loyalty data...</p>
+        <p className="mt-4" style={{ color: theme.textSecondary }}>포인트 정보를 불러오는 중...</p>
       </div>
     );
   }
@@ -125,8 +125,8 @@ const LoyaltyPoints: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Loyalty Points</h1>
-        <button onClick={() => alert('Help')}>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>포인트</h1>
+        <button onClick={() => alert('도움말')}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.textSecondary }}>help_outline</span>
         </button>
       </header>
@@ -138,8 +138,8 @@ const LoyaltyPoints: React.FC = () => {
             <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)' }}>
               <span className="material-symbols-outlined text-2xl" style={{ color: '#eab308' }}>warning</span>
               <div>
-                <p className="text-sm font-bold" style={{ color: '#eab308' }}>Points Expiring Soon</p>
-                <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>{formatAmount(expiringPoints.points)} points will expire on {formatDate(expiringPoints.expiryDate)}</p>
+                <p className="text-sm font-bold" style={{ color: '#eab308' }}>곧 만료되는 포인트</p>
+                <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>{formatAmount(expiringPoints.points)} 포인트가 {formatDate(expiringPoints.expiryDate)}에 만료됩니다</p>
               </div>
             </div>
           </div>
@@ -151,24 +151,24 @@ const LoyaltyPoints: React.FC = () => {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <div className="inline-flex items-center px-3 py-1 rounded-full mb-2" style={{ background: `${getTierColor(member.currentTier)}20`, border: `1px solid ${getTierColor(member.currentTier)}40` }}>
-                  <span className="text-xs font-bold" style={{ color: getTierColor(member.currentTier) }}>{member.currentTier} MEMBER</span>
+                  <span className="text-xs font-bold" style={{ color: getTierColor(member.currentTier) }}>{member.currentTier} 회원</span>
                 </div>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>Member since {formatDate(member.joinedAt)}</p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>가입일: {formatDate(member.joinedAt)}</p>
               </div>
               <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: theme.accentSoft }}>
                 <span className="material-symbols-outlined text-3xl" style={{ color: theme.accent }}>stars</span>
               </div>
             </div>
             <div className="mb-4">
-              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Available Points</p>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>사용 가능 포인트</p>
               <h2 className="text-4xl font-bold" style={{ color: theme.text }}>{formatAmount(member.availablePoints)}</h2>
-              <p className="text-xs mt-1" style={{ color: theme.textMuted }}>= {formatAmount(member.availablePoints)} KRW</p>
+              <p className="text-xs mt-1" style={{ color: theme.textMuted }}>= {formatAmount(member.availablePoints)} 원</p>
             </div>
             {tierBenefits?.nextTier && (
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Progress to {tierBenefits.nextTier}</p>
-                  <p className="text-xs font-bold" style={{ color: theme.text }}>{formatAmount(member.annualSpending)} / {formatAmount(tierBenefits.spendingToNextTier)} KRW</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>{tierBenefits.nextTier} 달성까지</p>
+                  <p className="text-xs font-bold" style={{ color: theme.text }}>{formatAmount(member.annualSpending)} / {formatAmount(tierBenefits.spendingToNextTier)} 원</p>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
                   <div className="h-full transition-all duration-500" style={{ width: `${tierProgress}%`, background: theme.accent }} />
@@ -181,15 +181,15 @@ const LoyaltyPoints: React.FC = () => {
         {/* Tier Benefits */}
         {tierBenefits && (
           <div className="px-5 mb-6">
-            <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Your Benefits</h3>
+            <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>나의 혜택</h3>
             <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: theme.accentSoft }}>
                   <span className="material-symbols-outlined" style={{ color: theme.accent }}>percent</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold" style={{ color: theme.text }}>{(tierBenefits.earnRate * 100).toFixed(1)}% Point Earn Rate</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Earn {tierBenefits.earnRate * 100}% on every purchase</p>
+                  <p className="text-sm font-bold" style={{ color: theme.text }}>{(tierBenefits.earnRate * 100).toFixed(1)}% 포인트 적립률</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>모든 구매에서 {tierBenefits.earnRate * 100}% 적립</p>
                 </div>
               </div>
               {tierBenefits.benefits.map((benefit, idx) => (
@@ -204,13 +204,13 @@ const LoyaltyPoints: React.FC = () => {
 
         {/* Points Summary */}
         <div className="px-5 mb-6">
-          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Points Summary</h3>
+          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>포인트 요약</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: 'trending_up', label: 'Lifetime Points', value: formatAmount(member.lifetimePoints) },
-              { icon: 'account_balance_wallet', label: 'Total Spending', value: formatAmount(member.lifetimeSpending) },
-              { icon: 'calendar_today', label: 'Annual Spending', value: formatAmount(member.annualSpending) },
-              { icon: 'store', label: 'Merchants', value: member.preferredMerchants.length.toString() },
+              { icon: 'trending_up', label: '누적 포인트', value: formatAmount(member.lifetimePoints) },
+              { icon: 'account_balance_wallet', label: '총 사용 금액', value: formatAmount(member.lifetimeSpending) },
+              { icon: 'calendar_today', label: '연간 사용 금액', value: formatAmount(member.annualSpending) },
+              { icon: 'store', label: '가맹점', value: member.preferredMerchants.length.toString() },
             ].map((item, idx) => (
               <div key={idx} className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
                 <div className="flex items-center gap-2 mb-1">
@@ -227,9 +227,9 @@ const LoyaltyPoints: React.FC = () => {
         <div className="px-5 mb-4">
           <div className="flex gap-2">
             {[
-              { key: 'overview', label: 'Merchants', icon: 'store' },
-              { key: 'history', label: 'History', icon: 'history' },
-              { key: 'redeem', label: 'Redeem', icon: 'redeem' },
+              { key: 'overview', label: '가맹점', icon: 'store' },
+              { key: 'history', label: '내역', icon: 'history' },
+              { key: 'redeem', label: '사용', icon: 'redeem' },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -252,7 +252,7 @@ const LoyaltyPoints: React.FC = () => {
         <div className="px-5">
           {activeTab === 'overview' && (
             <div>
-              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>Earn and redeem points at these participating merchants</p>
+              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>제휴 가맹점에서 포인트를 적립하고 사용하세요</p>
               <div className="grid grid-cols-2 gap-3">
                 {merchants.map((merchant) => (
                   <button
@@ -267,7 +267,7 @@ const LoyaltyPoints: React.FC = () => {
                     <p className="text-sm font-bold mb-1" style={{ color: theme.text }}>{merchant.merchantName}</p>
                     {merchant.customEarnRate && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: theme.accentSoft, color: theme.accent }}>
-                        +{(merchant.customEarnRate * 100).toFixed(0)}% Bonus
+                        +{(merchant.customEarnRate * 100).toFixed(0)}% 보너스
                       </span>
                     )}
                   </button>
@@ -278,7 +278,7 @@ const LoyaltyPoints: React.FC = () => {
 
           {activeTab === 'history' && (
             <div>
-              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>Your point transaction history</p>
+              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>포인트 거래 내역</p>
               <div className="space-y-3">
                 {member.pointHistory.slice().reverse().map((tx) => (
                   <div key={tx.id} className="flex items-center justify-between p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
@@ -295,14 +295,14 @@ const LoyaltyPoints: React.FC = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold" style={{ color: tx.points > 0 ? '#22c55e' : theme.accent }}>{tx.points > 0 ? '+' : ''}{formatAmount(tx.points)}</p>
-                      <p className="text-xs" style={{ color: theme.textMuted }}>Balance: {formatAmount(tx.balanceAfter)}</p>
+                      <p className="text-xs" style={{ color: theme.textMuted }}>잔액: {formatAmount(tx.balanceAfter)}</p>
                     </div>
                   </div>
                 ))}
                 {member.pointHistory.length === 0 && (
                   <div className="text-center py-12">
                     <span className="material-symbols-outlined text-6xl mb-4" style={{ color: theme.textMuted }}>receipt_long</span>
-                    <p className="text-sm" style={{ color: theme.textSecondary }}>No transaction history yet</p>
+                    <p className="text-sm" style={{ color: theme.textSecondary }}>아직 거래 내역이 없습니다</p>
                   </div>
                 )}
               </div>
@@ -311,33 +311,33 @@ const LoyaltyPoints: React.FC = () => {
 
           {activeTab === 'redeem' && (
             <div>
-              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>Redeem your points for instant discounts</p>
+              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>포인트를 즉시 할인에 사용하세요</p>
               <div className="rounded-xl p-5 mb-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Points to Redeem</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>사용할 포인트</label>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[20px]" style={{ color: theme.textMuted }}>stars</span>
                     <input
                       type="number"
-                      placeholder="Enter amount"
+                      placeholder="금액 입력"
                       value={pointsToRedeem}
                       onChange={(e) => setPointsToRedeem(e.target.value)}
                       className="w-full h-12 pl-12 pr-4 rounded-xl outline-none"
                       style={{ background: theme.cardHover, border: `1px solid ${theme.border}`, color: theme.text }}
                     />
                   </div>
-                  <p className="text-xs mt-2" style={{ color: theme.textSecondary }}>Minimum: {formatAmount(sharedLoyaltyService.getConfig().minRedemptionPoints)} points</p>
+                  <p className="text-xs mt-2" style={{ color: theme.textSecondary }}>최소: {formatAmount(sharedLoyaltyService.getConfig().minRedemptionPoints)} 포인트</p>
                 </div>
 
                 {pointsToRedeem && parseInt(pointsToRedeem) > 0 && (
                   <div className="rounded-xl p-4 mb-4" style={{ background: theme.accentSoft, border: `1px solid ${theme.accent}30` }}>
-                    <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>You will receive</p>
-                    <p className="text-2xl font-bold" style={{ color: theme.accent }}>{formatAmount(parseInt(pointsToRedeem))} KRW</p>
+                    <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>할인 금액</p>
+                    <p className="text-2xl font-bold" style={{ color: theme.accent }}>{formatAmount(parseInt(pointsToRedeem))} 원</p>
                   </div>
                 )}
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>Select Merchant</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>가맹점 선택</label>
                   <div className="grid grid-cols-2 gap-2">
                     {merchants.map((merchant) => (
                       <button
@@ -375,7 +375,7 @@ const LoyaltyPoints: React.FC = () => {
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-[20px]">redeem</span>
-                      Redeem Points
+                      포인트 사용
                     </>
                   )}
                 </button>
@@ -385,12 +385,12 @@ const LoyaltyPoints: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <span className="material-symbols-outlined text-[20px]" style={{ color: '#3b82f6' }}>info</span>
                   <div>
-                    <p className="text-xs font-bold mb-1" style={{ color: theme.text }}>How Redemption Works</p>
+                    <p className="text-xs font-bold mb-1" style={{ color: theme.text }}>포인트 사용 안내</p>
                     <ul className="text-xs space-y-1" style={{ color: theme.textSecondary }}>
-                      <li>1 point = 1 KRW discount</li>
-                      <li>Minimum redemption: {formatAmount(sharedLoyaltyService.getConfig().minRedemptionPoints)} points</li>
-                      <li>Redeemed value can be used at selected merchant</li>
-                      <li>No expiry on redeemed credits</li>
+                      <li>1 포인트 = 1원 할인</li>
+                      <li>최소 사용: {formatAmount(sharedLoyaltyService.getConfig().minRedemptionPoints)} 포인트</li>
+                      <li>선택한 가맹점에서 사용 가능</li>
+                      <li>사용된 포인트는 만료 없음</li>
                     </ul>
                   </div>
                 </div>

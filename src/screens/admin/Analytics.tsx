@@ -38,11 +38,11 @@ const userGrowthData = [
 ];
 
 const merchantCategoryData = [
-  { name: 'Food & Beverage', value: 35, color: '#2b8cee' },
-  { name: 'Retail', value: 25, color: '#22c55e' },
-  { name: 'Services', value: 20, color: '#f59e0b' },
-  { name: 'Traditional Market', value: 12, color: '#ec4899' },
-  { name: 'Others', value: 8, color: '#8b5cf6' },
+  { name: '음식/음료', value: 35, color: '#2b8cee' },
+  { name: '소매', value: 25, color: '#22c55e' },
+  { name: '서비스', value: 20, color: '#f59e0b' },
+  { name: '전통시장', value: 12, color: '#ec4899' },
+  { name: '기타', value: 8, color: '#8b5cf6' },
 ];
 
 const regionalData = [
@@ -78,9 +78,9 @@ const Analytics: React.FC = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Analytics</h1>
+          <h1 className="text-2xl font-bold text-white">분석</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Platform performance and insights
+            플랫폼 성능 및 인사이트
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -103,28 +103,28 @@ const Analytics: React.FC = () => {
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
-          title="Total Issuance"
+          title="총 발행량"
           value={`₩${formatCurrency(metrics?.totalIssuance || 45200000000)}`}
           change="+2.4%"
           positive
           icon="account_balance_wallet"
         />
         <MetricCard
-          title="24h Volume"
+          title="24시간 거래량"
           value={`₩${formatCurrency(metrics?.volume24h || 2100000000)}`}
           change="+5.4%"
           positive
           icon="sync_alt"
         />
         <MetricCard
-          title="Active Users"
+          title="활성 사용자"
           value={formatCurrency(metrics?.activeUsers || 342100)}
           change="+1.2%"
           positive
           icon="groups"
         />
         <MetricCard
-          title="Verification Rate"
+          title="검증률"
           value={`${metrics?.verificationRate || 99.8}%`}
           change="+0.1%"
           positive
@@ -136,7 +136,7 @@ const Analytics: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Transaction Volume */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Transaction Volume</h3>
+          <h3 className="text-white font-semibold mb-4">거래량</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={transactionVolumeData}>
@@ -163,7 +163,7 @@ const Analytics: React.FC = () => {
                   stroke="#2b8cee"
                   strokeWidth={2}
                   fill="url(#colorVolume)"
-                  name="Volume (B KRW)"
+                  name="거래량 (B KRW)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -172,7 +172,7 @@ const Analytics: React.FC = () => {
 
         {/* User Growth */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">User Growth</h3>
+          <h3 className="text-white font-semibold mb-4">사용자 증가</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={userGrowthData}>
@@ -186,8 +186,8 @@ const Analytics: React.FC = () => {
                     borderRadius: 8,
                   }}
                 />
-                <Bar dataKey="users" fill="#2b8cee" name="Total Users" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="newUsers" fill="#22c55e" name="New Users" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="users" fill="#2b8cee" name="전체 사용자" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="newUsers" fill="#22c55e" name="신규 사용자" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -198,7 +198,7 @@ const Analytics: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Merchant Categories */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-4">Merchant Categories</h3>
+          <h3 className="text-white font-semibold mb-4">가맹점 카테고리</h3>
           <div className="h-64 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -243,7 +243,7 @@ const Analytics: React.FC = () => {
 
         {/* Regional Distribution */}
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6 lg:col-span-2">
-          <h3 className="text-white font-semibold mb-4">Regional Distribution</h3>
+          <h3 className="text-white font-semibold mb-4">지역별 분포</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={regionalData} layout="vertical">
@@ -257,7 +257,7 @@ const Analytics: React.FC = () => {
                     borderRadius: 8,
                   }}
                 />
-                <Bar dataKey="volume" fill="#2b8cee" name="Volume (M KRW)" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="volume" fill="#2b8cee" name="거래량 (M KRW)" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -266,7 +266,7 @@ const Analytics: React.FC = () => {
 
       {/* Hourly Pattern */}
       <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
-        <h3 className="text-white font-semibold mb-4">Hourly Transaction Pattern</h3>
+        <h3 className="text-white font-semibold mb-4">시간대별 거래 패턴</h3>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={hourlyPatternData}>
@@ -286,7 +286,7 @@ const Analytics: React.FC = () => {
                 stroke="#22c55e"
                 strokeWidth={2}
                 dot={false}
-                name="Transaction Volume"
+                name="거래량"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -301,7 +301,7 @@ const Analytics: React.FC = () => {
               <span className="material-symbols-outlined text-green-500">token</span>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">Block Height</p>
+              <p className="text-gray-400 text-sm">블록 높이</p>
               <p className="text-white text-xl font-bold font-mono">
                 #{(networkStatus?.blockHeight || 12404200).toLocaleString()}
               </p>
@@ -312,7 +312,7 @@ const Analytics: React.FC = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
             </span>
-            Xphere Connected
+            Xphere 연결됨
           </div>
         </div>
 
@@ -322,13 +322,13 @@ const Analytics: React.FC = () => {
               <span className="material-symbols-outlined text-primary">history</span>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">Anchored Logs</p>
+              <p className="text-gray-400 text-sm">앵커링된 로그</p>
               <p className="text-white text-xl font-bold">
                 {(metrics?.anchoredLogs || 156789).toLocaleString()}
               </p>
             </div>
           </div>
-          <p className="text-gray-500 text-sm">All audit logs anchored to blockchain</p>
+          <p className="text-gray-500 text-sm">모든 감사 로그가 블록체인에 앵커링됨</p>
         </div>
 
         <div className="bg-gray-900/50 border border-white/5 rounded-xl p-6">
@@ -337,13 +337,13 @@ const Analytics: React.FC = () => {
               <span className="material-symbols-outlined text-yellow-500">eco</span>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">CO2 Saved</p>
+              <p className="text-gray-400 text-sm">CO2 절감량</p>
               <p className="text-white text-xl font-bold">
-                {metrics?.co2Saved || 142.5} tons
+                {metrics?.co2Saved || 142.5} 톤
               </p>
             </div>
           </div>
-          <p className="text-gray-500 text-sm">Through carbon point incentives</p>
+          <p className="text-gray-500 text-sm">탄소 포인트 인센티브를 통해</p>
         </div>
       </div>
     </div>

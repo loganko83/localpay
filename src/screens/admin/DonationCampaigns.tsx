@@ -87,7 +87,7 @@ const DonationCampaigns: React.FC = () => {
 
   const handleCreateCampaign = () => {
     if (!campaignForm.charityId || !campaignForm.title || !campaignForm.targetAmount || !campaignForm.endDate) {
-      alert('Please fill all required fields');
+      alert('모든 필수 항목을 입력해 주세요');
       return;
     }
 
@@ -113,13 +113,13 @@ const DonationCampaigns: React.FC = () => {
         impactMetrics: '',
       });
     } else {
-      alert('Failed to create campaign');
+      alert('캠페인 생성에 실패했습니다');
     }
   };
 
   const handleCreateOrganization = () => {
     if (!orgForm.name || !orgForm.registrationNumber || !orgForm.description) {
-      alert('Please fill all required fields');
+      alert('모든 필수 항목을 입력해 주세요');
       return;
     }
 
@@ -164,10 +164,10 @@ const DonationCampaigns: React.FC = () => {
   ];
 
   const topCampaigns = [
-    { name: 'Children Education Fund', raised: 245000000, donors: 1234 },
-    { name: 'Medical Relief', raised: 198000000, donors: 987 },
-    { name: 'Disaster Recovery', raised: 167000000, donors: 756 },
-    { name: 'Environmental Protection', raised: 134000000, donors: 543 },
+    { name: '아동 교육 기금', raised: 245000000, donors: 1234 },
+    { name: '의료 구호', raised: 198000000, donors: 987 },
+    { name: '재해 복구', raised: 167000000, donors: 756 },
+    { name: '환경 보호', raised: 134000000, donors: 543 },
   ];
 
   const platformOverview = {
@@ -192,10 +192,10 @@ const DonationCampaigns: React.FC = () => {
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
         {[
-          { key: 'active', label: 'Active', count: 24 },
-          { key: 'pending', label: 'Pending Approval', count: 8 },
-          { key: 'completed', label: 'Completed', count: 156 },
-          { key: 'rejected', label: 'Rejected', count: 3 },
+          { key: 'active', label: '활성', count: 24 },
+          { key: 'pending', label: '승인 대기', count: 8 },
+          { key: 'completed', label: '완료', count: 156 },
+          { key: 'rejected', label: '거절됨', count: 3 },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -224,12 +224,12 @@ const DonationCampaigns: React.FC = () => {
               <span className="material-symbols-outlined text-5xl text-text-muted mb-3">
                 campaign
               </span>
-              <p className="text-text-secondary">No campaigns found</p>
+              <p className="text-text-secondary">캠페인이 없습니다</p>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="mt-4 px-4 py-2 bg-[#2b8cee] text-white rounded-xl text-sm font-medium"
               >
-                Create First Campaign
+                첫 캠페인 만들기
               </button>
             </div>
           </Card>
@@ -258,10 +258,10 @@ const DonationCampaigns: React.FC = () => {
                   <div>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-white font-medium">
-                        {formatAmount(campaign.raisedAmount)} raised
+                        {formatAmount(campaign.raisedAmount)} 모금
                       </span>
                       <span className="text-text-secondary">
-                        of {formatAmount(campaign.targetAmount)}
+                        목표 {formatAmount(campaign.targetAmount)}
                       </span>
                     </div>
                     <div className="h-2 bg-surface-highlight rounded-full overflow-hidden">
@@ -272,7 +272,7 @@ const DonationCampaigns: React.FC = () => {
                     </div>
                     <div className="flex justify-between text-xs mt-1">
                       <span className="text-primary font-medium">{progress}%</span>
-                      <span className="text-text-muted">{daysLeft} days left</span>
+                      <span className="text-text-muted">{daysLeft}일 남음</span>
                     </div>
                   </div>
 
@@ -282,7 +282,7 @@ const DonationCampaigns: React.FC = () => {
                       <span className="material-symbols-outlined text-[14px] text-text-muted">
                         group
                       </span>
-                      <span className="text-text-secondary">{campaign.donorCount} donors</span>
+                      <span className="text-text-secondary">{campaign.donorCount}명 기부자</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px] text-text-muted">
@@ -297,13 +297,13 @@ const DonationCampaigns: React.FC = () => {
                   {/* Actions */}
                   <div className="flex gap-2 pt-2 border-t border-surface-highlight">
                     <button className="flex-1 py-2 bg-surface-highlight text-white text-xs font-medium rounded-lg active:scale-95 transition-transform">
-                      Edit
+                      수정
                     </button>
                     <button className="flex-1 py-2 bg-yellow-500/20 text-yellow-500 text-xs font-medium rounded-lg active:scale-95 transition-transform">
-                      Pause
+                      일시정지
                     </button>
                     <button className="flex-1 py-2 bg-red-500/20 text-red-500 text-xs font-medium rounded-lg active:scale-95 transition-transform">
-                      Close
+                      종료
                     </button>
                   </div>
                 </div>
@@ -318,12 +318,12 @@ const DonationCampaigns: React.FC = () => {
   const renderOrganizations = () => (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-sm font-bold text-white">Registered Organizations</h3>
+        <h3 className="text-sm font-bold text-white">등록된 단체</h3>
         <button
           onClick={() => setShowOrgModal(true)}
           className="px-3 py-1.5 bg-[#2b8cee] text-white text-xs font-medium rounded-lg"
         >
-          Add Organization
+          단체 추가
         </button>
       </div>
 
@@ -334,7 +334,7 @@ const DonationCampaigns: React.FC = () => {
               <span className="material-symbols-outlined text-5xl text-text-muted mb-3">
                 business
               </span>
-              <p className="text-text-secondary">No organizations registered</p>
+              <p className="text-text-secondary">등록된 단체가 없습니다</p>
             </div>
           </Card>
         ) : (
@@ -347,35 +347,35 @@ const DonationCampaigns: React.FC = () => {
                     <p className="text-xs text-text-secondary">Reg: {org.registrationNumber}</p>
                   </div>
                   <Badge variant={org.isVerified ? 'success' : 'warning'}>
-                    {org.isVerified ? 'Verified' : 'Pending'}
+                    {org.isVerified ? '인증됨' : '대기 중'}
                   </Badge>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <p className="text-text-muted mb-1">Category</p>
+                    <p className="text-text-muted mb-1">카테고리</p>
                     <p className="text-white font-medium">{org.category}</p>
                   </div>
                   <div>
-                    <p className="text-text-muted mb-1">Type</p>
+                    <p className="text-text-muted mb-1">유형</p>
                     <p className="text-white font-medium">{org.donationType}</p>
                   </div>
                   <div>
-                    <p className="text-text-muted mb-1">Total Received</p>
+                    <p className="text-text-muted mb-1">총 수령액</p>
                     <p className="text-primary font-medium">{formatAmount(org.totalReceived)}</p>
                   </div>
                   <div>
-                    <p className="text-text-muted mb-1">Distributed</p>
+                    <p className="text-text-muted mb-1">배분액</p>
                     <p className="text-primary font-medium">{formatAmount(org.totalDistributed)}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2 pt-2 border-t border-surface-highlight">
                   <button className="flex-1 py-2 bg-surface-highlight text-white text-xs font-medium rounded-lg">
-                    View Details
+                    상세 보기
                   </button>
                   <button className="flex-1 py-2 bg-surface-highlight text-white text-xs font-medium rounded-lg">
-                    Documents
+                    서류
                   </button>
                 </div>
               </div>
@@ -390,7 +390,7 @@ const DonationCampaigns: React.FC = () => {
     <div className="space-y-4">
       {/* Donation Trend Chart */}
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Donation Trend</h3>
+        <h3 className="text-sm font-bold text-white mb-4">기부 추이</h3>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={donationTrendData}>
@@ -414,7 +414,7 @@ const DonationCampaigns: React.FC = () => {
               />
               <Tooltip
                 contentStyle={{ backgroundColor: '#1c242c', borderColor: '#2a3540', borderRadius: '8px' }}
-                formatter={(value) => [`₩${value}M`, 'Donations']}
+                formatter={(value) => [`₩${value}M`, '기부금']}
               />
               <Area
                 type="monotone"
@@ -430,7 +430,7 @@ const DonationCampaigns: React.FC = () => {
 
       {/* Category Breakdown */}
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Donations by Category</h3>
+        <h3 className="text-sm font-bold text-white mb-4">카테고리별 기부금</h3>
         <div className="flex items-center gap-4">
           <div className="h-40 w-40">
             <ResponsiveContainer width="100%" height="100%">
@@ -470,7 +470,7 @@ const DonationCampaigns: React.FC = () => {
 
       {/* Top Campaigns */}
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Top Performing Campaigns</h3>
+        <h3 className="text-sm font-bold text-white mb-4">상위 캠페인</h3>
         <div className="space-y-3">
           {topCampaigns.map((campaign, index) => (
             <div key={campaign.name} className="flex items-center gap-3">
@@ -479,7 +479,7 @@ const DonationCampaigns: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-white font-medium truncate">{campaign.name}</p>
-                <p className="text-xs text-text-secondary">{campaign.donors} donors</p>
+                <p className="text-xs text-text-secondary">{campaign.donors}명 기부자</p>
               </div>
               <p className="text-sm text-primary font-bold">{formatAmount(campaign.raised)}</p>
             </div>
@@ -489,13 +489,13 @@ const DonationCampaigns: React.FC = () => {
 
       {/* Donor Demographics */}
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Donor Demographics</h3>
+        <h3 className="text-sm font-bold text-white mb-4">기부자 통계</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Age 20-30', value: '28%', icon: 'person' },
-            { label: 'Age 31-40', value: '34%', icon: 'person' },
-            { label: 'Age 41-50', value: '22%', icon: 'person' },
-            { label: 'Age 51+', value: '16%', icon: 'person' },
+            { label: '20-30세', value: '28%', icon: 'person' },
+            { label: '31-40세', value: '34%', icon: 'person' },
+            { label: '41-50세', value: '22%', icon: 'person' },
+            { label: '51세 이상', value: '16%', icon: 'person' },
           ].map((item) => (
             <div key={item.label} className="p-3 bg-surface-highlight rounded-lg">
               <div className="flex items-center gap-2 mb-1">
@@ -516,7 +516,7 @@ const DonationCampaigns: React.FC = () => {
     <div className="space-y-4">
       <Card padding="lg">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold text-white">Pending Tax Receipts</h3>
+          <h3 className="text-sm font-bold text-white">대기 중인 기부금 영수증</h3>
           <Badge variant="warning">{pendingReceipts.length}</Badge>
         </div>
 
@@ -525,7 +525,7 @@ const DonationCampaigns: React.FC = () => {
             <div key={receipt.id} className="p-3 bg-surface-highlight rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm font-medium text-white">{receipt.donor}</p>
-                <Badge variant="warning" size="sm">Pending</Badge>
+                <Badge variant="warning" size="sm">대기 중</Badge>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-text-secondary">
@@ -539,13 +539,13 @@ const DonationCampaigns: React.FC = () => {
 
         <div className="flex gap-2">
           <button className="flex-1 py-2 bg-[#2b8cee] text-white text-sm font-medium rounded-lg">
-            Generate Batch Receipts
+            일괄 영수증 발급
           </button>
         </div>
       </Card>
 
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Receipt History</h3>
+        <h3 className="text-sm font-bold text-white mb-4">영수증 기록</h3>
         <div className="space-y-2">
           {[
             { id: 'RCP-2024-001', donor: 'Park JiHo', amount: 500000, date: Date.now() - 604800000, status: 'issued' },
@@ -573,13 +573,13 @@ const DonationCampaigns: React.FC = () => {
   const renderTransparency = () => (
     <div className="space-y-4">
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Fund Allocation</h3>
+        <h3 className="text-sm font-bold text-white mb-4">자금 배분</h3>
         <div className="space-y-3">
           {[
-            { category: 'Program Expenses', amount: 756000000, percentage: 72, color: '#2b8cee' },
-            { category: 'Administrative Costs', amount: 126000000, percentage: 12, color: '#f59e0b' },
-            { category: 'Fundraising Expenses', amount: 84000000, percentage: 8, color: '#8b5cf6' },
-            { category: 'Reserve Fund', amount: 84000000, percentage: 8, color: '#6b7280' },
+            { category: '사업비', amount: 756000000, percentage: 72, color: '#2b8cee' },
+            { category: '관리비', amount: 126000000, percentage: 12, color: '#f59e0b' },
+            { category: '모금비', amount: 84000000, percentage: 8, color: '#8b5cf6' },
+            { category: '예비비', amount: 84000000, percentage: 8, color: '#6b7280' },
           ].map((item) => (
             <div key={item.category}>
               <div className="flex justify-between text-xs mb-1">
@@ -599,24 +599,24 @@ const DonationCampaigns: React.FC = () => {
       </Card>
 
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Blockchain Verification</h3>
+        <h3 className="text-sm font-bold text-white mb-4">블록체인 검증</h3>
         <div className="space-y-3">
           {[
-            { type: 'Donation Record', hash: '0xaf4...b2e9', verified: true },
-            { type: 'Fund Distribution', hash: '0x7cd...4a1f', verified: true },
-            { type: 'Impact Report', hash: '0x2e8...9c3d', verified: true },
+            { type: '기부 기록', hash: '0xaf4...b2e9', verified: true },
+            { type: '자금 배분', hash: '0x7cd...4a1f', verified: true },
+            { type: '성과 보고', hash: '0x2e8...9c3d', verified: true },
           ].map((item, index) => (
             <div key={index} className="p-3 bg-surface rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm text-white font-medium">{item.type}</p>
                 <Badge variant="success" size="sm">
                   <span className="material-symbols-outlined text-[10px]">verified</span>
-                  Verified
+                  검증됨
                 </Badge>
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-xs text-text-muted font-mono">{item.hash}</p>
-                <button className="text-[#2b8cee] text-xs">View</button>
+                <button className="text-[#2b8cee] text-xs">보기</button>
               </div>
             </div>
           ))}
@@ -624,13 +624,13 @@ const DonationCampaigns: React.FC = () => {
       </Card>
 
       <Card padding="lg">
-        <h3 className="text-sm font-bold text-white mb-4">Impact Metrics Summary</h3>
+        <h3 className="text-sm font-bold text-white mb-4">성과 지표 요약</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Beneficiaries', value: '12,345', icon: 'group' },
-            { label: 'Projects Completed', value: '87', icon: 'task_alt' },
-            { label: 'Communities Served', value: '23', icon: 'location_on' },
-            { label: 'Transparency Score', value: '94/100', icon: 'verified' },
+            { label: '수혜자', value: '12,345', icon: 'group' },
+            { label: '완료된 프로젝트', value: '87', icon: 'task_alt' },
+            { label: '지원 지역', value: '23', icon: 'location_on' },
+            { label: '투명성 점수', value: '94/100', icon: 'verified' },
           ].map((metric) => (
             <div key={metric.label} className="p-3 bg-surface-highlight rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -653,8 +653,8 @@ const DonationCampaigns: React.FC = () => {
       <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md px-4 py-4 border-b border-surface">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h1 className="text-lg font-bold text-white">Donation Platform</h1>
-            <p className="text-xs text-text-secondary">Transparent donation management</p>
+            <h1 className="text-lg font-bold text-white">기부 플랫폼</h1>
+            <p className="text-xs text-text-secondary">투명한 기부금 관리</p>
           </div>
           {viewMode === 'campaigns' && (
             <button
@@ -669,11 +669,11 @@ const DonationCampaigns: React.FC = () => {
         {/* View Mode Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
           {[
-            { key: 'campaigns', label: 'Campaigns', icon: 'campaign' },
-            { key: 'organizations', label: 'Organizations', icon: 'business' },
-            { key: 'analytics', label: 'Analytics', icon: 'analytics' },
-            { key: 'receipts', label: 'Receipts', icon: 'receipt' },
-            { key: 'transparency', label: 'Transparency', icon: 'verified' },
+            { key: 'campaigns', label: '캠페인', icon: 'campaign' },
+            { key: 'organizations', label: '단체', icon: 'business' },
+            { key: 'analytics', label: '분석', icon: 'analytics' },
+            { key: 'receipts', label: '영수증', icon: 'receipt' },
+            { key: 'transparency', label: '투명성', icon: 'verified' },
           ].map((mode) => (
             <button
               key={mode.key}
@@ -694,37 +694,37 @@ const DonationCampaigns: React.FC = () => {
       {/* Platform Overview */}
       <div className="px-4 py-4 grid grid-cols-2 gap-3">
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Total Donations</p>
+          <p className="text-xs text-text-secondary mb-1">총 기부금</p>
           <p className="text-xl font-bold text-white">{formatAmount(platformOverview.totalDonations)}</p>
-          <p className="text-xs text-[#2b8cee] mt-1">+12.5% this month</p>
+          <p className="text-xs text-[#2b8cee] mt-1">이번 달 +12.5%</p>
         </Card>
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Active Campaigns</p>
+          <p className="text-xs text-text-secondary mb-1">활성 캠페인</p>
           <p className="text-xl font-bold text-white">{platformOverview.activeCampaigns}</p>
-          <p className="text-xs text-[#2b8cee] mt-1">+3 this week</p>
+          <p className="text-xs text-[#2b8cee] mt-1">이번 주 +3</p>
         </Card>
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Success Rate</p>
+          <p className="text-xs text-text-secondary mb-1">달성률</p>
           <p className="text-xl font-bold text-white">{platformOverview.successRate}%</p>
-          <p className="text-xs text-primary mt-1">Above average</p>
+          <p className="text-xs text-primary mt-1">평균 이상</p>
         </Card>
         <Card padding="md">
-          <p className="text-xs text-text-secondary mb-1">Organizations</p>
+          <p className="text-xs text-text-secondary mb-1">등록 단체</p>
           <p className="text-xl font-bold text-white">{platformOverview.registeredOrgs}</p>
-          <p className="text-xs text-primary mt-1">+8 verified</p>
+          <p className="text-xs text-primary mt-1">+8 인증됨</p>
         </Card>
       </div>
 
       {/* Stats Cards */}
       <div className="px-4 mb-6">
-        <h3 className="text-sm font-bold text-white mb-3">This Month Statistics</h3>
+        <h3 className="text-sm font-bold text-white mb-3">이번 달 통계</h3>
         <div className="grid grid-cols-2 gap-3">
           <Card padding="md">
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-[16px] text-[#2b8cee]">
                 payments
               </span>
-              <p className="text-xs text-text-secondary">Month Donations</p>
+              <p className="text-xs text-text-secondary">월간 기부금</p>
             </div>
             <p className="text-lg font-bold text-white">{formatAmount(platformOverview.thisMonth)}</p>
           </Card>
@@ -733,7 +733,7 @@ const DonationCampaigns: React.FC = () => {
               <span className="material-symbols-outlined text-[16px] text-[#2b8cee]">
                 calculate
               </span>
-              <p className="text-xs text-text-secondary">Average Donation</p>
+              <p className="text-xs text-text-secondary">평균 기부금</p>
             </div>
             <p className="text-lg font-bold text-white">{formatAmount(platformOverview.avgDonation)}</p>
           </Card>
@@ -742,7 +742,7 @@ const DonationCampaigns: React.FC = () => {
               <span className="material-symbols-outlined text-[16px] text-[#2b8cee]">
                 person_add
               </span>
-              <p className="text-xs text-text-secondary">New Donors</p>
+              <p className="text-xs text-text-secondary">신규 기부자</p>
             </div>
             <p className="text-lg font-bold text-white">{platformOverview.newDonors}</p>
           </Card>
@@ -751,7 +751,7 @@ const DonationCampaigns: React.FC = () => {
               <span className="material-symbols-outlined text-[16px] text-[#2b8cee]">
                 autorenew
               </span>
-              <p className="text-xs text-text-secondary">Recurring Donors</p>
+              <p className="text-xs text-text-secondary">정기 기부자</p>
             </div>
             <p className="text-lg font-bold text-white">{platformOverview.recurringDonors}</p>
           </Card>
@@ -771,17 +771,17 @@ const DonationCampaigns: React.FC = () => {
       <Modal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        title="Create Donation Campaign"
+        title="기부 캠페인 만들기"
       >
         <div className="space-y-4 mt-4">
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Organization</label>
+            <label className="block text-xs text-text-secondary mb-2">단체</label>
             <select
               value={campaignForm.charityId}
               onChange={(e) => setCampaignForm({ ...campaignForm, charityId: e.target.value })}
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm"
             >
-              <option value="">Select Organization</option>
+              <option value="">단체 선택</option>
               {organizations.map((org) => (
                 <option key={org.id} value={org.id}>{org.name}</option>
               ))}
@@ -789,75 +789,75 @@ const DonationCampaigns: React.FC = () => {
           </div>
 
           <Input
-            label="Campaign Title"
+            label="캠페인 제목"
             value={campaignForm.title}
             onChange={(e) => setCampaignForm({ ...campaignForm, title: e.target.value })}
-            placeholder="Enter campaign title"
+            placeholder="캠페인 제목 입력"
           />
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Description</label>
+            <label className="block text-xs text-text-secondary mb-2">설명</label>
             <textarea
               value={campaignForm.description}
               onChange={(e) => setCampaignForm({ ...campaignForm, description: e.target.value })}
-              placeholder="Describe the campaign purpose and goals"
+              placeholder="캠페인의 목적과 목표를 설명해 주세요"
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm resize-none"
               rows={3}
             />
           </div>
 
           <Input
-            label="Goal Amount (KRW)"
+            label="목표 금액 (원)"
             type="number"
             value={campaignForm.targetAmount || ''}
             onChange={(e) => setCampaignForm({ ...campaignForm, targetAmount: Number(e.target.value) })}
-            placeholder="Enter target amount"
+            placeholder="목표 금액 입력"
           />
 
           <Input
-            label="End Date"
+            label="종료일"
             type="date"
             value={campaignForm.endDate}
             onChange={(e) => setCampaignForm({ ...campaignForm, endDate: e.target.value })}
           />
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Category</label>
+            <label className="block text-xs text-text-secondary mb-2">카테고리</label>
             <select
               value={campaignForm.category}
               onChange={(e) => setCampaignForm({ ...campaignForm, category: e.target.value as CharityCategory })}
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm"
             >
-              <option value="WELFARE">Welfare</option>
-              <option value="EDUCATION">Education</option>
-              <option value="MEDICAL">Medical</option>
-              <option value="DISASTER">Disaster Relief</option>
-              <option value="ENVIRONMENT">Environment</option>
-              <option value="CULTURE">Culture</option>
-              <option value="INTERNATIONAL">International Aid</option>
-              <option value="LOCAL_COMMUNITY">Local Community</option>
+              <option value="WELFARE">복지</option>
+              <option value="EDUCATION">교육</option>
+              <option value="MEDICAL">의료</option>
+              <option value="DISASTER">재해 구호</option>
+              <option value="ENVIRONMENT">환경</option>
+              <option value="CULTURE">문화</option>
+              <option value="INTERNATIONAL">국제 원조</option>
+              <option value="LOCAL_COMMUNITY">지역사회</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Impact Metrics</label>
+            <label className="block text-xs text-text-secondary mb-2">성과 지표</label>
             <textarea
               value={campaignForm.impactMetrics}
               onChange={(e) => setCampaignForm({ ...campaignForm, impactMetrics: e.target.value })}
-              placeholder="Define measurable impact goals"
+              placeholder="측정 가능한 성과 목표를 정의하세요"
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm resize-none"
               rows={2}
             />
           </div>
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Campaign Image</label>
+            <label className="block text-xs text-text-secondary mb-2">캠페인 이미지</label>
             <div className="h-32 border-2 border-dashed border-surface-highlight rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <span className="material-symbols-outlined text-3xl text-text-muted mb-2">
                   add_photo_alternate
                 </span>
-                <p className="text-xs text-text-secondary">Upload campaign image</p>
+                <p className="text-xs text-text-secondary">캠페인 이미지 업로드</p>
               </div>
             </div>
           </div>
@@ -867,7 +867,7 @@ const DonationCampaigns: React.FC = () => {
             variant="primary"
             className="w-full"
           >
-            Create Campaign
+            캠페인 만들기
           </Button>
         </div>
       </Modal>
@@ -876,68 +876,68 @@ const DonationCampaigns: React.FC = () => {
       <Modal
         isOpen={showOrgModal}
         onClose={() => setShowOrgModal(false)}
-        title="Register Organization"
+        title="단체 등록"
       >
         <div className="space-y-4 mt-4">
           <Input
-            label="Organization Name"
+            label="단체명"
             value={orgForm.name}
             onChange={(e) => setOrgForm({ ...orgForm, name: e.target.value })}
-            placeholder="Enter organization name"
+            placeholder="단체명 입력"
           />
 
           <Input
-            label="Registration Number"
+            label="등록번호"
             value={orgForm.registrationNumber}
             onChange={(e) => setOrgForm({ ...orgForm, registrationNumber: e.target.value })}
-            placeholder="Ministry registration number"
+            placeholder="관청 등록번호"
           />
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Category</label>
+            <label className="block text-xs text-text-secondary mb-2">카테고리</label>
             <select
               value={orgForm.category}
               onChange={(e) => setOrgForm({ ...orgForm, category: e.target.value as CharityCategory })}
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm"
             >
-              <option value="WELFARE">Welfare</option>
-              <option value="EDUCATION">Education</option>
-              <option value="MEDICAL">Medical</option>
-              <option value="DISASTER">Disaster Relief</option>
-              <option value="ENVIRONMENT">Environment</option>
-              <option value="CULTURE">Culture</option>
-              <option value="INTERNATIONAL">International Aid</option>
-              <option value="LOCAL_COMMUNITY">Local Community</option>
+              <option value="WELFARE">복지</option>
+              <option value="EDUCATION">교육</option>
+              <option value="MEDICAL">의료</option>
+              <option value="DISASTER">재해 구호</option>
+              <option value="ENVIRONMENT">환경</option>
+              <option value="CULTURE">문화</option>
+              <option value="INTERNATIONAL">국제 원조</option>
+              <option value="LOCAL_COMMUNITY">지역사회</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Donation Type</label>
+            <label className="block text-xs text-text-secondary mb-2">기부 유형</label>
             <select
               value={orgForm.donationType}
               onChange={(e) => setOrgForm({ ...orgForm, donationType: e.target.value as DonationType })}
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm"
             >
-              <option value="STATUTORY">Statutory</option>
-              <option value="DESIGNATED">Designated</option>
-              <option value="POLITICAL">Political</option>
-              <option value="RELIGIOUS">Religious</option>
+              <option value="STATUTORY">법정</option>
+              <option value="DESIGNATED">지정</option>
+              <option value="POLITICAL">정치</option>
+              <option value="RELIGIOUS">종교</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs text-text-secondary mb-2">Description</label>
+            <label className="block text-xs text-text-secondary mb-2">설명</label>
             <textarea
               value={orgForm.description}
               onChange={(e) => setOrgForm({ ...orgForm, description: e.target.value })}
-              placeholder="Organization mission and activities"
+              placeholder="단체의 미션과 활동 내용"
               className="w-full px-3 py-2 bg-surface border border-surface-highlight rounded-lg text-white text-sm resize-none"
               rows={3}
             />
           </div>
 
           <Input
-            label="Website (Optional)"
+            label="웹사이트 (선택)"
             value={orgForm.website}
             onChange={(e) => setOrgForm({ ...orgForm, website: e.target.value })}
             placeholder="https://example.org"
@@ -948,7 +948,7 @@ const DonationCampaigns: React.FC = () => {
             variant="primary"
             className="w-full"
           >
-            Register Organization
+            단체 등록
           </Button>
         </div>
       </Modal>

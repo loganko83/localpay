@@ -20,10 +20,10 @@ const Home: React.FC = () => {
     const diffMs = now.getTime() - date.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffHours < 48) return 'Yesterday';
-    return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    if (diffHours < 1) return '방금';
+    if (diffHours < 24) return `${diffHours}시간 전`;
+    if (diffHours < 48) return '어제';
+    return date.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
   };
 
 
@@ -43,8 +43,8 @@ const Home: React.FC = () => {
             <span className="material-symbols-outlined text-white text-[20px]">person</span>
           </div>
           <div>
-            <p style={{ color: theme.textMuted }} className="text-xs">Location</p>
-            <p style={{ color: theme.text }} className="text-sm font-semibold">Busan, Korea</p>
+            <p style={{ color: theme.textMuted }} className="text-xs">현재 위치</p>
+            <p style={{ color: theme.text }} className="text-sm font-semibold">부산광역시</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -73,11 +73,11 @@ const Home: React.FC = () => {
         >
           <div className="flex justify-between items-start mb-5">
             <div>
-              <p style={{ color: theme.textSecondary }} className="text-sm mb-1">Total Balance</p>
+              <p style={{ color: theme.textSecondary }} className="text-sm mb-1">총 잔액</p>
               <h2 style={{ color: theme.text }} className="text-3xl font-bold">
                 {formatAmount(wallet?.balance || 150000)}
               </h2>
-              <p style={{ color: theme.textMuted }} className="text-sm mt-1">B-Coin</p>
+              <p style={{ color: theme.textMuted }} className="text-sm mt-1">B코인</p>
             </div>
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center"
@@ -94,7 +94,7 @@ const Home: React.FC = () => {
               style={{ background: theme.accent, color: '#fff' }}
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
-              Top Up
+              충전
             </button>
             <button
               onClick={() => navigate('/consumer/scan')}
@@ -102,7 +102,7 @@ const Home: React.FC = () => {
               style={{ background: theme.cardHover, color: theme.text, border: `1px solid ${theme.border}` }}
             >
               <span className="material-symbols-outlined text-[18px]">qr_code_scanner</span>
-              Pay
+              결제
             </button>
           </div>
         </div>
@@ -110,10 +110,10 @@ const Home: React.FC = () => {
         {/* Quick Actions */}
         <div className="grid grid-cols-4 gap-3">
           {[
-            { icon: 'swap_horiz', label: 'Transfer', path: '/consumer/wallet' },
-            { icon: 'confirmation_number', label: 'Coupons', path: '/consumer/coupons' },
-            { icon: 'train', label: 'Transit', path: '/consumer/services' },
-            { icon: 'stars', label: 'Rewards', path: '/consumer/loyalty' },
+            { icon: 'swap_horiz', label: '송금', path: '/consumer/wallet' },
+            { icon: 'confirmation_number', label: '쿠폰', path: '/consumer/coupons' },
+            { icon: 'train', label: '교통', path: '/consumer/services' },
+            { icon: 'stars', label: '리워드', path: '/consumer/loyalty' },
           ].map((action, idx) => (
             <button
               key={idx}
@@ -137,32 +137,32 @@ const Home: React.FC = () => {
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-3">
           <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
-            <p style={{ color: theme.textMuted }} className="text-xs mb-1">This Month</p>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">이번 달</p>
             <p style={{ color: theme.text }} className="text-lg font-bold">+45.2K</p>
             <p style={{ color: '#22c55e' }} className="text-xs">+12.5%</p>
           </div>
           <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
-            <p style={{ color: theme.textMuted }} className="text-xs mb-1">Spent</p>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">사용액</p>
             <p style={{ color: theme.text }} className="text-lg font-bold">-128K</p>
-            <p style={{ color: theme.textMuted }} className="text-xs">32 tx</p>
+            <p style={{ color: theme.textMuted }} className="text-xs">32건</p>
           </div>
           <div className="p-4 rounded-xl" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
-            <p style={{ color: theme.textMuted }} className="text-xs mb-1">Points</p>
+            <p style={{ color: theme.textMuted }} className="text-xs mb-1">포인트</p>
             <p style={{ color: theme.text }} className="text-lg font-bold">2,450</p>
-            <p style={{ color: '#f59e0b' }} className="text-xs">Gold</p>
+            <p style={{ color: '#f59e0b' }} className="text-xs">골드</p>
           </div>
         </div>
 
         {/* Recent Activity */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 style={{ color: theme.text }} className="text-base font-bold">Recent Activity</h3>
+            <h3 style={{ color: theme.text }} className="text-base font-bold">최근 활동</h3>
             <button
               onClick={() => navigate('/consumer/history')}
               style={{ color: theme.accent, background: 'transparent', border: 'none' }}
               className="text-sm font-medium"
             >
-              See All
+              전체보기
             </button>
           </div>
 
@@ -170,10 +170,10 @@ const Home: React.FC = () => {
             {recentTransactions.length === 0 ? (
               <>
                 {[
-                  { name: 'Starbucks Reserve', amount: -8500, time: '2 hours ago', icon: 'local_cafe' },
-                  { name: 'Busan Metro', amount: -1450, time: 'Yesterday', icon: 'train' },
-                  { name: 'Cashback Reward', amount: 500, time: 'Yesterday', icon: 'redeem' },
-                  { name: 'GS25 Convenience', amount: -3200, time: '2 days ago', icon: 'store' },
+                  { name: '스타벅스 리저브', amount: -8500, time: '2시간 전', icon: 'local_cafe' },
+                  { name: '부산 지하철', amount: -1450, time: '어제', icon: 'train' },
+                  { name: '캐시백 적립', amount: 500, time: '어제', icon: 'redeem' },
+                  { name: 'GS25 편의점', amount: -3200, time: '2일 전', icon: 'store' },
                 ].map((tx, idx) => (
                   <div
                     key={idx}

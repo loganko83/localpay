@@ -8,10 +8,10 @@ import { theme } from '../../styles/theme';
 const mockCoupons: RegionalCoupon[] = [
   {
     id: 'coup-001',
-    name: '10% Discount',
-    description: 'Get 10% off at participating restaurants in Hanok Village',
+    name: '10% 할인',
+    description: '한옥마을 참여 음식점에서 10% 할인',
     merchantId: 'm-001',
-    merchantName: 'Jeonju Bibimbap House',
+    merchantName: '전주 비빔밥 본가',
     discountType: 'percentage',
     discountValue: 10,
     minPurchase: 20000,
@@ -27,9 +27,9 @@ const mockCoupons: RegionalCoupon[] = [
   },
   {
     id: 'coup-002',
-    name: '5,000 KRW Off',
-    description: 'Fixed discount on traditional craft purchases',
-    merchantName: 'Hanok Crafts',
+    name: '5,000원 할인',
+    description: '전통 공예품 구매 시 정액 할인',
+    merchantName: '한옥 공예방',
     discountType: 'fixed',
     discountValue: 5000,
     minPurchase: 30000,
@@ -44,8 +44,8 @@ const mockCoupons: RegionalCoupon[] = [
   },
   {
     id: 'coup-003',
-    name: 'Youth 15% Off',
-    description: 'Special discount for youth (19-34) with verified credentials',
+    name: '청년 15% 할인',
+    description: '인증된 청년(19-34세) 대상 특별 할인',
     discountType: 'percentage',
     discountValue: 15,
     minPurchase: 10000,
@@ -61,8 +61,8 @@ const mockCoupons: RegionalCoupon[] = [
   },
   {
     id: 'coup-004',
-    name: 'Traditional Market',
-    description: '7% cashback at Jeonju Traditional Market',
+    name: '전통시장',
+    description: '전주 전통시장 7% 캐시백',
     discountType: 'percentage',
     discountValue: 7,
     minPurchase: 5000,
@@ -78,9 +78,9 @@ const mockCoupons: RegionalCoupon[] = [
   },
   {
     id: 'coup-005',
-    name: 'Culture Experience',
-    description: '20% off at Jeonju cultural experience centers',
-    merchantName: 'Hanok Experience Center',
+    name: '문화체험',
+    description: '전주 문화체험센터 20% 할인',
+    merchantName: '한옥 체험센터',
     discountType: 'percentage',
     discountValue: 20,
     minPurchase: 15000,
@@ -97,11 +97,11 @@ const mockCoupons: RegionalCoupon[] = [
 ];
 
 const categories = [
-  { id: 'all', label: 'All', icon: 'apps' },
-  { id: 'food', label: 'Food', icon: 'restaurant' },
-  { id: 'retail', label: 'Retail', icon: 'shopping_bag' },
-  { id: 'market', label: 'Market', icon: 'storefront' },
-  { id: 'culture', label: 'Culture', icon: 'museum' },
+  { id: 'all', label: '전체', icon: 'apps' },
+  { id: 'food', label: '음식', icon: 'restaurant' },
+  { id: 'retail', label: '소매', icon: 'shopping_bag' },
+  { id: 'market', label: '시장', icon: 'storefront' },
+  { id: 'culture', label: '문화', icon: 'museum' },
 ];
 
 const Coupons: React.FC = () => {
@@ -122,7 +122,7 @@ const Coupons: React.FC = () => {
     if (coupon.discountType === 'percentage') {
       return `${coupon.discountValue}%`;
     }
-    return `${formatAmount(coupon.discountValue)} KRW`;
+    return `${formatAmount(coupon.discountValue)}원`;
   };
 
   const getRemainingCount = (coupon: RegionalCoupon) => {
@@ -143,7 +143,7 @@ const Coupons: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Regional Coupons</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>지역 쿠폰</h1>
         <div className="w-8" />
       </header>
 
@@ -152,7 +152,7 @@ const Coupons: React.FC = () => {
         <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Available Coupons</p>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>사용 가능 쿠폰</p>
               <h2 className="text-2xl font-bold" style={{ color: theme.text }}>3</h2>
             </div>
             <div
@@ -165,11 +165,11 @@ const Coupons: React.FC = () => {
           <div className="flex gap-4 pt-4" style={{ borderTop: `1px solid ${theme.border}` }}>
             <div className="flex-1 text-center">
               <p className="text-lg font-bold" style={{ color: theme.text }}>12</p>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Used</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>사용함</p>
             </div>
             <div className="flex-1 text-center" style={{ borderLeft: `1px solid ${theme.border}` }}>
               <p className="text-lg font-bold" style={{ color: theme.accent }}>15,000</p>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Saved (KRW)</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>절약 (원)</p>
             </div>
           </div>
         </div>
@@ -229,7 +229,7 @@ const Coupons: React.FC = () => {
                       className="text-xs font-bold px-2 py-1 rounded"
                       style={{ background: '#f59e0b', color: '#fff' }}
                     >
-                      {getRemainingCount(coupon)} left
+                      {getRemainingCount(coupon)}개 남음
                     </span>
                   )}
                 </div>
@@ -245,11 +245,11 @@ const Coupons: React.FC = () => {
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1" style={{ color: theme.textMuted }}>
                   <span className="material-symbols-outlined text-sm">calendar_today</span>
-                  <span>Until {new Date(coupon.validUntil).toLocaleDateString('ko-KR')}</span>
+                  <span>{new Date(coupon.validUntil).toLocaleDateString('ko-KR')}까지</span>
                 </div>
                 {coupon.minPurchase && (
                   <span style={{ color: theme.textMuted }}>
-                    Min. {formatAmount(coupon.minPurchase)} KRW
+                    최소 {formatAmount(coupon.minPurchase)}원
                   </span>
                 )}
               </div>
@@ -263,8 +263,8 @@ const Coupons: React.FC = () => {
                   />
                 </div>
                 <div className="flex justify-between mt-1 text-[10px]" style={{ color: theme.textMuted }}>
-                  <span>{coupon.usedCount} claimed</span>
-                  <span>{getRemainingCount(coupon)} remaining</span>
+                  <span>{coupon.usedCount}명 사용</span>
+                  <span>{getRemainingCount(coupon)}개 남음</span>
                 </div>
               </div>
             </div>
@@ -315,34 +315,34 @@ const Coupons: React.FC = () => {
               {/* Coupon Details */}
               <div className="rounded-xl p-4 space-y-3" style={{ background: theme.bg }}>
                 <div className="flex justify-between">
-                  <span className="text-sm" style={{ color: theme.textSecondary }}>Discount</span>
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>할인</span>
                   <span className="font-medium" style={{ color: theme.text }}>
                     {selectedCoupon.discountType === 'percentage'
-                      ? `${selectedCoupon.discountValue}% Off`
-                      : `${formatAmount(selectedCoupon.discountValue)} KRW Off`}
+                      ? `${selectedCoupon.discountValue}% 할인`
+                      : `${formatAmount(selectedCoupon.discountValue)}원 할인`}
                   </span>
                 </div>
                 {selectedCoupon.minPurchase && (
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Min. Purchase</span>
-                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.minPurchase)} KRW</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>최소 구매금액</span>
+                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.minPurchase)}원</span>
                   </div>
                 )}
                 {selectedCoupon.maxDiscount && (
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Max. Discount</span>
-                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.maxDiscount)} KRW</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>최대 할인금액</span>
+                    <span style={{ color: theme.text }}>{formatAmount(selectedCoupon.maxDiscount)}원</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-sm" style={{ color: theme.textSecondary }}>Valid Until</span>
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>유효기간</span>
                   <span style={{ color: theme.text }}>
                     {new Date(selectedCoupon.validUntil).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
                 {selectedCoupon.merchantName && (
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Merchant</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>가맹점</span>
                     <span style={{ color: theme.accent }}>{selectedCoupon.merchantName}</span>
                   </div>
                 )}
@@ -351,7 +351,7 @@ const Coupons: React.FC = () => {
               {/* Usage Stats */}
               <div className="rounded-xl p-4" style={{ background: theme.bg }}>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm" style={{ color: theme.textSecondary }}>Remaining</span>
+                  <span className="text-sm" style={{ color: theme.textSecondary }}>남은 수량</span>
                   <span className="text-lg font-bold" style={{ color: theme.accent }}>
                     {getRemainingCount(selectedCoupon)} / {selectedCoupon.usageLimit}
                   </span>
@@ -366,9 +366,9 @@ const Coupons: React.FC = () => {
 
               {/* Terms */}
               <div className="text-xs space-y-1" style={{ color: theme.textMuted }}>
-                <p>- Cannot be combined with other discounts</p>
-                <p>- One coupon per transaction</p>
-                <p>- Valid only at participating merchants in {selectedCoupon.region}</p>
+                <p>- 다른 할인과 중복 적용 불가</p>
+                <p>- 거래당 1회 사용 가능</p>
+                <p>- {selectedCoupon.region} 지역 참여 가맹점에서만 사용 가능</p>
               </div>
             </div>
 
@@ -383,7 +383,7 @@ const Coupons: React.FC = () => {
                 }}
               >
                 <span className="material-symbols-outlined">qr_code_scanner</span>
-                Use Coupon
+                쿠폰 사용하기
               </button>
             </div>
           </div>

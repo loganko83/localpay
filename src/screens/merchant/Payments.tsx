@@ -7,10 +7,10 @@ import { TransactionStatus } from '../../types';
 import { theme } from '../../styles/theme';
 
 const statusFilters: { label: string; value: TransactionStatus | 'all' }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Completed', value: 'completed' },
-  { label: 'Pending', value: 'pending' },
-  { label: 'Failed', value: 'failed' },
+  { label: '전체', value: 'all' },
+  { label: '완료', value: 'completed' },
+  { label: '대기 중', value: 'pending' },
+  { label: '실패', value: 'failed' },
 ];
 
 const Payments: React.FC = () => {
@@ -45,13 +45,13 @@ const Payments: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-4">
-      <Header title="Payment Management" />
+      <Header title="결제 관리" />
 
       {/* Search */}
       <div className="px-4 mb-4">
         <Input
           icon="search"
-          placeholder="Search by customer or TX ID..."
+          placeholder="고객 또는 거래 ID로 검색..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -87,9 +87,9 @@ const Payments: React.FC = () => {
                 }
               }}
             >
-              {range === 'today' ? 'Today' :
-                range === 'yesterday' ? 'Yesterday' :
-                  range === 'week' ? 'This Week' : 'This Month'}
+              {range === 'today' ? '오늘' :
+                range === 'yesterday' ? '어제' :
+                  range === 'week' ? '이번 주' : '이번 달'}
             </button>
           ))}
           <button
@@ -111,7 +111,7 @@ const Payments: React.FC = () => {
             onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
           >
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-            Custom
+            직접 선택
           </button>
         </div>
       </div>
@@ -120,14 +120,14 @@ const Payments: React.FC = () => {
       <div style={{ padding: '0 1rem', marginBottom: '1rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
           <Card padding="md">
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Total Received</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>총 수입</p>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: theme.accent }}>₩{formatAmount(totalAmount)}</p>
-            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'payment').length} transactions</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'payment').length} 건</p>
           </Card>
           <Card padding="md">
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Refunds</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>환불</p>
             <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ef4444' }}>₩{formatAmount(refundAmount)}</p>
-            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'refund').length} transactions</p>
+            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{filteredTransactions.filter(t => t.type === 'refund').length} 건</p>
           </Card>
         </div>
       </div>
@@ -188,7 +188,7 @@ const Payments: React.FC = () => {
                   </span>
                 </div>
                 <div>
-                  <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{tx.customerName || 'Customer'}</p>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{tx.customerName || '고객'}</p>
                   <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
                     {new Date(tx.createdAt).toLocaleString('ko-KR', {
                       month: 'short',
@@ -240,7 +240,7 @@ const Payments: React.FC = () => {
               {tx.type === 'payment' && tx.status === 'completed' && (
                 <Button variant="ghost" size="sm">
                   <span className="material-symbols-outlined text-[16px] mr-1">undo</span>
-                  Refund
+                  환불
                 </Button>
               )}
             </div>
@@ -252,7 +252,7 @@ const Payments: React.FC = () => {
       <div style={{ padding: '0 1rem', marginTop: '1.5rem' }}>
         <Button variant="secondary" fullWidth>
           <span className="material-symbols-outlined mr-2">download</span>
-          Export Report
+          리포트 내보내기
         </Button>
       </div>
     </div>

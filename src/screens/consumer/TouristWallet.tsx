@@ -174,12 +174,12 @@ const TouristWallet: React.FC = () => {
 
   const getRefundStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
-      PENDING: 'Pending',
-      APPROVED: 'Approved',
-      ISSUED: 'Issued',
-      USED: 'Used',
-      EXPIRED: 'Expired',
-      REJECTED: 'Rejected',
+      PENDING: '대기 중',
+      APPROVED: '승인됨',
+      ISSUED: '발급됨',
+      USED: '사용됨',
+      EXPIRED: '만료됨',
+      REJECTED: '거절됨',
     };
     return labels[status] || status;
   };
@@ -190,7 +190,7 @@ const TouristWallet: React.FC = () => {
         <span className="material-symbols-outlined animate-spin text-4xl" style={{ color: theme.accent }}>
           progress_activity
         </span>
-        <p className="mt-4" style={{ color: theme.textSecondary }}>Loading wallet...</p>
+        <p className="mt-4" style={{ color: theme.textSecondary }}>지갑 로딩 중...</p>
       </div>
     );
   }
@@ -201,16 +201,16 @@ const TouristWallet: React.FC = () => {
         <span className="material-symbols-outlined text-6xl mb-4" style={{ color: theme.textSecondary }}>
           account_balance_wallet
         </span>
-        <h2 className="text-xl font-bold mb-2" style={{ color: theme.text }}>No Wallet Found</h2>
+        <h2 className="text-xl font-bold mb-2" style={{ color: theme.text }}>지갑을 찾을 수 없습니다</h2>
         <p className="text-center mb-6" style={{ color: theme.textSecondary }}>
-          Please verify your passport to create a tourist wallet.
+          관광객 지갑을 만들려면 여권을 인증해주세요.
         </p>
         <button
           onClick={() => navigate('/consumer')}
           className="px-6 py-3 rounded-xl font-bold"
           style={{ background: theme.accent, color: '#fff' }}
         >
-          Go Back
+          돌아가기
         </button>
       </div>
     );
@@ -228,7 +228,7 @@ const TouristWallet: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Tourist Wallet</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>관광객 지갑</h1>
         <button onClick={() => setShowVisitorInfoModal(true)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.textSecondary }}>info</span>
         </button>
@@ -237,7 +237,7 @@ const TouristWallet: React.FC = () => {
       {/* Multi-Currency Balance Header */}
       <div className="px-5 pt-4 pb-6">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm" style={{ color: theme.textSecondary }}>Total Balance</p>
+          <p className="text-sm" style={{ color: theme.textSecondary }}>총 잔액</p>
           <button
             onClick={() => setShowCurrencySelector(true)}
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg"
@@ -262,10 +262,10 @@ const TouristWallet: React.FC = () => {
         <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-medium uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-              Exchange Rates
+              환율
             </p>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: '#3b82f620', color: '#3b82f6' }}>
-              Live
+              실시간
             </span>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -285,12 +285,12 @@ const TouristWallet: React.FC = () => {
 
       {/* Quick Exchange Section */}
       <div className="px-5 mb-6">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Quick Exchange</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>빠른 환전</h3>
         <div className="rounded-2xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: theme.textSecondary }}>
-                From Currency
+                환전할 통화
               </label>
               <select
                 value={fromCurrency}
@@ -308,7 +308,7 @@ const TouristWallet: React.FC = () => {
 
             <div>
               <label className="block text-xs font-medium mb-2" style={{ color: theme.textSecondary }}>
-                Amount
+                금액
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[20px]" style={{ color: theme.textMuted }}>
@@ -328,19 +328,19 @@ const TouristWallet: React.FC = () => {
             {exchangePreview && (
               <div className="rounded-xl p-3 space-y-2" style={{ background: theme.cardHover }}>
                 <div className="flex justify-between text-xs">
-                  <span style={{ color: theme.textSecondary }}>Exchange Rate</span>
+                  <span style={{ color: theme.textSecondary }}>환율</span>
                   <span className="font-medium" style={{ color: theme.text }}>
                     ₩{formatAmount(exchangePreview.exchangeRate, 'KRW')}
                   </span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span style={{ color: theme.textSecondary }}>Processing Fee</span>
+                  <span style={{ color: theme.textSecondary }}>수수료</span>
                   <span className="font-medium" style={{ color: theme.text }}>
                     ₩{formatAmount(exchangePreview.fee, 'KRW')}
                   </span>
                 </div>
                 <div className="pt-2 flex justify-between" style={{ borderTop: `1px solid ${theme.border}` }}>
-                  <span className="text-sm font-bold" style={{ color: theme.text }}>You will receive</span>
+                  <span className="text-sm font-bold" style={{ color: theme.text }}>받으실 금액</span>
                   <span className="text-sm font-bold" style={{ color: theme.accent }}>
                     ₩{formatAmount(exchangePreview.netKRW, 'KRW')}
                   </span>
@@ -354,7 +354,7 @@ const TouristWallet: React.FC = () => {
               className="w-full h-12 rounded-xl font-bold disabled:opacity-50"
               style={{ background: theme.accent, color: '#fff' }}
             >
-              Exchange Now
+              지금 환전
             </button>
           </div>
         </div>
@@ -363,13 +363,13 @@ const TouristWallet: React.FC = () => {
       {/* Tax Refund Status */}
       <div className="px-5 mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold" style={{ color: theme.text }}>Tax Refund</h3>
+          <h3 className="text-sm font-bold" style={{ color: theme.text }}>세금 환급</h3>
           <button
             onClick={() => setShowTaxRefundModal(true)}
             className="text-xs font-medium"
             style={{ color: theme.accent }}
           >
-            Details
+            상세
           </button>
         </div>
 
@@ -380,7 +380,7 @@ const TouristWallet: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined" style={{ color: theme.accent }}>local_atm</span>
-              <span className="text-sm font-bold" style={{ color: theme.text }}>Eligible Refunds</span>
+              <span className="text-sm font-bold" style={{ color: theme.text }}>환급 가능 금액</span>
             </div>
             <span
               className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -389,20 +389,20 @@ const TouristWallet: React.FC = () => {
                 color: refundEligibility?.eligible ? '#22c55e' : '#eab308',
               }}
             >
-              {refundEligibility?.eligible ? 'Eligible' : 'Not Eligible'}
+              {refundEligibility?.eligible ? '환급 가능' : '환급 불가'}
             </span>
           </div>
 
           {refundSummary && (
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Total Refunded</p>
+                <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>총 환급액</p>
                 <p className="text-lg font-bold" style={{ color: theme.text }}>
                   ₩{formatAmount(refundSummary.totalRefunded, 'KRW')}
                 </p>
               </div>
               <div>
-                <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>Remaining Quota</p>
+                <p className="text-xs mb-1" style={{ color: theme.textSecondary }}>남은 한도</p>
                 <p className="text-lg font-bold" style={{ color: theme.accent }}>
                   ₩{formatAmount(refundSummary.remainingQuota, 'KRW')}
                 </p>
@@ -421,7 +421,7 @@ const TouristWallet: React.FC = () => {
       {/* Refund History */}
       {refundHistory.length > 0 && (
         <div className="px-5 mb-6">
-          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Refund History</h3>
+          <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>환급 내역</h3>
           <div className="space-y-3">
             {refundHistory.slice(0, 3).map((refund) => (
               <div
@@ -457,7 +457,7 @@ const TouristWallet: React.FC = () => {
                       +₩{formatAmount(refund.refundAmount, 'KRW')}
                     </p>
                     <p className="text-xs" style={{ color: theme.textSecondary }}>
-                      Purchase: ₩{formatAmount(refund.purchase.purchaseAmount, 'KRW')}
+                      구매: ₩{formatAmount(refund.purchase.purchaseAmount, 'KRW')}
                     </p>
                   </div>
                 </div>
@@ -469,13 +469,13 @@ const TouristWallet: React.FC = () => {
 
       {/* Exchange History */}
       <div className="px-5 mb-6">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Exchange History</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>환전 내역</h3>
         {wallet.chargeHistory.length === 0 ? (
           <div className="rounded-xl p-8 text-center" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
             <span className="material-symbols-outlined text-4xl mb-2" style={{ color: theme.textSecondary }}>
               currency_exchange
             </span>
-            <p className="text-sm" style={{ color: theme.textSecondary }}>No exchange history yet</p>
+            <p className="text-sm" style={{ color: theme.textSecondary }}>아직 환전 내역이 없습니다</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -501,7 +501,7 @@ const TouristWallet: React.FC = () => {
                         {new Date(charge.timestamp).toLocaleDateString('en-US')}
                       </p>
                       <p className="text-xs" style={{ color: theme.textSecondary }}>
-                        Rate: ₩{formatAmount(charge.exchangeRate, 'KRW')} · Fee: ₩{formatAmount(charge.fee, 'KRW')}
+                        환율: ₩{formatAmount(charge.exchangeRate, 'KRW')} · 수수료: ₩{formatAmount(charge.fee, 'KRW')}
                       </p>
                     </div>
                   </div>
@@ -529,7 +529,7 @@ const TouristWallet: React.FC = () => {
             style={{ background: theme.card }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold" style={{ color: theme.text }}>Select Display Currency</h3>
+              <h3 className="text-lg font-bold" style={{ color: theme.text }}>표시 통화 선택</h3>
               <button onClick={() => setShowCurrencySelector(false)}>
                 <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
@@ -585,7 +585,7 @@ const TouristWallet: React.FC = () => {
             style={{ background: theme.card }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold" style={{ color: theme.text }}>Tax Refund Details</h3>
+              <h3 className="text-lg font-bold" style={{ color: theme.text }}>세금 환급 상세</h3>
               <button onClick={() => setShowTaxRefundModal(false)}>
                 <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
@@ -593,11 +593,11 @@ const TouristWallet: React.FC = () => {
             <div className="space-y-4">
               <div className="rounded-xl p-4" style={{ background: theme.cardHover }}>
                 <h4 className="text-xs font-medium mb-3 uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-                  Eligibility Status
+                  환급 자격 상태
                 </h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Status</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>상태</span>
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                       style={{
@@ -605,20 +605,20 @@ const TouristWallet: React.FC = () => {
                         color: refundEligibility?.eligible ? '#22c55e' : '#eab308',
                       }}
                     >
-                      {refundEligibility?.eligible ? 'Eligible' : 'Not Eligible'}
+                      {refundEligibility?.eligible ? '환급 가능' : '환급 불가'}
                     </span>
                   </div>
                   {refundEligibility?.daysUntilDeparture !== undefined && (
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Days Until Departure</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>출국까지 남은 일수</span>
                       <span className="text-sm font-bold" style={{ color: theme.text }}>
-                        {refundEligibility.daysUntilDeparture} days
+                        {refundEligibility.daysUntilDeparture}일
                       </span>
                     </div>
                   )}
                   {refundEligibility?.remainingQuota !== undefined && (
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Remaining Quota</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>남은 한도</span>
                       <span className="text-sm font-bold" style={{ color: theme.accent }}>
                         ₩{formatAmount(refundEligibility.remainingQuota, 'KRW')}
                       </span>
@@ -630,29 +630,29 @@ const TouristWallet: React.FC = () => {
               {refundSummary && (
                 <div className="rounded-xl p-4" style={{ background: theme.cardHover }}>
                   <h4 className="text-xs font-medium mb-3 uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-                    Summary
+                    요약
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Total Purchases</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>총 구매액</span>
                       <span className="text-sm font-bold" style={{ color: theme.text }}>
                         ₩{formatAmount(refundSummary.totalPurchases, 'KRW')}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Total Refunded</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>총 환급액</span>
                       <span className="text-sm font-bold" style={{ color: theme.accent }}>
                         ₩{formatAmount(refundSummary.totalRefunded, 'KRW')}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Pending Refunds</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>대기 중인 환급</span>
                       <span className="text-sm font-bold" style={{ color: '#eab308' }}>
                         ₩{formatAmount(refundSummary.pendingRefunds, 'KRW')}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Number of Refunds</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>환급 건수</span>
                       <span className="text-sm font-bold" style={{ color: theme.text }}>
                         {refundSummary.refundCount}
                       </span>
@@ -672,7 +672,7 @@ const TouristWallet: React.FC = () => {
                 className="w-full h-12 rounded-xl font-bold"
                 style={{ background: theme.accent, color: '#fff' }}
               >
-                Close
+                닫기
               </button>
             </div>
           </div>
@@ -688,7 +688,7 @@ const TouristWallet: React.FC = () => {
             style={{ background: theme.card }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold" style={{ color: theme.text }}>Visitor Information</h3>
+              <h3 className="text-lg font-bold" style={{ color: theme.text }}>방문자 정보</h3>
               <button onClick={() => setShowVisitorInfoModal(false)}>
                 <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
@@ -696,17 +696,17 @@ const TouristWallet: React.FC = () => {
             <div className="space-y-4">
               <div className="rounded-xl p-4" style={{ background: theme.cardHover }}>
                 <h4 className="text-xs font-medium mb-3 uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-                  Passport Information
+                  여권 정보
                 </h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Country</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>국가</span>
                     <span className="text-sm font-bold" style={{ color: theme.text }}>
                       {wallet.passportCountry}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Passport ID</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>여권 번호</span>
                     <span className="text-sm font-mono" style={{ color: theme.text }}>
                       {wallet.passportNumber}
                     </span>
@@ -716,30 +716,30 @@ const TouristWallet: React.FC = () => {
 
               <div className="rounded-xl p-4" style={{ background: theme.cardHover }}>
                 <h4 className="text-xs font-medium mb-3 uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-                  Visit Dates
+                  방문 일정
                 </h4>
                 <div className="space-y-2">
                   {wallet.entryDate && (
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Entry Date</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>입국일</span>
                       <span className="text-sm font-bold" style={{ color: theme.text }}>
-                        {new Date(wallet.entryDate).toLocaleDateString('en-US')}
+                        {new Date(wallet.entryDate).toLocaleDateString('ko-KR')}
                       </span>
                     </div>
                   )}
                   {wallet.plannedDepartureDate && (
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Departure Date</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>출국 예정일</span>
                       <span className="text-sm font-bold" style={{ color: theme.text }}>
-                        {new Date(wallet.plannedDepartureDate).toLocaleDateString('en-US')}
+                        {new Date(wallet.plannedDepartureDate).toLocaleDateString('ko-KR')}
                       </span>
                     </div>
                   )}
                   {wallet.entryDate && (
                     <div className="flex justify-between">
-                      <span className="text-sm" style={{ color: theme.textSecondary }}>Days in Korea</span>
+                      <span className="text-sm" style={{ color: theme.textSecondary }}>한국 체류일</span>
                       <span className="text-sm font-bold" style={{ color: theme.accent }}>
-                        {Math.floor((Date.now() - wallet.entryDate) / (24 * 60 * 60 * 1000))} days
+                        {Math.floor((Date.now() - wallet.entryDate) / (24 * 60 * 60 * 1000))}일
                       </span>
                     </div>
                   )}
@@ -748,25 +748,25 @@ const TouristWallet: React.FC = () => {
 
               <div className="rounded-xl p-4" style={{ background: theme.cardHover }}>
                 <h4 className="text-xs font-medium mb-3 uppercase tracking-wide" style={{ color: theme.textSecondary }}>
-                  Wallet Statistics
+                  지갑 통계
                 </h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Total Charged</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>총 충전액</span>
                     <span className="text-sm font-bold" style={{ color: theme.text }}>
                       ₩{formatAmount(wallet.totalChargedKRW, 'KRW')}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Total Spent</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>총 사용액</span>
                     <span className="text-sm font-bold" style={{ color: theme.text }}>
                       ₩{formatAmount(wallet.totalSpentKRW, 'KRW')}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm" style={{ color: theme.textSecondary }}>Created</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>생성일</span>
                     <span className="text-sm" style={{ color: theme.text }}>
-                      {new Date(wallet.createdAt).toLocaleDateString('en-US')}
+                      {new Date(wallet.createdAt).toLocaleDateString('ko-KR')}
                     </span>
                   </div>
                 </div>
@@ -777,7 +777,7 @@ const TouristWallet: React.FC = () => {
                 className="w-full h-12 rounded-xl font-bold"
                 style={{ background: theme.accent, color: '#fff' }}
               >
-                Close
+                닫기
               </button>
             </div>
           </div>

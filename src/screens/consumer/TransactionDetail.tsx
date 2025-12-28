@@ -16,7 +16,7 @@ const TransactionDetail: React.FC = () => {
     txId: 'TX-2024-ABC123',
     userId: 'user-1',
     merchantId: 'merchant-1',
-    merchantName: 'Jeonju Bibimbap House',
+    merchantName: '전주 비빔밥 본가',
     amount: 25000,
     type: 'payment' as const,
     status: 'completed' as const,
@@ -50,10 +50,10 @@ const TransactionDetail: React.FC = () => {
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'payment': return 'Payment';
-      case 'topup': return 'Top-up';
-      case 'refund': return 'Refund';
-      case 'transfer': return 'Transfer';
+      case 'payment': return '결제';
+      case 'topup': return '충전';
+      case 'refund': return '환불';
+      case 'transfer': return '송금';
       default: return type;
     }
   };
@@ -77,7 +77,7 @@ const TransactionDetail: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Transaction Detail</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>거래 상세</h1>
         <div className="w-8" />
       </header>
 
@@ -135,7 +135,7 @@ const TransactionDetail: React.FC = () => {
             </div>
             <div>
               <p className="font-medium" style={{ color: theme.text }}>
-                {transaction.merchantName || 'Bank Transfer'}
+                {transaction.merchantName || '은행 이체'}
               </p>
               <p className="text-xs" style={{ color: theme.textSecondary }}>
                 {formatDate(transaction.createdAt)}
@@ -147,22 +147,22 @@ const TransactionDetail: React.FC = () => {
 
       {/* Transaction Details */}
       <div className="px-5 mb-4">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Transaction Information</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>거래 정보</h3>
         <div className="rounded-xl p-4 space-y-3" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex justify-between">
-            <span className="text-sm" style={{ color: theme.textSecondary }}>Transaction ID</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>거래 ID</span>
             <span className="text-sm font-mono" style={{ color: theme.text }}>{transaction.txId}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm" style={{ color: theme.textSecondary }}>Type</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>유형</span>
             <span className="text-sm" style={{ color: theme.text }}>{getTypeLabel(transaction.type)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm" style={{ color: theme.textSecondary }}>Amount</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>금액</span>
             <span className="text-sm" style={{ color: theme.text }}>{formatAmount(transaction.amount)} P</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm" style={{ color: theme.textSecondary }}>Status</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>상태</span>
             <span
               className="text-xs font-bold px-2 py-0.5 rounded"
               style={{
@@ -174,7 +174,7 @@ const TransactionDetail: React.FC = () => {
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm" style={{ color: theme.textSecondary }}>Date & Time</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>일시</span>
             <span className="text-sm" style={{ color: theme.text }}>{formatDate(transaction.createdAt)}</span>
           </div>
         </div>
@@ -182,7 +182,7 @@ const TransactionDetail: React.FC = () => {
 
       {/* Blockchain Verification */}
       <div className="px-5 mb-4">
-        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>Blockchain Verification</h3>
+        <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>블록체인 인증</h3>
         <div className="rounded-xl p-4" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center gap-3 pb-3 mb-3" style={{ borderBottom: `1px solid ${theme.border}` }}>
             <div
@@ -192,24 +192,24 @@ const TransactionDetail: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: '#22c55e' }}>verified</span>
             </div>
             <div>
-              <p className="font-medium" style={{ color: theme.text }}>Verified on Blockchain</p>
+              <p className="font-medium" style={{ color: theme.text }}>블록체인 인증됨</p>
               <p className="text-xs" style={{ color: theme.textSecondary }}>
-                Verified at {formatDate(blockchainData.verifiedAt)}
+                {formatDate(blockchainData.verifiedAt)} 인증됨
               </p>
             </div>
           </div>
 
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
-              <span style={{ color: theme.textSecondary }}>Block Hash</span>
+              <span style={{ color: theme.textSecondary }}>블록 해시</span>
               <span className="font-mono" style={{ color: theme.text }}>{blockchainData.hash}</span>
             </div>
             <div className="flex justify-between">
-              <span style={{ color: theme.textSecondary }}>Block Number</span>
+              <span style={{ color: theme.textSecondary }}>블록 번호</span>
               <span style={{ color: theme.text }}>{blockchainData.blockNumber.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span style={{ color: theme.textSecondary }}>TX Hash</span>
+              <span style={{ color: theme.textSecondary }}>TX 해시</span>
               <span className="font-mono truncate max-w-[180px]" style={{ color: theme.text }}>
                 {blockchainData.txHash}
               </span>
@@ -218,8 +218,8 @@ const TransactionDetail: React.FC = () => {
 
           <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${theme.border}` }}>
             <p className="text-[10px]" style={{ color: theme.textMuted }}>
-              This transaction is permanently recorded on the Xphere blockchain network
-              for audit and verification purposes.
+              이 거래는 감사 및 검증 목적으로 Xphere 블록체인 네트워크에
+              영구적으로 기록됩니다.
             </p>
           </div>
         </div>
@@ -233,14 +233,14 @@ const TransactionDetail: React.FC = () => {
             style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
             <span className="material-symbols-outlined text-lg">share</span>
-            Share
+            공유
           </button>
           <button
             className="flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
             style={{ background: theme.card, color: theme.text, border: `1px solid ${theme.border}` }}
           >
             <span className="material-symbols-outlined text-lg">download</span>
-            Receipt
+            영수증
           </button>
         </div>
 
@@ -251,7 +251,7 @@ const TransactionDetail: React.FC = () => {
             style={{ background: 'transparent', color: theme.accent }}
           >
             <span className="material-symbols-outlined">replay</span>
-            Request Refund
+            환불 요청
           </button>
         )}
       </div>
@@ -261,7 +261,7 @@ const TransactionDetail: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-sm rounded-2xl p-4 space-y-4" style={{ background: theme.card }}>
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold" style={{ color: theme.text }}>Request Refund</h2>
+              <h2 className="text-lg font-bold" style={{ color: theme.text }}>환불 요청</h2>
               <button onClick={() => setShowRefundModal(false)} className="p-2 rounded-lg" style={{ background: theme.cardHover }}>
                 <span className="material-symbols-outlined" style={{ color: theme.textSecondary }}>close</span>
               </button>
@@ -275,18 +275,18 @@ const TransactionDetail: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm" style={{ color: theme.textSecondary }}>Reason for refund</label>
+              <label className="text-sm" style={{ color: theme.textSecondary }}>환불 사유</label>
               <textarea
                 className="w-full rounded-xl p-3 resize-none focus:outline-none"
                 rows={3}
-                placeholder="Please describe your reason for requesting a refund..."
+                placeholder="환불을 요청하는 사유를 설명해 주세요..."
                 style={{ background: theme.bg, color: theme.text, border: `1px solid ${theme.border}` }}
               />
             </div>
 
             <p className="text-xs" style={{ color: theme.textMuted }}>
-              Refund requests are processed by the merchant. You will be notified once the
-              merchant responds to your request.
+              환불 요청은 가맹점에서 처리합니다. 가맹점이 요청에 응답하면
+              알림을 받게 됩니다.
             </p>
 
             <div className="flex gap-3">
@@ -295,7 +295,7 @@ const TransactionDetail: React.FC = () => {
                 className="flex-1 py-3 rounded-xl font-medium"
                 style={{ background: theme.cardHover, color: theme.text }}
               >
-                Cancel
+                취소
               </button>
               <button
                 onClick={() => {
@@ -305,7 +305,7 @@ const TransactionDetail: React.FC = () => {
                 className="flex-1 py-3 rounded-xl font-bold text-white"
                 style={{ background: theme.accent }}
               >
-                Submit Request
+                요청 제출
               </button>
             </div>
           </div>

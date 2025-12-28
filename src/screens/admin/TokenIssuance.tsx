@@ -15,52 +15,52 @@ interface FundTypeConfig {
 const FUND_TYPES: FundTypeConfig[] = [
   {
     type: 'DISASTER_RELIEF',
-    name: 'Disaster Relief',
+    name: '재난지원금',
     icon: 'medical_services',
     color: 'bg-red-500',
-    description: 'Emergency disaster relief fund',
+    description: '긴급 재난 구호 기금',
   },
   {
     type: 'CHILD_MEAL',
-    name: 'Child Meal',
+    name: '아동급식',
     icon: 'restaurant',
     color: 'bg-orange-500',
-    description: 'Child meal support program',
+    description: '아동 급식 지원 프로그램',
   },
   {
     type: 'YOUTH_ALLOWANCE',
-    name: 'Youth Allowance',
+    name: '청년수당',
     icon: 'school',
     color: 'bg-blue-500',
-    description: 'Youth employment support',
+    description: '청년 고용 지원',
   },
   {
     type: 'SENIOR_WELFARE',
-    name: 'Senior Welfare',
+    name: '어르신복지',
     icon: 'elderly',
     color: 'bg-purple-500',
-    description: 'Senior citizen welfare',
+    description: '노인 복지 지원',
   },
   {
     type: 'FARMER_SUPPORT',
-    name: 'Farmer Support',
+    name: '농민지원',
     icon: 'agriculture',
     color: 'bg-green-500',
-    description: 'Agricultural support fund',
+    description: '농업 지원 기금',
   },
   {
     type: 'TRADITIONAL_MARKET',
-    name: 'Traditional Market',
+    name: '전통시장',
     icon: 'storefront',
     color: 'bg-yellow-500',
-    description: 'Traditional market bonus',
+    description: '전통시장 보너스',
   },
   {
     type: 'GENERAL',
-    name: 'General',
+    name: '일반',
     icon: 'payments',
     color: 'bg-primary',
-    description: 'General local currency',
+    description: '일반 지역화폐',
   },
 ];
 
@@ -70,19 +70,19 @@ interface MCCCategory {
 }
 
 const MCC_CATEGORY_LIST: MCCCategory[] = [
-  { name: 'Grocery', codes: MCC_CATEGORIES.GROCERY },
-  { name: 'Restaurant', codes: MCC_CATEGORIES.RESTAURANT },
-  { name: 'Pharmacy', codes: MCC_CATEGORIES.PHARMACY },
-  { name: 'Hospital', codes: MCC_CATEGORIES.HOSPITAL },
-  { name: 'Education', codes: MCC_CATEGORIES.EDUCATION },
-  { name: 'Traditional Market', codes: MCC_CATEGORIES.TRADITIONAL_MARKET },
-  { name: 'Liquor', codes: MCC_CATEGORIES.LIQUOR },
-  { name: 'Gambling', codes: MCC_CATEGORIES.GAMBLING },
-  { name: 'Adult', codes: MCC_CATEGORIES.ADULT },
-  { name: 'Large Mart', codes: MCC_CATEGORIES.LARGE_MART },
-  { name: 'Luxury', codes: MCC_CATEGORIES.LUXURY },
-  { name: 'Transport', codes: MCC_CATEGORIES.TRANSPORT },
-  { name: 'Gas Station', codes: MCC_CATEGORIES.GAS_STATION },
+  { name: '식료품', codes: MCC_CATEGORIES.GROCERY },
+  { name: '음식점', codes: MCC_CATEGORIES.RESTAURANT },
+  { name: '약국', codes: MCC_CATEGORIES.PHARMACY },
+  { name: '병원', codes: MCC_CATEGORIES.HOSPITAL },
+  { name: '교육', codes: MCC_CATEGORIES.EDUCATION },
+  { name: '전통시장', codes: MCC_CATEGORIES.TRADITIONAL_MARKET },
+  { name: '주류', codes: MCC_CATEGORIES.LIQUOR },
+  { name: '도박', codes: MCC_CATEGORIES.GAMBLING },
+  { name: '성인', codes: MCC_CATEGORIES.ADULT },
+  { name: '대형마트', codes: MCC_CATEGORIES.LARGE_MART },
+  { name: '명품', codes: MCC_CATEGORIES.LUXURY },
+  { name: '교통', codes: MCC_CATEGORIES.TRANSPORT },
+  { name: '주유소', codes: MCC_CATEGORIES.GAS_STATION },
 ];
 
 const TokenIssuance: React.FC = () => {
@@ -151,7 +151,7 @@ const TokenIssuance: React.FC = () => {
 
   const handleIssueTokens = async () => {
     if (!recipientId || !amount) {
-      alert('Please fill in all required fields');
+      alert('모든 필수 필드를 입력해주세요');
       return;
     }
 
@@ -186,23 +186,23 @@ const TokenIssuance: React.FC = () => {
       loadIssuedTokens();
       loadBudgets();
 
-      alert('Tokens issued successfully!');
+      alert('토큰이 성공적으로 발행되었습니다!');
     } catch (error) {
       console.error('Failed to issue tokens:', error);
-      alert('Failed to issue tokens');
+      alert('토큰 발행에 실패했습니다');
     }
   };
 
   const handleProcessClawback = async () => {
     try {
       const result = await programmableMoneyService.processClawback();
-      alert(`Clawback processed: ${result.processed} tokens, total: ₩${formatAmount(result.totalClawback)}`);
+      alert(`회수 처리 완료: ${result.processed}개 토큰, 총액: ₩${formatAmount(result.totalClawback)}`);
       loadMetrics();
       loadIssuedTokens();
       setShowClawbackModal(false);
     } catch (error) {
       console.error('Failed to process clawback:', error);
-      alert('Failed to process clawback');
+      alert('회수 처리에 실패했습니다');
     }
   };
 
@@ -248,47 +248,47 @@ const TokenIssuance: React.FC = () => {
 
   return (
     <div className="flex flex-col pb-24 bg-background min-h-screen">
-      <Header title="Token Issuance" />
+      <Header title="토큰 발행" />
 
       {/* Dashboard Header */}
       <div className="px-4 mb-4">
         <Card padding="lg" className="bg-gradient-to-br from-[#2b8cee] to-[#1a5ba8]">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-1">Issuance Dashboard</h2>
-            <p className="text-sm text-white/80">System-wide token statistics</p>
+            <h2 className="text-2xl font-bold text-white mb-1">발행 대시보드</h2>
+            <p className="text-sm text-white/80">시스템 전체 토큰 통계</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-white/70 mb-1">Total Issued</p>
+              <p className="text-xs text-white/70 mb-1">총 발행량</p>
               <p className="text-xl font-bold text-white">
                 ₩{formatAmount(metrics?.totalMinted || 0)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-white/70 mb-1">In Circulation</p>
+              <p className="text-xs text-white/70 mb-1">유통량</p>
               <p className="text-xl font-bold text-white">
                 ₩{formatAmount(metrics?.totalCirculating || 0)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-white/70 mb-1">Expired/Clawed Back</p>
+              <p className="text-xs text-white/70 mb-1">만료/회수</p>
               <p className="text-xl font-bold text-white">
                 ₩{formatAmount((metrics?.totalBurned || 0) + (metrics?.totalClawback || 0))}
               </p>
             </div>
             <div>
-              <p className="text-xs text-white/70 mb-1">System Health</p>
+              <p className="text-xs text-white/70 mb-1">시스템 상태</p>
               <div className="flex items-center gap-2">
-                <Badge variant="success" size="sm">Operational</Badge>
+                <Badge variant="success" size="sm">정상 운영</Badge>
               </div>
             </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-white/20">
             <div className="flex items-center justify-between text-xs text-white/70">
-              <span>Multiplier Effect: {metrics?.multiplierEffect.toFixed(2)}x</span>
-              <span>Velocity: {metrics?.velocityPerDay.toFixed(3)}/day</span>
+              <span>승수 효과: {metrics?.multiplierEffect.toFixed(2)}x</span>
+              <span>유통 속도: {metrics?.velocityPerDay.toFixed(3)}/일</span>
             </div>
           </div>
         </Card>
@@ -296,7 +296,7 @@ const TokenIssuance: React.FC = () => {
 
       {/* Fund Type Selector */}
       <div className="px-4 mb-4">
-        <h3 className="text-sm font-bold text-white mb-3">Select Fund Type</h3>
+        <h3 className="text-sm font-bold text-white mb-3">기금 유형 선택</h3>
         <div className="grid grid-cols-2 gap-3">
           {FUND_TYPES.map((fund) => {
             const budget = budgets.get(fund.type);
@@ -326,7 +326,7 @@ const TokenIssuance: React.FC = () => {
                 {budget && (
                   <div className="text-xs">
                     <p className="text-text-secondary">
-                      Balance: <span className="text-white font-medium">₩{formatAmount(budget.circulatingAmount)}</span>
+                      잔액: <span className="text-white font-medium">₩{formatAmount(budget.circulatingAmount)}</span>
                     </p>
                   </div>
                 )}
@@ -346,7 +346,7 @@ const TokenIssuance: React.FC = () => {
             onClick={() => setShowIssueModal(true)}
             icon={<span className="material-symbols-outlined text-[20px]">add_circle</span>}
           >
-            Issue Tokens
+            토큰 발행
           </Button>
           <Button
             variant="secondary"
@@ -355,14 +355,14 @@ const TokenIssuance: React.FC = () => {
             onClick={() => setShowMCCModal(true)}
             icon={<span className="material-symbols-outlined text-[20px]">tune</span>}
           >
-            MCC Config
+            MCC 설정
           </Button>
         </div>
       </div>
 
       {/* Budget Tracking */}
       <div className="px-4 mb-4">
-        <h3 className="text-sm font-bold text-white mb-3">Budget Tracking by Fund Type</h3>
+        <h3 className="text-sm font-bold text-white mb-3">기금 유형별 예산 현황</h3>
         <Card padding="md">
           <div className="space-y-4">
             {FUND_TYPES.map((fund) => {
@@ -393,8 +393,8 @@ const TokenIssuance: React.FC = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-text-muted">
-                    <span>Issued: ₩{formatAmount(budget.issuedAmount)}</span>
-                    <span>Allocated: ₩{formatAmount(budget.allocatedAmount)}</span>
+                    <span>발행: ₩{formatAmount(budget.issuedAmount)}</span>
+                    <span>배정: ₩{formatAmount(budget.allocatedAmount)}</span>
                   </div>
                 </div>
               );
@@ -406,21 +406,21 @@ const TokenIssuance: React.FC = () => {
       {/* Active Tokens Table */}
       <div className="px-4 mb-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-white">Active Tokens</h3>
+          <h3 className="text-sm font-bold text-white">활성 토큰</h3>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setShowClawbackModal(true)}
             icon={<span className="material-symbols-outlined text-[16px]">history</span>}
           >
-            Clawback
+            회수
           </Button>
         </div>
 
         {/* Filters */}
         <div className="mb-3 space-y-2">
           <Input
-            placeholder="Search by User ID..."
+            placeholder="사용자 ID로 검색..."
             value={searchUserId}
             onChange={(e) => setSearchUserId(e.target.value)}
             icon="search"
@@ -434,7 +434,7 @@ const TokenIssuance: React.FC = () => {
                   : 'bg-surface-highlight text-text-secondary hover:text-white'
               }`}
             >
-              All
+              전체
             </button>
             {FUND_TYPES.map((fund) => (
               <button
@@ -460,8 +460,8 @@ const TokenIssuance: React.FC = () => {
                 <span className="material-symbols-outlined text-text-muted text-5xl mb-2">
                   token
                 </span>
-                <p className="text-sm text-text-secondary">No tokens issued yet</p>
-                <p className="text-xs text-text-muted mt-1">Issue your first token to get started</p>
+                <p className="text-sm text-text-secondary">발행된 토큰이 없습니다</p>
+                <p className="text-xs text-text-muted mt-1">첫 번째 토큰을 발행하여 시작하세요</p>
               </div>
             </Card>
           ) : (
@@ -485,24 +485,24 @@ const TokenIssuance: React.FC = () => {
                           {status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-white">User: {token.userId}</p>
-                      <p className="text-xs text-text-muted">Fund: {fundConfig?.name}</p>
+                      <p className="text-sm text-white">사용자: {token.userId}</p>
+                      <p className="text-xs text-text-muted">기금: {fundConfig?.name}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-[#2b8cee]">₩{formatAmount(token.amount)}</p>
                       {status === 'active' && daysRemaining > 0 && (
-                        <p className="text-[10px] text-text-muted">{daysRemaining}d left</p>
+                        <p className="text-[10px] text-text-muted">{daysRemaining}일 남음</p>
                       )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <p className="text-text-muted">Issued</p>
+                      <p className="text-text-muted">발행일</p>
                       <p className="text-white">{formatDate(token.issuedAt)}</p>
                     </div>
                     <div>
-                      <p className="text-text-muted">Expires</p>
+                      <p className="text-text-muted">만료일</p>
                       <p className="text-white">{formatDate(token.restrictions.expiryDate)}</p>
                     </div>
                   </div>
@@ -510,7 +510,7 @@ const TokenIssuance: React.FC = () => {
                   {token.budgetCode && (
                     <div className="mt-2 pt-2 border-t border-surface-highlight">
                       <p className="text-[10px] text-text-muted">
-                        Budget Code: <span className="font-mono text-white">{token.budgetCode}</span>
+                        예산 코드: <span className="font-mono text-white">{token.budgetCode}</span>
                       </p>
                     </div>
                   )}
@@ -525,12 +525,12 @@ const TokenIssuance: React.FC = () => {
       <Modal
         isOpen={showIssueModal}
         onClose={() => setShowIssueModal(false)}
-        title="Issue New Tokens"
+        title="새 토큰 발행"
       >
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2">
-              Fund Type
+              기금 유형
             </label>
             <div className="p-3 rounded-xl bg-surface border border-surface-highlight">
               <div className="flex items-center gap-3">
@@ -552,7 +552,7 @@ const TokenIssuance: React.FC = () => {
           </div>
 
           <Input
-            label="Recipient User ID"
+            label="수령자 사용자 ID"
             placeholder="user-12345"
             value={recipientId}
             onChange={(e) => setRecipientId(e.target.value)}
@@ -560,7 +560,7 @@ const TokenIssuance: React.FC = () => {
           />
 
           <Input
-            label="Amount (KRW)"
+            label="금액 (원)"
             placeholder="100000"
             type="number"
             value={amount}
@@ -569,7 +569,7 @@ const TokenIssuance: React.FC = () => {
           />
 
           <Input
-            label="Expiry Days"
+            label="만료 일수"
             placeholder="90"
             type="number"
             value={expiryDays}
@@ -578,7 +578,7 @@ const TokenIssuance: React.FC = () => {
           />
 
           <Input
-            label="Budget Code (Optional)"
+            label="예산 코드 (선택사항)"
             placeholder="BUD-2024-001"
             value={budgetCode}
             onChange={(e) => setBudgetCode(e.target.value)}
@@ -587,8 +587,8 @@ const TokenIssuance: React.FC = () => {
 
           <div className="flex items-center justify-between p-4 rounded-xl bg-surface border border-surface-highlight">
             <div>
-              <p className="text-sm font-medium text-white">Custom Restrictions</p>
-              <p className="text-xs text-text-muted">Override default MCC rules</p>
+              <p className="text-sm font-medium text-white">맞춤 제한 설정</p>
+              <p className="text-xs text-text-muted">기본 MCC 규칙 재정의</p>
             </div>
             <Toggle
               checked={customRestrictions}
@@ -599,7 +599,7 @@ const TokenIssuance: React.FC = () => {
           {customRestrictions && (
             <div className="p-4 rounded-xl bg-surface-highlight border border-surface">
               <p className="text-xs text-text-secondary mb-3">
-                Configure custom MCC restrictions for this token
+                이 토큰에 대한 맞춤 MCC 제한을 설정하세요
               </p>
               <Button
                 variant="secondary"
@@ -611,7 +611,7 @@ const TokenIssuance: React.FC = () => {
                 }}
                 icon={<span className="material-symbols-outlined text-[16px]">tune</span>}
               >
-                Open MCC Configurator
+                MCC 설정 열기
               </Button>
             </div>
           )}
@@ -622,7 +622,7 @@ const TokenIssuance: React.FC = () => {
             fullWidth
             onClick={handleIssueTokens}
           >
-            Issue Tokens
+            토큰 발행
           </Button>
         </div>
       </Modal>
@@ -631,18 +631,18 @@ const TokenIssuance: React.FC = () => {
       <Modal
         isOpen={showMCCModal}
         onClose={() => setShowMCCModal(false)}
-        title="MCC Restriction Configurator"
+        title="MCC 제한 설정"
       >
         <div className="space-y-4">
           <p className="text-sm text-text-secondary">
-            Configure merchant category restrictions. Select allowed or blocked categories.
+            가맹점 업종 제한을 설정합니다. 허용 또는 차단할 업종을 선택하세요.
           </p>
 
           <div>
-            <h4 className="text-sm font-bold text-white mb-3">Allowed Categories</h4>
+            <h4 className="text-sm font-bold text-white mb-3">허용 업종</h4>
             <div className="space-y-2">
               {MCC_CATEGORY_LIST.filter(cat =>
-                !['Liquor', 'Gambling', 'Adult', 'Large Mart', 'Luxury'].includes(cat.name)
+                !['주류', '도박', '성인', '대형마트', '명품'].includes(cat.name)
               ).map((category) => {
                 const isSelected = category.codes.every(code => allowedMCC.includes(code));
 
@@ -659,7 +659,7 @@ const TokenIssuance: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-white">{category.name}</p>
-                        <p className="text-xs text-text-muted">{category.codes.length} MCC codes</p>
+                        <p className="text-xs text-text-muted">{category.codes.length}개 MCC 코드</p>
                       </div>
                       {isSelected && (
                         <span className="material-symbols-outlined text-primary">check_circle</span>
@@ -672,10 +672,10 @@ const TokenIssuance: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold text-white mb-3">Blocked Categories</h4>
+            <h4 className="text-sm font-bold text-white mb-3">차단 업종</h4>
             <div className="space-y-2">
               {MCC_CATEGORY_LIST.filter(cat =>
-                ['Liquor', 'Gambling', 'Adult', 'Large Mart', 'Luxury'].includes(cat.name)
+                ['주류', '도박', '성인', '대형마트', '명품'].includes(cat.name)
               ).map((category) => {
                 const isSelected = category.codes.every(code => blockedMCC.includes(code));
 
@@ -692,7 +692,7 @@ const TokenIssuance: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-white">{category.name}</p>
-                        <p className="text-xs text-text-muted">{category.codes.length} MCC codes</p>
+                        <p className="text-xs text-text-muted">{category.codes.length}개 MCC 코드</p>
                       </div>
                       {isSelected && (
                         <span className="material-symbols-outlined text-red-500">block</span>
@@ -707,12 +707,12 @@ const TokenIssuance: React.FC = () => {
           <div className="pt-4 border-t border-surface-highlight">
             <div className="grid grid-cols-2 gap-2 text-xs mb-3">
               <div className="p-2 rounded-lg bg-surface">
-                <p className="text-text-muted mb-1">Allowed</p>
-                <p className="text-white font-bold">{allowedMCC.length} codes</p>
+                <p className="text-text-muted mb-1">허용</p>
+                <p className="text-white font-bold">{allowedMCC.length}개 코드</p>
               </div>
               <div className="p-2 rounded-lg bg-surface">
-                <p className="text-text-muted mb-1">Blocked</p>
-                <p className="text-white font-bold">{blockedMCC.length} codes</p>
+                <p className="text-text-muted mb-1">차단</p>
+                <p className="text-white font-bold">{blockedMCC.length}개 코드</p>
               </div>
             </div>
 
@@ -725,7 +725,7 @@ const TokenIssuance: React.FC = () => {
                 setShowIssueModal(true);
               }}
             >
-              Apply Configuration
+              설정 적용
             </Button>
           </div>
         </div>
@@ -735,16 +735,16 @@ const TokenIssuance: React.FC = () => {
       <Modal
         isOpen={showClawbackModal}
         onClose={() => setShowClawbackModal(false)}
-        title="Clawback Management"
+        title="회수 관리"
       >
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/30">
             <div className="flex items-start gap-3">
               <span className="material-symbols-outlined text-yellow-500">warning</span>
               <div>
-                <p className="text-sm font-medium text-yellow-500">Clawback Process</p>
+                <p className="text-sm font-medium text-yellow-500">회수 프로세스</p>
                 <p className="text-xs text-yellow-500/80 mt-1">
-                  This will process all expired tokens and return funds to the issuer. This action cannot be undone.
+                  만료된 모든 토큰을 처리하고 발행자에게 자금을 반환합니다. 이 작업은 취소할 수 없습니다.
                 </p>
               </div>
             </div>
@@ -753,13 +753,13 @@ const TokenIssuance: React.FC = () => {
           <Card padding="md">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-text-secondary">Total Clawed Back</p>
+                <p className="text-sm text-text-secondary">총 회수액</p>
                 <p className="text-lg font-bold text-white">
                   ₩{formatAmount(metrics?.totalClawback || 0)}
                 </p>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm text-text-secondary">Total Burned</p>
+                <p className="text-sm text-text-secondary">총 소각액</p>
                 <p className="text-lg font-bold text-white">
                   ₩{formatAmount(metrics?.totalBurned || 0)}
                 </p>
@@ -775,16 +775,16 @@ const TokenIssuance: React.FC = () => {
               onClick={handleProcessClawback}
               icon={<span className="material-symbols-outlined text-[20px]">delete_sweep</span>}
             >
-              Process Clawback Now
+              지금 회수 처리
             </Button>
           </div>
 
           <div className="pt-4 border-t border-surface-highlight">
-            <h4 className="text-sm font-bold text-white mb-3">Clawback History</h4>
+            <h4 className="text-sm font-bold text-white mb-3">회수 이력</h4>
             <div className="space-y-2">
               <Card padding="sm">
                 <p className="text-xs text-text-secondary text-center py-4">
-                  No recent clawback operations
+                  최근 회수 작업 없음
                 </p>
               </Card>
             </div>

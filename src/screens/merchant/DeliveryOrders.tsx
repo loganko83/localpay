@@ -61,14 +61,14 @@ const DeliveryOrders: React.FC = () => {
 
   const getStatusBadge = (status: OrderStatus) => {
     const statusConfig: Record<OrderStatus, { variant: 'success' | 'warning' | 'error' | 'info' | 'default', label: string }> = {
-      PLACED: { variant: 'warning', label: 'Pending' },
-      ACCEPTED: { variant: 'info', label: 'Accepted' },
-      PREPARING: { variant: 'info', label: 'Preparing' },
-      READY: { variant: 'success', label: 'Ready' },
-      PICKED_UP: { variant: 'success', label: 'Picked Up' },
-      DELIVERING: { variant: 'success', label: 'Delivering' },
-      DELIVERED: { variant: 'default', label: 'Completed' },
-      CANCELLED: { variant: 'error', label: 'Cancelled' },
+      PLACED: { variant: 'warning', label: '대기 중' },
+      ACCEPTED: { variant: 'info', label: '접수됨' },
+      PREPARING: { variant: 'info', label: '준비 중' },
+      READY: { variant: 'success', label: '준비 완료' },
+      PICKED_UP: { variant: 'success', label: '픽업됨' },
+      DELIVERING: { variant: 'success', label: '배달 중' },
+      DELIVERED: { variant: 'default', label: '완료' },
+      CANCELLED: { variant: 'error', label: '취소됨' },
     };
     const config = statusConfig[status];
     return <Badge variant={config.variant} size="sm">{config.label}</Badge>;
@@ -103,11 +103,11 @@ const DeliveryOrders: React.FC = () => {
     .reduce((sum, o) => sum + o.subtotal, 0);
 
   const tabs: { key: TabType; label: string; count: number }[] = [
-    { key: 'all', label: 'All', count: orders.length },
-    { key: 'pending', label: 'Pending', count: orders.filter(o => o.status === 'PLACED').length },
-    { key: 'preparing', label: 'Preparing', count: orders.filter(o => o.status === 'ACCEPTED' || o.status === 'PREPARING').length },
-    { key: 'ready', label: 'Ready', count: orders.filter(o => o.status === 'READY' || o.status === 'PICKED_UP').length },
-    { key: 'completed', label: 'Completed', count: completedOrders },
+    { key: 'all', label: '전체', count: orders.length },
+    { key: 'pending', label: '대기 중', count: orders.filter(o => o.status === 'PLACED').length },
+    { key: 'preparing', label: '준비 중', count: orders.filter(o => o.status === 'ACCEPTED' || o.status === 'PREPARING').length },
+    { key: 'ready', label: '준비 완료', count: orders.filter(o => o.status === 'READY' || o.status === 'PICKED_UP').length },
+    { key: 'completed', label: '완료', count: completedOrders },
   ];
 
   return (
@@ -119,8 +119,8 @@ const DeliveryOrders: React.FC = () => {
             <span className="material-symbols-outlined" style={{ color: theme.accent }}>restaurant</span>
           </div>
           <div>
-            <h2 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, lineHeight: 1.25 }}>Delivery Orders</h2>
-            <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Real-time order management</p>
+            <h2 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, lineHeight: 1.25 }}>배달 주문</h2>
+            <p style={{ fontSize: '0.75rem', color: theme.textSecondary }}>실시간 주문 관리</p>
           </div>
         </div>
         <button
@@ -139,7 +139,7 @@ const DeliveryOrders: React.FC = () => {
           <div style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}`, borderRadius: '0.5rem', padding: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Today's Orders</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>오늘 주문</p>
                 <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme.text }}>{todayOrders}</p>
               </div>
               <div style={{ height: '2.5rem', width: '2.5rem', borderRadius: '9999px', backgroundColor: theme.accentSoft, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -151,7 +151,7 @@ const DeliveryOrders: React.FC = () => {
           <div style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}`, borderRadius: '0.5rem', padding: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Pending Action</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>대기 중</p>
                 <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fbbf24' }}>{pendingOrders}</p>
               </div>
               <div style={{ height: '2.5rem', width: '2.5rem', borderRadius: '9999px', backgroundColor: 'rgba(251,191,36,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -163,7 +163,7 @@ const DeliveryOrders: React.FC = () => {
           <div style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}`, borderRadius: '0.5rem', padding: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Completed</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>완료</p>
                 <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme.accent }}>{completedOrders}</p>
               </div>
               <div style={{ height: '2.5rem', width: '2.5rem', borderRadius: '9999px', backgroundColor: theme.accentSoft, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -175,7 +175,7 @@ const DeliveryOrders: React.FC = () => {
           <div style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}`, borderRadius: '0.5rem', padding: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Today's Revenue</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>오늘 매출</p>
                 <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: theme.accent }}>₩{formatAmount(todayRevenue)}</p>
               </div>
               <div style={{ height: '2.5rem', width: '2.5rem', borderRadius: '9999px', backgroundColor: theme.accentSoft, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -241,27 +241,27 @@ const DeliveryOrders: React.FC = () => {
       <div style={{ padding: '0 1rem 1rem' }}>
         <div style={{ background: `linear-gradient(to bottom right, ${theme.accentSoft}, ${theme.card})`, border: `1px solid ${theme.accent}4d`, borderRadius: '0.5rem', padding: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>Settlement Summary</h3>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>정산 요약</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined filled" style={{ color: theme.accent, fontSize: '16px' }}>verified</span>
-              <span style={{ fontSize: '0.75rem', color: theme.accent, fontWeight: 500 }}>Blockchain Verified</span>
+              <span style={{ fontSize: '0.75rem', color: theme.accent, fontWeight: 500 }}>블록체인 검증됨</span>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Today's Settlements</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>오늘 정산</span>
               <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>₩{formatAmount(todayRevenue)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Pending Settlement</span>
+              <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>정산 대기</span>
               <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: '#fbbf24' }}>₩{formatAmount(pendingSettlement)}</span>
             </div>
             <div style={{ paddingTop: '0.5rem', borderTop: `1px solid ${theme.border}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Platform Commission</span>
+                <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>플랫폼 수수료</span>
                 <span style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>0%</span>
               </div>
-              <p style={{ fontSize: '0.625rem', color: theme.textMuted, marginTop: '0.25rem' }}>Only 1% payment gateway fee applies</p>
+              <p style={{ fontSize: '0.625rem', color: theme.textMuted, marginTop: '0.25rem' }}>결제 게이트웨이 수수료 1%만 적용</p>
             </div>
           </div>
         </div>
@@ -270,18 +270,18 @@ const DeliveryOrders: React.FC = () => {
       {/* Orders List */}
       <div style={{ padding: '0 1rem' }}>
         <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text, marginBottom: '0.75rem' }}>
-          {activeTab === 'pending' && 'Incoming Orders'}
-          {activeTab === 'preparing' && 'Orders in Preparation'}
-          {activeTab === 'ready' && 'Ready for Pickup'}
-          {activeTab === 'completed' && 'Completed Orders'}
-          {activeTab === 'all' && 'All Orders'}
+          {activeTab === 'pending' && '신규 주문'}
+          {activeTab === 'preparing' && '준비 중인 주문'}
+          {activeTab === 'ready' && '픽업 대기'}
+          {activeTab === 'completed' && '완료된 주문'}
+          {activeTab === 'all' && '전체 주문'}
         </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {filteredOrders.length === 0 ? (
             <div style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}`, borderRadius: '0.5rem', padding: '2rem', textAlign: 'center' }}>
               <span className="material-symbols-outlined" style={{ color: theme.textMuted, fontSize: '48px', display: 'block', marginBottom: '0.5rem' }}>inbox</span>
-              <p style={{ fontSize: '0.875rem', color: theme.textSecondary }}>No orders in this category</p>
+              <p style={{ fontSize: '0.875rem', color: theme.textSecondary }}>이 카테고리에 주문이 없습니다</p>
             </div>
           ) : (
             filteredOrders.map(order => (
@@ -343,15 +343,15 @@ const DeliveryOrders: React.FC = () => {
                 {/* Order Total */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '0.75rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                    <span style={{ color: theme.textSecondary }}>Subtotal</span>
+                    <span style={{ color: theme.textSecondary }}>소계</span>
                     <span style={{ color: theme.text }}>₩{formatAmount(order.subtotal)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                    <span style={{ color: theme.textSecondary }}>Delivery Fee</span>
+                    <span style={{ color: theme.textSecondary }}>배달료</span>
                     <span style={{ color: theme.text }}>₩{formatAmount(order.deliveryFee)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 'bold', paddingTop: '0.25rem', borderTop: `1px solid ${theme.border}` }}>
-                    <span style={{ color: theme.text }}>Total</span>
+                    <span style={{ color: theme.text }}>합계</span>
                     <span style={{ color: theme.accent }}>₩{formatAmount(order.total)}</span>
                   </div>
                 </div>
@@ -369,7 +369,7 @@ const DeliveryOrders: React.FC = () => {
                       onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>close</span>
-                      Reject
+                      거부
                     </button>
                     <button
                       style={{ flex: 1, padding: '0.5rem', borderRadius: '0.5rem', backgroundColor: theme.accent, color: theme.text, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.875rem', fontWeight: 500, transition: 'opacity 0.2s' }}
@@ -381,7 +381,7 @@ const DeliveryOrders: React.FC = () => {
                       onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>check</span>
-                      Accept Order
+                      주문 접수
                     </button>
                   </div>
                 )}
@@ -390,7 +390,7 @@ const DeliveryOrders: React.FC = () => {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                       <span className="material-symbols-outlined animate-spin" style={{ color: theme.accent, fontSize: '16px' }}>progress_activity</span>
-                      <span style={{ fontSize: '0.75rem', color: theme.accent, fontWeight: 500 }}>Preparing... Est. {order.estimatedDeliveryTime}min</span>
+                      <span style={{ fontSize: '0.75rem', color: theme.accent, fontWeight: 500 }}>준비 중... 예상 {order.estimatedDeliveryTime}분</span>
                     </div>
                     <button
                       style={{ width: '100%', padding: '0.5rem', borderRadius: '0.5rem', backgroundColor: theme.accent, color: theme.text, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.875rem', fontWeight: 500, transition: 'opacity 0.2s' }}
@@ -402,7 +402,7 @@ const DeliveryOrders: React.FC = () => {
                       onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>restaurant</span>
-                      Mark as Ready
+                      준비 완료
                     </button>
                   </div>
                 )}
@@ -415,8 +415,8 @@ const DeliveryOrders: React.FC = () => {
                           <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '16px' }}>two_wheeler</span>
                         </div>
                         <div>
-                          <p style={{ fontSize: '0.75rem', fontWeight: 'bold', color: theme.text }}>Rider Assigned</p>
-                          <p style={{ fontSize: '0.625rem', color: theme.textSecondary }}>Rider ID: {order.riderId.slice(-6)}</p>
+                          <p style={{ fontSize: '0.75rem', fontWeight: 'bold', color: theme.text }}>라이더 배정됨</p>
+                          <p style={{ fontSize: '0.625rem', color: theme.textSecondary }}>라이더 ID: {order.riderId.slice(-6)}</p>
                         </div>
                       </div>
                       <button
@@ -430,7 +430,7 @@ const DeliveryOrders: React.FC = () => {
                     {order.status === 'PICKED_UP' && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '12px' }}>local_shipping</span>
-                        <span style={{ fontSize: '0.75rem', color: theme.accent }}>On the way • ETA {order.estimatedDeliveryTime}min</span>
+                        <span style={{ fontSize: '0.75rem', color: theme.accent }}>배달 중 • 예상 {order.estimatedDeliveryTime}분</span>
                       </div>
                     )}
                   </div>
@@ -442,8 +442,8 @@ const DeliveryOrders: React.FC = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span className="material-symbols-outlined filled" style={{ color: theme.accent, fontSize: '16px' }}>check_circle</span>
                         <div>
-                          <p style={{ fontSize: '0.75rem', fontWeight: 'bold', color: theme.accent }}>Settled</p>
-                          <p style={{ fontSize: '0.625rem', color: theme.textSecondary }}>₩{formatAmount(order.settlement.merchantAmount)} received</p>
+                          <p style={{ fontSize: '0.75rem', fontWeight: 'bold', color: theme.accent }}>정산 완료</p>
+                          <p style={{ fontSize: '0.625rem', color: theme.textSecondary }}>₩{formatAmount(order.settlement.merchantAmount)} 수령</p>
                         </div>
                       </div>
                       <button
@@ -452,7 +452,7 @@ const DeliveryOrders: React.FC = () => {
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                       >
                         <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>receipt</span>
-                        Receipt
+                        영수증
                       </button>
                     </div>
                   </div>
@@ -474,7 +474,7 @@ const DeliveryOrders: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ position: 'sticky', top: 0, backgroundColor: theme.card, borderBottom: `1px solid ${theme.border}`, padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: theme.text }}>Order Details</h3>
+              <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: theme.text }}>주문 상세</h3>
               <button
                 onClick={() => setSelectedOrder(null)}
                 style={{ padding: '0.5rem', borderRadius: '9999px', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }}
@@ -498,17 +498,17 @@ const DeliveryOrders: React.FC = () => {
               {/* Customer & Delivery */}
               <div style={{ backgroundColor: `${theme.cardHover}80`, borderRadius: '0.5rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Customer</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>고객</p>
                   <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.text }}>{anonymizeCustomer(selectedOrder.customerId)}</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Delivery Address</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>배달 주소</p>
                   <p style={{ fontSize: '0.875rem', color: theme.text }}>{selectedOrder.deliveryAddress}</p>
-                  <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{selectedOrder.deliveryDistance}km • Est. {selectedOrder.estimatedDeliveryTime}min</p>
+                  <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginTop: '0.25rem' }}>{selectedOrder.deliveryDistance}km • 예상 {selectedOrder.estimatedDeliveryTime}분</p>
                 </div>
                 {selectedOrder.specialInstructions && (
                   <div>
-                    <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Special Instructions</p>
+                    <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>특별 요청사항</p>
                     <p style={{ fontSize: '0.875rem', color: '#fbbf24' }}>{selectedOrder.specialInstructions}</p>
                   </div>
                 )}
@@ -516,7 +516,7 @@ const DeliveryOrders: React.FC = () => {
 
               {/* Order Items */}
               <div>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.5rem' }}>Order Items</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.5rem' }}>주문 항목</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {selectedOrder.items.map((item, idx) => (
                     <div key={idx} style={{ backgroundColor: `${theme.cardHover}80`, borderRadius: '0.5rem', padding: '0.75rem' }}>
@@ -527,10 +527,10 @@ const DeliveryOrders: React.FC = () => {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                           {item.options && item.options.length > 0 && (
-                            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginBottom: '0.25rem' }}>Options: {item.options.join(', ')}</p>
+                            <p style={{ fontSize: '0.75rem', color: theme.textMuted, marginBottom: '0.25rem' }}>옵션: {item.options.join(', ')}</p>
                           )}
                         </div>
-                        <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>Qty: {item.quantity} × ₩{formatAmount(item.unitPrice)}</span>
+                        <span style={{ fontSize: '0.75rem', color: theme.textSecondary }}>수량: {item.quantity} × ₩{formatAmount(item.unitPrice)}</span>
                       </div>
                     </div>
                   ))}
@@ -539,22 +539,22 @@ const DeliveryOrders: React.FC = () => {
 
               {/* Payment Breakdown */}
               <div style={{ backgroundColor: `${theme.cardHover}80`, borderRadius: '0.5rem', padding: '0.75rem' }}>
-                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.5rem' }}>Payment Breakdown</p>
+                <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.5rem' }}>결제 상세</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                    <span style={{ color: theme.textSecondary }}>Subtotal</span>
+                    <span style={{ color: theme.textSecondary }}>소계</span>
                     <span style={{ color: theme.text }}>₩{formatAmount(selectedOrder.subtotal)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                    <span style={{ color: theme.textSecondary }}>Delivery Fee</span>
+                    <span style={{ color: theme.textSecondary }}>배달료</span>
                     <span style={{ color: theme.text }}>₩{formatAmount(selectedOrder.deliveryFee)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                    <span style={{ color: theme.textSecondary }}>Platform Fee</span>
+                    <span style={{ color: theme.textSecondary }}>플랫폼 수수료</span>
                     <span style={{ color: theme.accent }}>₩{formatAmount(selectedOrder.platformFee)} (0%)</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: 'bold', paddingTop: '0.5rem', borderTop: `1px solid ${theme.border}` }}>
-                    <span style={{ color: theme.text }}>Total</span>
+                    <span style={{ color: theme.text }}>합계</span>
                     <span style={{ color: theme.accent }}>₩{formatAmount(selectedOrder.total)}</span>
                   </div>
                 </div>
@@ -565,24 +565,24 @@ const DeliveryOrders: React.FC = () => {
                 <div style={{ backgroundColor: theme.accentSoft, border: `1px solid ${theme.accent}4d`, borderRadius: '0.5rem', padding: '0.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                     <span className="material-symbols-outlined filled" style={{ color: theme.accent }}>verified</span>
-                    <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>Settlement Completed</p>
+                    <p style={{ fontSize: '0.875rem', fontWeight: 'bold', color: theme.accent }}>정산 완료</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                      <span style={{ color: theme.textSecondary }}>Merchant Amount</span>
+                      <span style={{ color: theme.textSecondary }}>가맹점 정산액</span>
                       <span style={{ color: theme.text, fontWeight: 'bold' }}>₩{formatAmount(selectedOrder.settlement.merchantAmount)}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                      <span style={{ color: theme.textSecondary }}>Rider Amount</span>
+                      <span style={{ color: theme.textSecondary }}>라이더 정산액</span>
                       <span style={{ color: theme.text }}>₩{formatAmount(selectedOrder.settlement.riderAmount)}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                      <span style={{ color: theme.textSecondary }}>PG Fee (1%)</span>
+                      <span style={{ color: theme.textSecondary }}>PG 수수료 (1%)</span>
                       <span style={{ color: theme.text }}>₩{formatAmount(selectedOrder.settlement.pgFeeAmount)}</span>
                     </div>
                     {selectedOrder.settlement.blockchainTxHash && (
                       <div style={{ paddingTop: '0.5rem', borderTop: `1px solid ${theme.accent}4d` }}>
-                        <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>Blockchain TX</p>
+                        <p style={{ fontSize: '0.75rem', color: theme.textSecondary, marginBottom: '0.25rem' }}>블록체인 TX</p>
                         <p style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: theme.accent, wordBreak: 'break-all' }}>{selectedOrder.settlement.blockchainTxHash}</p>
                       </div>
                     )}

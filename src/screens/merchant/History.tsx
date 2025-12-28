@@ -18,12 +18,12 @@ const History: React.FC = () => {
   const revenueChange = 12.5;
 
   const transactions = [
-    { id: '1', txId: '0x8f...2a4b', customer: 'Customer #4921', amount: 15000, time: '10:42 AM', status: 'success' as const },
-    { id: '2', txId: '0x1d...ff32', customer: 'Processing', amount: 32000, time: '09:58 AM', status: 'pending' as const },
-    { id: '3', txId: '0x3b...9c11', customer: 'Refunded', amount: 4500, time: '10:15 AM', status: 'refunded' as const },
-    { id: '4', txId: '0xa1...77b2', customer: 'Customer #3301', amount: 8200, time: '09:30 AM', status: 'success' as const },
-    { id: '5', txId: '0xe4...11c9', customer: 'Customer #8822', amount: 45000, time: '09:12 AM', status: 'success' as const },
-    { id: '6', txId: '0xb2...44a1', customer: 'Customer #1102', amount: 22500, time: '08:45 AM', status: 'success' as const },
+    { id: '1', txId: '0x8f...2a4b', customer: '고객 #4921', amount: 15000, time: '오전 10:42', status: 'success' as const },
+    { id: '2', txId: '0x1d...ff32', customer: '처리 중', amount: 32000, time: '오전 09:58', status: 'pending' as const },
+    { id: '3', txId: '0x3b...9c11', customer: '환불됨', amount: 4500, time: '오전 10:15', status: 'refunded' as const },
+    { id: '4', txId: '0xa1...77b2', customer: '고객 #3301', amount: 8200, time: '오전 09:30', status: 'success' as const },
+    { id: '5', txId: '0xe4...11c9', customer: '고객 #8822', amount: 45000, time: '오전 09:12', status: 'success' as const },
+    { id: '6', txId: '0xb2...44a1', customer: '고객 #1102', amount: 22500, time: '오전 08:45', status: 'success' as const },
   ];
 
   const filteredTransactions = transactions.filter((tx) => {
@@ -35,10 +35,10 @@ const History: React.FC = () => {
   });
 
   const filters: { label: string; value: FilterType }[] = [
-    { label: 'All', value: 'all' },
-    { label: 'Completed', value: 'completed' },
-    { label: 'Refunded', value: 'refunded' },
-    { label: 'Pending', value: 'pending' },
+    { label: '전체', value: 'all' },
+    { label: '완료', value: 'completed' },
+    { label: '환불됨', value: 'refunded' },
+    { label: '대기 중', value: 'pending' },
   ];
 
   return (
@@ -58,7 +58,7 @@ const History: React.FC = () => {
           >
             <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
           </button>
-          <h1 className="text-xl font-bold" style={{ color: theme.text }}>Transactions</h1>
+          <h1 className="text-xl font-bold" style={{ color: theme.text }}>거래 내역</h1>
         </div>
         <button
           onClick={() => navigate('/merchant/scan')}
@@ -66,7 +66,7 @@ const History: React.FC = () => {
           style={{ background: theme.accentSoft }}
         >
           <span className="material-symbols-outlined text-[20px]" style={{ color: theme.accent }}>qr_code_scanner</span>
-          <span className="text-sm font-bold" style={{ color: theme.accent }}>Scan</span>
+          <span className="text-sm font-bold" style={{ color: theme.accent }}>스캔</span>
         </button>
       </header>
 
@@ -89,12 +89,12 @@ const History: React.FC = () => {
                   <span className="material-symbols-outlined text-[20px]" style={{ color: theme.textSecondary }}>
                     account_balance_wallet
                   </span>
-                  <p className="text-sm font-medium" style={{ color: theme.textSecondary }}>Today's Revenue</p>
+                  <p className="text-sm font-medium" style={{ color: theme.textSecondary }}>오늘 매출</p>
                 </div>
                 <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: theme.text }}>₩{formatAmount(todayRevenue)}</h2>
                 <div className="flex items-center gap-1 mt-1">
                   <span className="material-symbols-outlined text-[16px]" style={{ color: theme.accent }}>trending_up</span>
-                  <p className="text-xs font-bold" style={{ color: theme.accent }}>+{revenueChange}% from yesterday</p>
+                  <p className="text-xs font-bold" style={{ color: theme.accent }}>+{revenueChange}% 어제 대비</p>
                 </div>
               </div>
 
@@ -107,7 +107,7 @@ const History: React.FC = () => {
                     boxShadow: `0 4px 12px ${theme.accentSoft}`,
                   }}
                 >
-                  View Analytics
+                  분석 보기
                 </button>
                 <button
                   className="h-10 w-10 rounded-lg flex items-center justify-center transition-colors"
@@ -133,7 +133,7 @@ const History: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by ID, amount or customer..."
+              placeholder="ID, 금액 또는 고객으로 검색..."
               className="w-full h-12 rounded-xl pl-12 pr-12 focus:outline-none focus:ring-2 transition-all"
               style={{
                 background: theme.card,
@@ -173,8 +173,8 @@ const History: React.FC = () => {
 
         {/* Section Header */}
         <div className="px-4 pb-3 flex items-center justify-between">
-          <h3 className="text-lg font-bold" style={{ color: theme.text }}>Recent Activity</h3>
-          <span className="text-xs font-medium" style={{ color: theme.textSecondary }}>Updated 1m ago</span>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>최근 활동</h3>
+          <span className="text-xs font-medium" style={{ color: theme.textSecondary }}>1분 전 갱신</span>
         </div>
 
         {/* Transaction List */}
@@ -255,7 +255,7 @@ const History: React.FC = () => {
                             : theme.textSecondary,
                     }}
                   >
-                    {tx.status === 'success' ? 'Success' : tx.status === 'pending' ? 'Pending' : 'Refunded'}
+                    {tx.status === 'success' ? '성공' : tx.status === 'pending' ? '대기 중' : '환불됨'}
                   </p>
                 </div>
               </div>
@@ -269,7 +269,7 @@ const History: React.FC = () => {
             className="flex items-center gap-1 text-sm font-medium transition-colors"
             style={{ color: theme.textSecondary }}
           >
-            Load More
+            더 보기
             <span className="material-symbols-outlined text-[16px]">expand_more</span>
           </button>
         </div>

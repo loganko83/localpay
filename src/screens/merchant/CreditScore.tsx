@@ -123,57 +123,57 @@ const CreditScore: React.FC = () => {
   const creditProducts = [
     {
       id: 'working-capital',
-      name: 'Working Capital Loan',
+      name: '운전자금 대출',
       maxAmount: 30000000,
       interestRate: 3.5,
-      term: '6-12 months',
+      term: '6-12개월',
       eligible: true,
     },
     {
       id: 'equipment',
-      name: 'Equipment Financing',
+      name: '설비자금 대출',
       maxAmount: 20000000,
       interestRate: 4.0,
-      term: '12-24 months',
+      term: '12-24개월',
       eligible: true,
     },
     {
       id: 'line-of-credit',
-      name: 'Line of Credit',
+      name: '한도 대출',
       maxAmount: 15000000,
       interestRate: 4.5,
-      term: 'Revolving',
+      term: '회전',
       eligible: true,
     },
     {
       id: 'expansion',
-      name: 'Expansion Loan',
+      name: '사업확장 대출',
       maxAmount: 50000000,
       interestRate: 5.0,
-      term: '24-36 months',
+      term: '24-36개월',
       eligible: false,
     },
   ];
 
   const improvementTips = [
     {
-      title: 'Increase Transaction Volume',
-      description: 'Process 15% more local currency transactions',
-      expectedImpact: '+25 points',
+      title: '거래량 증가',
+      description: '지역화폐 거래를 15% 더 처리하세요',
+      expectedImpact: '+25점',
       icon: 'trending_up',
       color: 'text-primary',
     },
     {
-      title: 'Improve Customer Retention',
-      description: 'Join loyalty program to boost repeat customers',
-      expectedImpact: '+18 points',
+      title: '고객 유지율 향상',
+      description: '로열티 프로그램에 참여하여 재방문 고객을 늘리세요',
+      expectedImpact: '+18점',
       icon: 'loyalty',
       color: 'text-blue-500',
     },
     {
-      title: 'Maintain Payment Consistency',
-      description: 'Keep zero-default record for 3+ months',
-      expectedImpact: '+12 points',
+      title: '결제 일관성 유지',
+      description: '3개월 이상 무연체 기록을 유지하세요',
+      expectedImpact: '+12점',
       icon: 'check_circle',
       color: 'text-yellow-500',
     },
@@ -185,7 +185,7 @@ const CreditScore: React.FC = () => {
         <span className="material-symbols-outlined animate-spin text-4xl" style={{ color: theme.accent }}>
           progress_activity
         </span>
-        <p style={{ color: theme.textSecondary, marginTop: '16px' }}>Loading credit score...</p>
+        <p style={{ color: theme.textSecondary, marginTop: '16px' }}>신용점수 로딩 중...</p>
       </div>
     );
   }
@@ -196,9 +196,9 @@ const CreditScore: React.FC = () => {
         <span className="material-symbols-outlined mb-4" style={{ color: theme.textSecondary, fontSize: '60px' }}>
           error_outline
         </span>
-        <p style={{ color: theme.text, fontWeight: 'bold', marginBottom: '8px' }}>Unable to load credit data</p>
+        <p style={{ color: theme.text, fontWeight: 'bold', marginBottom: '8px' }}>신용 데이터를 불러올 수 없습니다</p>
         <Button onClick={loadCreditData} variant="primary">
-          Retry
+          다시 시도
         </Button>
       </div>
     );
@@ -209,7 +209,7 @@ const CreditScore: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: '16px' }}>
-      <Header title="Credit Score" showBack />
+      <Header title="신용점수" showBack />
 
       {/* Credit Score Header */}
       <div style={{ padding: '24px 16px 16px' }}>
@@ -217,7 +217,7 @@ const CreditScore: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
             <div>
               <p style={{ fontSize: '12px', color: theme.textSecondary, fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-                Your Credit Score
+                신용점수
               </p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
                 <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: theme.text }}>
@@ -228,20 +228,20 @@ const CreditScore: React.FC = () => {
                     variant="success"
                     size="md"
                   >
-                    Grade {getGradeLabel(creditAssessment.grade)}
+                    등급 {getGradeLabel(creditAssessment.grade)}
                   </Badge>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', color: scoreTrend === 'up' ? theme.accent : '#ef4444' }}>
                     <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
                       {scoreTrend === 'up' ? 'trending_up' : 'trending_down'}
                     </span>
                     <span style={{ fontSize: '12px', fontWeight: 'bold' }}>
-                      {scoreTrend === 'up' ? '+' : '-'}{scoreDiff} points
+                      {scoreTrend === 'up' ? '+' : '-'}{scoreDiff}점
                     </span>
                   </div>
                 </div>
               </div>
               <p style={{ fontSize: '12px', color: theme.textSecondary, marginTop: '12px' }}>
-                Last updated: {new Date(creditAssessment.assessedAt).toLocaleDateString('ko-KR')}
+                최종 업데이트: {new Date(creditAssessment.assessedAt).toLocaleDateString('ko-KR')}
               </p>
             </div>
             <div style={{ height: '48px', width: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: `${getGradeColor(creditAssessment.grade)}20` }}>
@@ -255,7 +255,7 @@ const CreditScore: React.FC = () => {
           <div style={{ position: 'relative', height: '128px', marginBottom: '16px' }}>
             <div style={{ position: 'absolute', inset: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '12px', color: theme.textSecondary }}>Out of</p>
+                <p style={{ fontSize: '12px', color: theme.textSecondary }}>만점</p>
                 <p style={{ fontSize: '24px', fontWeight: 'bold', color: theme.text }}>1000</p>
               </div>
             </div>
@@ -295,9 +295,9 @@ const CreditScore: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: theme.textSecondary }}>
-            <span>0 - Poor</span>
-            <span>500 - Fair</span>
-            <span>1000 - Excellent</span>
+            <span>0 - 매우 낮음</span>
+            <span>500 - 보통</span>
+            <span>1000 - 우수</span>
           </div>
         </Card>
       </div>
@@ -305,9 +305,9 @@ const CreditScore: React.FC = () => {
       {/* Score Factors Breakdown */}
       <div style={{ padding: '0 16px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>Score Factors</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>점수 요인</h3>
           <button style={{ fontSize: '12px', color: theme.accent, fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer' }}>
-            Learn More
+            자세히 보기
           </button>
         </div>
 
@@ -352,9 +352,9 @@ const CreditScore: React.FC = () => {
       {/* Credit Products Available */}
       <div style={{ padding: '0 16px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>Available Credit Products</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>이용 가능한 신용 상품</h3>
           <Badge variant="success" size="sm">
-            {creditProducts.filter(p => p.eligible).length} Eligible
+            {creditProducts.filter(p => p.eligible).length}개 이용 가능
           </Badge>
         </div>
 
@@ -365,9 +365,9 @@ const CreditScore: React.FC = () => {
                 <div style={{ flex: '1' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>{product.name}</h4>
-                    {product.eligible && <Badge variant="success" size="sm">Pre-approved</Badge>}
+                    {product.eligible && <Badge variant="success" size="sm">사전 승인됨</Badge>}
                   </div>
-                  <p style={{ fontSize: '12px', color: theme.textSecondary }}>Term: {product.term}</p>
+                  <p style={{ fontSize: '12px', color: theme.textSecondary }}>기간: {product.term}</p>
                 </div>
                 {!product.eligible && (
                   <span className="material-symbols-outlined" style={{ color: theme.textSecondary, fontSize: '18px' }}>
@@ -378,11 +378,11 @@ const CreditScore: React.FC = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <div>
-                  <p style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '4px' }}>Max Amount</p>
+                  <p style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '4px' }}>최대 금액</p>
                   <p style={{ fontSize: '18px', fontWeight: 'bold', color: theme.text }}>₩{formatAmount(product.maxAmount)}</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '4px' }}>Interest Rate</p>
+                  <p style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '4px' }}>이자율</p>
                   <p style={{ fontSize: '18px', fontWeight: 'bold', color: theme.accent }}>{product.interestRate}%</p>
                 </div>
               </div>
@@ -394,7 +394,7 @@ const CreditScore: React.FC = () => {
                   fullWidth
                   onClick={() => navigate('/merchant/loan-apply', { state: { product } })}
                 >
-                  Apply Now
+                  지금 신청
                 </Button>
               )}
             </Card>
@@ -404,7 +404,7 @@ const CreditScore: React.FC = () => {
 
       {/* Transaction Analytics */}
       <div style={{ padding: '0 16px', marginBottom: '24px' }}>
-        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '12px' }}>Transaction Analytics</h3>
+        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '12px' }}>거래 분석</h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '16px' }}>
           <Card padding="md">
@@ -412,12 +412,12 @@ const CreditScore: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '18px' }}>
                 payments
               </span>
-              <span style={{ fontSize: '12px', color: theme.textSecondary }}>Monthly Volume</span>
+              <span style={{ fontSize: '12px', color: theme.textSecondary }}>월간 거래량</span>
             </div>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: theme.text }}>₩25M</p>
             <p style={{ fontSize: '12px', color: theme.accent, display: 'flex', alignItems: 'center', marginTop: '4px' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '10px', marginRight: '2px' }}>trending_up</span>
-              +12% MoM
+              전월 대비 +12%
             </p>
           </Card>
 
@@ -426,12 +426,12 @@ const CreditScore: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '18px' }}>
                 receipt_long
               </span>
-              <span style={{ fontSize: '12px', color: theme.textSecondary }}>Avg Transaction</span>
+              <span style={{ fontSize: '12px', color: theme.textSecondary }}>평균 거래액</span>
             </div>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: theme.text }}>₩59.5K</p>
             <p style={{ fontSize: '12px', color: theme.textMuted, display: 'flex', alignItems: 'center', marginTop: '4px' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '10px', marginRight: '2px' }}>remove</span>
-              +2% MoM
+              전월 대비 +2%
             </p>
           </Card>
 
@@ -440,12 +440,12 @@ const CreditScore: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: '#eab308', fontSize: '18px' }}>
                 group
               </span>
-              <span style={{ fontSize: '12px', color: theme.textSecondary }}>Unique Customers</span>
+              <span style={{ fontSize: '12px', color: theme.textSecondary }}>순 고객 수</span>
             </div>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: theme.text }}>180</p>
             <p style={{ fontSize: '12px', color: theme.accent, display: 'flex', alignItems: 'center', marginTop: '4px' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '10px', marginRight: '2px' }}>trending_up</span>
-              +8 this month
+              이번 달 +8명
             </p>
           </Card>
 
@@ -454,20 +454,20 @@ const CreditScore: React.FC = () => {
               <span className="material-symbols-outlined" style={{ color: '#a855f7', fontSize: '18px' }}>
                 autorenew
               </span>
-              <span style={{ fontSize: '12px', color: theme.textSecondary }}>Repeat Rate</span>
+              <span style={{ fontSize: '12px', color: theme.textSecondary }}>재방문율</span>
             </div>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: theme.text }}>65%</p>
             <p style={{ fontSize: '12px', color: theme.accent, display: 'flex', alignItems: 'center', marginTop: '4px' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '10px', marginRight: '2px' }}>trending_up</span>
-              +5% MoM
+              전월 대비 +5%
             </p>
           </Card>
         </div>
 
         <Card padding="md">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>Peak Transaction Hours</h4>
-            <p style={{ fontSize: '12px', color: theme.textSecondary }}>Last 30 days</p>
+            <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>피크 거래 시간대</h4>
+            <p style={{ fontSize: '12px', color: theme.textSecondary }}>최근 30일</p>
           </div>
           <div style={{ height: '160px' }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -493,7 +493,7 @@ const CreditScore: React.FC = () => {
       {/* Score History Chart */}
       <div style={{ padding: '0 16px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>Score History</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>점수 이력</h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setViewPeriod('6m')}
@@ -565,11 +565,11 @@ const CreditScore: React.FC = () => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px', paddingTop: '16px', borderTop: `1px solid ${theme.border}` }}>
             <div>
-              <p style={{ fontSize: '12px', color: theme.textSecondary }}>Score Improvement</p>
-              <p style={{ fontSize: '18px', fontWeight: 'bold', color: theme.accent }}>+140 points</p>
+              <p style={{ fontSize: '12px', color: theme.textSecondary }}>점수 향상</p>
+              <p style={{ fontSize: '18px', fontWeight: 'bold', color: theme.accent }}>+140점</p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: '12px', color: theme.textSecondary }}>Period Average</p>
+              <p style={{ fontSize: '12px', color: theme.textSecondary }}>기간 평균</p>
               <p style={{ fontSize: '18px', fontWeight: 'bold', color: theme.text }}>754</p>
             </div>
           </div>
@@ -579,9 +579,9 @@ const CreditScore: React.FC = () => {
       {/* Improvement Tips */}
       <div style={{ padding: '0 16px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>Score Improvement Tips</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text }}>점수 향상 팁</h3>
           <Badge variant="info" size="sm">
-            Personalized
+            맞춤형
           </Badge>
         </div>
 
@@ -603,7 +603,7 @@ const CreditScore: React.FC = () => {
                   </div>
                   <p style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '12px' }}>{tip.description}</p>
                   <Button variant="secondary" size="sm" fullWidth>
-                    Start Improving
+                    개선 시작
                   </Button>
                 </div>
               </div>
@@ -614,14 +614,14 @@ const CreditScore: React.FC = () => {
 
       {/* Recommendations Section */}
       <div style={{ padding: '0 16px' }}>
-        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '12px' }}>Recommendations</h3>
+        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '12px' }}>추천사항</h3>
         <div style={{ backgroundColor: theme.accentSoft, borderColor: theme.accent + '33', borderWidth: '1px', borderStyle: 'solid', borderRadius: '12px', padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
             <span className="material-symbols-outlined" style={{ color: theme.accent, fontSize: '24px' }}>
               lightbulb
             </span>
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '8px' }}>Keep up the great work!</h4>
+              <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: theme.text, marginBottom: '8px' }}>좋은 성과를 유지하세요!</h4>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {creditAssessment.recommendations.map((rec, index) => (
                   <li key={index} style={{ fontSize: '12px', color: theme.textSecondary, display: 'flex', alignItems: 'flex-start', gap: '8px' }}>

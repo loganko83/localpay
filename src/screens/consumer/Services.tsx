@@ -8,81 +8,81 @@ import { theme } from '../../styles/theme';
 const mockServices: LinkedService[] = [
   {
     id: 'svc-001',
-    name: 'Jeonju Metro',
-    description: 'Use LocalPay for metro fare payment with 5% discount',
-    provider: 'Jeonju Metro Authority',
+    name: '전주 지하철',
+    description: 'LocalPay로 지하철 요금 결제 시 5% 할인',
+    provider: '전주 도시철도공사',
     category: 'transport',
     isEnabled: true,
     iconUrl: 'subway',
   },
   {
     id: 'svc-002',
-    name: 'City Bus',
-    description: 'Pay bus fares with LocalPay balance',
-    provider: 'Jeonbuk Bus Association',
+    name: '시내버스',
+    description: 'LocalPay 잔액으로 버스 요금 결제',
+    provider: '전북 버스조합',
     category: 'transport',
     isEnabled: true,
     iconUrl: 'directions_bus',
   },
   {
     id: 'svc-003',
-    name: 'LocalPay Taxi',
-    description: 'Request taxis and pay with LocalPay',
-    provider: 'Jeonju Taxi Union',
+    name: 'LocalPay 택시',
+    description: '택시 호출 및 LocalPay 결제',
+    provider: '전주 택시조합',
     category: 'transport',
     isEnabled: false,
     iconUrl: 'local_taxi',
   },
   {
     id: 'svc-004',
-    name: 'Traditional Market',
-    description: 'Special discounts at Jeonju Traditional Markets',
-    provider: 'Jeonju Market Association',
+    name: '전통시장',
+    description: '전주 전통시장 특별 할인',
+    provider: '전주 시장상인회',
     category: 'retail',
     isEnabled: true,
     iconUrl: 'storefront',
   },
   {
     id: 'svc-005',
-    name: 'Convenience Stores',
-    description: 'Pay at partnered convenience stores',
-    provider: 'Retail Partners',
+    name: '편의점',
+    description: '제휴 편의점에서 결제',
+    provider: '소매 파트너',
     category: 'retail',
     isEnabled: true,
     iconUrl: 'local_convenience_store',
   },
   {
     id: 'svc-006',
-    name: 'Hanok Village Tours',
-    description: 'Book cultural experiences with LocalPay',
-    provider: 'Jeonju Cultural Foundation',
+    name: '한옥마을 투어',
+    description: 'LocalPay로 문화체험 예약',
+    provider: '전주 문화재단',
     category: 'culture',
     isEnabled: false,
     iconUrl: 'museum',
   },
   {
     id: 'svc-007',
-    name: 'Library Services',
-    description: 'Access digital library and rent materials',
-    provider: 'Jeonju Public Library',
+    name: '도서관 서비스',
+    description: '디지털 도서관 이용 및 자료 대출',
+    provider: '전주 시립도서관',
     category: 'culture',
     isEnabled: true,
     iconUrl: 'local_library',
   },
   {
     id: 'svc-008',
-    name: 'Senior Welfare',
-    description: 'Welfare benefits for verified seniors',
-    provider: 'Jeonju Social Welfare Center',
+    name: '어르신 복지',
+    description: '인증된 어르신 대상 복지 혜택',
+    provider: '전주 사회복지관',
     category: 'welfare',
     isEnabled: false,
     iconUrl: 'elderly',
   },
   {
     id: 'svc-009',
-    name: 'Youth Benefits',
-    description: 'Special programs for youth with verified credentials',
-    provider: 'Jeonju Youth Center',
+    name: '청년 혜택',
+    description: '인증된 청년 대상 특별 프로그램',
+    provider: '전주 청년센터',
     category: 'welfare',
     isEnabled: true,
     iconUrl: 'school',
@@ -90,10 +90,10 @@ const mockServices: LinkedService[] = [
 ];
 
 const categoryInfo: Record<string, { label: string; icon: string; color: string }> = {
-  transport: { label: 'Transport', icon: 'commute', color: '#3b82f6' },
-  retail: { label: 'Retail', icon: 'shopping_cart', color: '#22c55e' },
-  culture: { label: 'Culture', icon: 'palette', color: '#a855f7' },
-  welfare: { label: 'Welfare', icon: 'volunteer_activism', color: '#f97316' },
+  transport: { label: '교통', icon: 'commute', color: '#3b82f6' },
+  retail: { label: '소매', icon: 'shopping_cart', color: '#22c55e' },
+  culture: { label: '문화', icon: 'palette', color: '#a855f7' },
+  welfare: { label: '복지', icon: 'volunteer_activism', color: '#f97316' },
 };
 
 const Services: React.FC = () => {
@@ -130,7 +130,7 @@ const Services: React.FC = () => {
         <button onClick={() => navigate(-1)}>
           <span className="material-symbols-outlined text-2xl" style={{ color: theme.text }}>arrow_back</span>
         </button>
-        <h1 className="text-lg font-bold" style={{ color: theme.text }}>Linked Services</h1>
+        <h1 className="text-lg font-bold" style={{ color: theme.text }}>연동 서비스</h1>
         <div className="w-8" />
       </header>
 
@@ -139,7 +139,7 @@ const Services: React.FC = () => {
         <div className="rounded-xl p-5" style={{ background: theme.card, border: `1px solid ${theme.border}` }}>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>Active Services</p>
+              <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>활성 서비스</p>
               <h2 className="text-2xl font-bold" style={{ color: theme.text }}>{enabledCount}</h2>
             </div>
             <div
@@ -180,9 +180,9 @@ const Services: React.FC = () => {
         >
           <span className="material-symbols-outlined" style={{ color: theme.accent }}>verified_user</span>
           <div>
-            <p className="text-sm font-medium" style={{ color: theme.accent }}>DID Verification Required</p>
+            <p className="text-sm font-medium" style={{ color: theme.accent }}>DID 인증 필요</p>
             <p className="text-xs mt-1" style={{ color: `${theme.accent}cc` }}>
-              Some services require credential verification. Verify your identity to unlock all features.
+              일부 서비스는 자격 인증이 필요합니다. 모든 기능을 사용하려면 신원을 인증하세요.
             </p>
           </div>
         </div>
@@ -268,10 +268,10 @@ const Services: React.FC = () => {
             integration_instructions
           </span>
           <p className="text-sm" style={{ color: theme.textSecondary }}>
-            More services coming soon!
+            더 많은 서비스가 준비 중입니다!
           </p>
           <p className="text-xs mt-1" style={{ color: theme.textMuted }}>
-            LocalPay is expanding partnerships with local businesses and government services.
+            LocalPay는 지역 사업체 및 정부 서비스와의 파트너십을 확대하고 있습니다.
           </p>
         </div>
       </div>
