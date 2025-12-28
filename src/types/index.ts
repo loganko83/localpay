@@ -128,6 +128,9 @@ export interface Transaction {
   type: TransactionType;
   status: TransactionStatus;
   createdAt: string;
+  approvalCode?: string;
+  receiptNumber?: string;
+  description?: string;
 }
 
 // Merchant Types

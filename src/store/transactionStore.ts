@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { Transaction, TransactionType, TransactionStatus } from '../types';
+import { bankAPI, BankTransactionRecord } from '../services/bankAPI';
+import { useToastStore } from './toastStore';
 
 interface TransactionFilters {
   type?: TransactionType;
@@ -14,7 +16,12 @@ interface TransactionState {
   isLoading: boolean;
   error: string | null;
   filters: TransactionFilters;
+  page: number;
+  totalPages: number;
+  totalElements: number;
+  hasMore: boolean;
 
+  // Basic setters
   setTransactions: (transactions: Transaction[]) => void;
   addTransaction: (transaction: Transaction) => void;
   setFilters: (filters: TransactionFilters) => void;
@@ -22,9 +29,54 @@ interface TransactionState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   getFilteredTransactions: () => Transaction[];
+
+  // API integrations
+  fetchTransactions: (userId: string, options?: {
+    page?: number;
+    size?: number;
+    type?: 'payment' | 'charge' | 'refund' | 'all';
+    append?: boolean;
+  }) => Promise<void>;
+  refreshTransactions: (userId: string) => Promise<void>;
+  loadMoreTransactions: (userId: string) => Promise<void>;
 }
 
-// Mock transaction data
+// Convert bank record to Transaction type
+function convertBankRecord(record: BankTransactionRecord): Transaction {
+  return {
+    id: record.transactionId,
+    txId: record.transactionId,
+    userId: record.userId,
+    merchantId: record.merchantId,
+    merchantName: record.merchantName || record.description || 'Unknown',
+    amount: record.amount,
+    type: mapBankType(record.type),
+    status: mapBankStatus(record.status),
+    createdAt: record.timestamp,
+    approvalCode: record.approvalCode,
+  };
+}
+
+function mapBankType(type: string): TransactionType {
+  switch (type) {
+    case 'payment': return 'payment';
+    case 'charge': return 'topup';
+    case 'refund': return 'refund';
+    default: return 'payment';
+  }
+}
+
+function mapBankStatus(status: string): TransactionStatus {
+  switch (status) {
+    case 'completed': return 'completed';
+    case 'pending': return 'pending';
+    case 'failed': return 'failed';
+    case 'cancelled': return 'failed';
+    default: return 'pending';
+  }
+}
+
+// Mock transaction data (used when VITE_USE_MOCK_DATA is true or no userId)
 const mockTransactions: Transaction[] = [
   {
     id: '1',
@@ -89,12 +141,17 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   isLoading: false,
   error: null,
   filters: {},
+  page: 0,
+  totalPages: 1,
+  totalElements: mockTransactions.length,
+  hasMore: false,
 
   setTransactions: (transactions) => set({ transactions }),
 
   addTransaction: (transaction) =>
     set((state) => ({
       transactions: [transaction, ...state.transactions],
+      totalElements: state.totalElements + 1,
     })),
 
   setFilters: (filters) =>
@@ -126,7 +183,86 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
           t.txId.toLowerCase().includes(search)
       );
     }
+    if (filters.dateFrom) {
+      const fromDate = new Date(filters.dateFrom);
+      filtered = filtered.filter((t) => new Date(t.createdAt) >= fromDate);
+    }
+    if (filters.dateTo) {
+      const toDate = new Date(filters.dateTo);
+      filtered = filtered.filter((t) => new Date(t.createdAt) <= toDate);
+    }
 
     return filtered;
+  },
+
+  /**
+   * Fetch transactions from Bank API
+   */
+  fetchTransactions: async (userId, options = {}) => {
+    const { page = 0, size = 20, type, append = false } = options;
+
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await bankAPI.getTransactions(userId, {
+        page,
+        size,
+        type: type || 'all',
+      });
+
+      const transactions = response.transactions.map(convertBankRecord);
+
+      set((state) => ({
+        transactions: append
+          ? [...state.transactions, ...transactions]
+          : transactions,
+        page: response.page,
+        totalPages: response.totalPages,
+        totalElements: response.totalElements,
+        hasMore: response.page < response.totalPages - 1,
+        isLoading: false,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch transactions';
+      set({ error: message, isLoading: false });
+      useToastStore.getState().addToast(message, 'error');
+    }
+  },
+
+  /**
+   * Refresh transactions (fetch first page)
+   */
+  refreshTransactions: async (userId) => {
+    const { filters } = get();
+    const typeFilter = filters.type === 'topup' ? 'charge' :
+                       filters.type === 'withdrawal' ? 'all' :
+                       filters.type as 'payment' | 'charge' | 'refund' | 'all' | undefined;
+
+    await get().fetchTransactions(userId, {
+      page: 0,
+      size: 20,
+      type: typeFilter,
+      append: false,
+    });
+  },
+
+  /**
+   * Load more transactions (next page)
+   */
+  loadMoreTransactions: async (userId) => {
+    const { page, hasMore, isLoading, filters } = get();
+
+    if (!hasMore || isLoading) return;
+
+    const typeFilter = filters.type === 'topup' ? 'charge' :
+                       filters.type === 'withdrawal' ? 'all' :
+                       filters.type as 'payment' | 'charge' | 'refund' | 'all' | undefined;
+
+    await get().fetchTransactions(userId, {
+      page: page + 1,
+      size: 20,
+      type: typeFilter,
+      append: true,
+    });
   },
 }));

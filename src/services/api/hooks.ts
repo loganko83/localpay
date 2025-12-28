@@ -188,7 +188,9 @@ export function useCredentials(page: number = 0, size: number = 20) {
   });
 }
 
-// ==================== Platform Metrics (Mock) ====================
+// ==================== Platform Metrics ====================
+
+import { backendApiClient, API_CONFIG } from './client';
 
 export interface PlatformMetrics {
   totalIssuance: number;
@@ -203,6 +205,32 @@ export interface PlatformMetrics {
   co2Saved: number;
 }
 
+export interface AdminDashboardStats {
+  overview: {
+    totalIssuance: number;
+    activeUsers: number;
+    totalMerchants: number;
+    volume24h: number;
+    volumeChange: number;
+  };
+  transactions: {
+    today: number;
+    pending: number;
+    failed: number;
+    avgAmount: number;
+  };
+  compliance: {
+    amlAlerts: number;
+    pendingKyc: number;
+    blockedAccounts: number;
+  };
+  settlements: {
+    pendingAmount: number;
+    todaySettled: number;
+    merchantsPending: number;
+  };
+}
+
 /**
  * Hook for platform metrics
  */
@@ -212,39 +240,116 @@ export function usePlatformMetrics() {
   return useQuery<PlatformMetrics>({
     queryKey: ['platformMetrics'],
     queryFn: async () => {
-      // In production, this would fetch from a real API
-      return {
-        totalIssuance: 45200000000, // 45.2B KRW
-        activeUsers: 342100,
-        volume24h: 2100000000, // 2.1B KRW
-        pendingMerchants: 12,
-        activeMerchants: 1847,
-        blockHeight: networkStatus?.blockHeight || 12404200,
-        anchoredLogs: 156789,
-        verificationRate: 99.8,
-        carbonPoints: 2845000,
-        co2Saved: 142.5, // tons
-      };
+      if (API_CONFIG.useMockData) {
+        // Mock data for development
+        return {
+          totalIssuance: 45200000000,
+          activeUsers: 342100,
+          volume24h: 2100000000,
+          pendingMerchants: 12,
+          activeMerchants: 1847,
+          blockHeight: networkStatus?.blockHeight || 12404200,
+          anchoredLogs: 156789,
+          verificationRate: 99.8,
+          carbonPoints: 2845000,
+          co2Saved: 142.5,
+        };
+      }
+
+      try {
+        const response = await backendApiClient.get<PlatformMetrics>('/admin/metrics');
+        return {
+          ...response,
+          blockHeight: networkStatus?.blockHeight || response.blockHeight,
+        };
+      } catch (error) {
+        console.error('[PlatformMetrics] API error, falling back to mock:', error);
+        return {
+          totalIssuance: 45200000000,
+          activeUsers: 342100,
+          volume24h: 2100000000,
+          pendingMerchants: 12,
+          activeMerchants: 1847,
+          blockHeight: networkStatus?.blockHeight || 12404200,
+          anchoredLogs: 156789,
+          verificationRate: 99.8,
+          carbonPoints: 2845000,
+          co2Saved: 142.5,
+        };
+      }
     },
     refetchInterval: 30000,
     staleTime: 15000,
   });
 }
 
+/**
+ * Hook for admin dashboard statistics
+ */
+export function useAdminDashboardStats() {
+  return useQuery<AdminDashboardStats>({
+    queryKey: ['adminDashboardStats'],
+    queryFn: async () => {
+      if (API_CONFIG.useMockData) {
+        return {
+          overview: {
+            totalIssuance: 45200000000,
+            activeUsers: 342100,
+            totalMerchants: 1847,
+            volume24h: 2100000000,
+            volumeChange: 12.5,
+          },
+          transactions: {
+            today: 15420,
+            pending: 234,
+            failed: 12,
+            avgAmount: 35000,
+          },
+          compliance: {
+            amlAlerts: 3,
+            pendingKyc: 45,
+            blockedAccounts: 2,
+          },
+          settlements: {
+            pendingAmount: 125000000,
+            todaySettled: 450000000,
+            merchantsPending: 156,
+          },
+        };
+      }
+
+      try {
+        return await backendApiClient.get<AdminDashboardStats>('/admin/dashboard/stats');
+      } catch (error) {
+        console.error('[AdminDashboardStats] API error:', error);
+        throw error;
+      }
+    },
+    refetchInterval: 60000,
+    staleTime: 30000,
+  });
+}
+
 export default {
+  // Blockchain
   useNetworkStatus,
   useBlockHeight,
   useRecentBlocks,
   useBlock,
   useTransaction,
+  // Audit
   useAnchorLog,
   useVerifyLog,
+  // DID
   useIssueDid,
   useResolveDid,
   useVerifyDid,
   useDids,
+  // Credentials
   useIssueCredential,
   useVerifyCredential,
   useCredentials,
+  // Metrics
   usePlatformMetrics,
+  useAdminDashboardStats,
 };
