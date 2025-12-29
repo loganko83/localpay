@@ -51,6 +51,158 @@ interface TransactionRow {
   created_at: string;
 }
 
+// ==================== Merchant Dashboard (must be before /:id) ====================
+
+/**
+ * GET /api/merchants/dashboard
+ * Get merchant dashboard stats
+ */
+router.get('/dashboard', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const db = getDb();
+
+    // Today's stats
+    const todayStats = db.prepare(`
+      SELECT
+        COALESCE(SUM(CASE WHEN type = 'payment' THEN amount ELSE 0 END), 0) as sales,
+        COUNT(CASE WHEN type = 'payment' THEN 1 END) as count
+      FROM transactions
+      WHERE merchant_id = ? AND status = 'completed' AND date(created_at) = date('now')
+    `).get(req.user!.merchantId!) as { sales: number; count: number };
+
+    // This month's stats
+    const monthStats = db.prepare(`
+      SELECT
+        COALESCE(SUM(CASE WHEN type = 'payment' THEN amount ELSE 0 END), 0) as sales,
+        COUNT(CASE WHEN type = 'payment' THEN 1 END) as count
+      FROM transactions
+      WHERE merchant_id = ? AND status = 'completed' AND created_at >= date('now', 'start of month')
+    `).get(req.user!.merchantId!) as { sales: number; count: number };
+
+    // Recent transactions
+    const recentTransactions = db.prepare(`
+      SELECT t.*, u.name as customer_name
+      FROM transactions t
+      LEFT JOIN users u ON t.user_id = u.id
+      WHERE t.merchant_id = ? AND t.status = 'completed'
+      ORDER BY t.created_at DESC
+      LIMIT 5
+    `).all(req.user!.merchantId!);
+
+    res.json({
+      success: true,
+      data: {
+        today: {
+          sales: todayStats.sales,
+          transactionCount: todayStats.count,
+        },
+        thisMonth: {
+          sales: monthStats.sales,
+          transactionCount: monthStats.count,
+        },
+        recentTransactions,
+      },
+    });
+  } catch (error) {
+    console.error('Get dashboard error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to get dashboard' } });
+  }
+});
+
+/**
+ * GET /api/merchants/employees
+ * List employees (merchant only)
+ */
+router.get('/employees', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const db = getDb();
+    const employees = db.prepare(`
+      SELECT * FROM employees WHERE merchant_id = ?
+      ORDER BY role, name
+    `).all(req.user!.merchantId!) as EmployeeRow[];
+
+    res.json({
+      success: true,
+      data: employees.map(e => ({
+        id: e.id,
+        name: e.name,
+        email: e.email,
+        phone: e.phone,
+        role: e.role,
+        permissions: e.permissions ? JSON.parse(e.permissions) : [],
+        status: e.status,
+        lastActiveAt: e.last_active_at,
+        createdAt: e.created_at,
+      })),
+    });
+  } catch (error) {
+    console.error('List employees error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to list employees' } });
+  }
+});
+
+/**
+ * GET /api/merchants/settlements
+ * Get settlement summary (merchant only)
+ */
+router.get('/settlements', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const period = req.query.period as string || 'current';
+    const db = getDb();
+
+    // Get transactions for the period
+    let dateFilter = '';
+    if (period === 'current') {
+      dateFilter = "AND created_at >= date('now', 'start of month')";
+    } else if (period === 'last') {
+      dateFilter = "AND created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')";
+    }
+
+    const transactions = db.prepare(`
+      SELECT amount, type, created_at FROM transactions
+      WHERE merchant_id = ? AND status = 'completed' ${dateFilter}
+    `).all(req.user!.merchantId!) as TransactionRow[];
+
+    // Calculate summary
+    let totalSales = 0;
+    let totalRefunds = 0;
+    let transactionCount = 0;
+
+    transactions.forEach(tx => {
+      if (tx.type === 'payment') {
+        totalSales += tx.amount;
+        transactionCount++;
+      } else if (tx.type === 'refund') {
+        totalRefunds += tx.amount;
+      }
+    });
+
+    const netAmount = totalSales - totalRefunds;
+    const platformFee = netAmount * 0.025; // 2.5% platform fee
+    const settlementAmount = netAmount - platformFee;
+
+    res.json({
+      success: true,
+      data: {
+        period,
+        totalSales,
+        totalRefunds,
+        netAmount,
+        platformFee,
+        platformFeeRate: 0.025,
+        settlementAmount,
+        transactionCount,
+        status: 'processing',
+      },
+    });
+  } catch (error) {
+    console.error('Get settlements error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to get settlements' } });
+  }
+});
+
+// ==================== Public Routes ====================
+
 /**
  * GET /api/merchants
  * List merchants (public)
@@ -264,38 +416,6 @@ router.put('/status', authenticate, requireMerchant, async (req: AuthenticatedRe
 // ==================== Employee Management ====================
 
 /**
- * GET /api/merchants/employees
- * List employees (merchant only)
- */
-router.get('/employees', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const db = getDb();
-    const employees = db.prepare(`
-      SELECT * FROM employees WHERE merchant_id = ?
-      ORDER BY role, name
-    `).all(req.user!.merchantId!) as EmployeeRow[];
-
-    res.json({
-      success: true,
-      data: employees.map(e => ({
-        id: e.id,
-        name: e.name,
-        email: e.email,
-        phone: e.phone,
-        role: e.role,
-        permissions: e.permissions ? JSON.parse(e.permissions) : [],
-        status: e.status,
-        lastActiveAt: e.last_active_at,
-        createdAt: e.created_at,
-      })),
-    });
-  } catch (error) {
-    console.error('List employees error:', error);
-    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to list employees' } });
-  }
-});
-
-/**
  * POST /api/merchants/employees
  * Add employee (merchant only)
  */
@@ -361,124 +481,6 @@ router.delete('/employees/:id', authenticate, requireMerchant, async (req: Authe
   } catch (error) {
     console.error('Remove employee error:', error);
     res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to remove employee' } });
-  }
-});
-
-// ==================== Settlement Data ====================
-
-/**
- * GET /api/merchants/settlements
- * Get settlement summary (merchant only)
- */
-router.get('/settlements', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const period = req.query.period as string || 'current';
-    const db = getDb();
-
-    // Get transactions for the period
-    let dateFilter = '';
-    if (period === 'current') {
-      dateFilter = "AND created_at >= date('now', 'start of month')";
-    } else if (period === 'last') {
-      dateFilter = "AND created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')";
-    }
-
-    const transactions = db.prepare(`
-      SELECT amount, type, created_at FROM transactions
-      WHERE merchant_id = ? AND status = 'completed' ${dateFilter}
-    `).all(req.user!.merchantId!) as TransactionRow[];
-
-    // Calculate summary
-    let totalSales = 0;
-    let totalRefunds = 0;
-    let transactionCount = 0;
-
-    transactions.forEach(tx => {
-      if (tx.type === 'payment') {
-        totalSales += tx.amount;
-        transactionCount++;
-      } else if (tx.type === 'refund') {
-        totalRefunds += tx.amount;
-      }
-    });
-
-    const netAmount = totalSales - totalRefunds;
-    const platformFee = netAmount * 0.025; // 2.5% platform fee
-    const settlementAmount = netAmount - platformFee;
-
-    res.json({
-      success: true,
-      data: {
-        period,
-        totalSales,
-        totalRefunds,
-        netAmount,
-        platformFee,
-        platformFeeRate: 0.025,
-        settlementAmount,
-        transactionCount,
-        status: 'processing',
-      },
-    });
-  } catch (error) {
-    console.error('Get settlements error:', error);
-    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to get settlements' } });
-  }
-});
-
-/**
- * GET /api/merchants/dashboard
- * Get merchant dashboard stats
- */
-router.get('/dashboard', authenticate, requireMerchant, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const db = getDb();
-
-    // Today's stats
-    const todayStats = db.prepare(`
-      SELECT
-        COALESCE(SUM(CASE WHEN type = 'payment' THEN amount ELSE 0 END), 0) as sales,
-        COUNT(CASE WHEN type = 'payment' THEN 1 END) as count
-      FROM transactions
-      WHERE merchant_id = ? AND status = 'completed' AND date(created_at) = date('now')
-    `).get(req.user!.merchantId!) as { sales: number; count: number };
-
-    // This month's stats
-    const monthStats = db.prepare(`
-      SELECT
-        COALESCE(SUM(CASE WHEN type = 'payment' THEN amount ELSE 0 END), 0) as sales,
-        COUNT(CASE WHEN type = 'payment' THEN 1 END) as count
-      FROM transactions
-      WHERE merchant_id = ? AND status = 'completed' AND created_at >= date('now', 'start of month')
-    `).get(req.user!.merchantId!) as { sales: number; count: number };
-
-    // Recent transactions
-    const recentTransactions = db.prepare(`
-      SELECT t.*, u.name as customer_name
-      FROM transactions t
-      LEFT JOIN users u ON t.user_id = u.id
-      WHERE t.merchant_id = ? AND t.status = 'completed'
-      ORDER BY t.created_at DESC
-      LIMIT 5
-    `).all(req.user!.merchantId!);
-
-    res.json({
-      success: true,
-      data: {
-        today: {
-          sales: todayStats.sales,
-          transactionCount: todayStats.count,
-        },
-        thisMonth: {
-          sales: monthStats.sales,
-          transactionCount: monthStats.count,
-        },
-        recentTransactions,
-      },
-    });
-  } catch (error) {
-    console.error('Get dashboard error:', error);
-    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to get dashboard' } });
   }
 });
 
