@@ -56,26 +56,26 @@ router.get('/', authenticate, [
     const endDate = req.query.endDate as string;
 
     const db = getDb();
-    let whereClause = 'WHERE user_id = ?';
+    let whereClause = 'WHERE t.user_id = ?';
     const params: (string | number)[] = [req.user!.userId];
 
     if (type && type !== 'all') {
-      whereClause += ' AND type = ?';
+      whereClause += ' AND t.type = ?';
       params.push(type);
     }
 
     if (startDate) {
-      whereClause += ' AND created_at >= ?';
+      whereClause += ' AND t.created_at >= ?';
       params.push(startDate);
     }
 
     if (endDate) {
-      whereClause += ' AND created_at <= ?';
+      whereClause += ' AND t.created_at <= ?';
       params.push(endDate);
     }
 
     // Get total count
-    const countResult = db.prepare(`SELECT COUNT(*) as count FROM transactions ${whereClause}`).get(...params) as { count: number };
+    const countResult = db.prepare(`SELECT COUNT(*) as count FROM transactions t ${whereClause}`).get(...params) as { count: number };
     const total = countResult.count;
 
     // Get transactions with pagination
