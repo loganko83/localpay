@@ -196,6 +196,17 @@ function createTables(): void {
     )
   `);
 
+  // Voucher usage tracking table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS voucher_usage (
+      id TEXT PRIMARY KEY,
+      voucher_id TEXT NOT NULL REFERENCES vouchers(id),
+      user_id TEXT NOT NULL REFERENCES users(id),
+      used_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(voucher_id, user_id)
+    )
+  `);
+
   // Coupons table
   db.exec(`
     CREATE TABLE IF NOT EXISTS coupons (
@@ -234,6 +245,8 @@ function createTables(): void {
     CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs(action);
     CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
     CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
+    CREATE INDEX IF NOT EXISTS idx_voucher_usage_voucher ON voucher_usage(voucher_id);
+    CREATE INDEX IF NOT EXISTS idx_voucher_usage_user ON voucher_usage(user_id);
   `);
 }
 

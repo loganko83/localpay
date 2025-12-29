@@ -199,6 +199,133 @@ router.post('/charge', authenticate, [
 });
 
 /**
+ * POST /api/wallet/redeem
+ * Redeem a voucher code
+ */
+router.post('/redeem', authenticate, [
+  body('code').notEmpty().withMessage('Voucher code is required'),
+], async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new ValidationError('Validation failed', { errors: errors.array() });
+    }
+
+    const { code } = req.body;
+    const db = getDb();
+
+    // Find voucher
+    const voucher = db.prepare(`
+      SELECT * FROM vouchers
+      WHERE code = ? AND status = 'active'
+    `).get(code) as {
+      id: string;
+      name: string;
+      code: string;
+      amount: number;
+      type: string;
+      usage_limit: number;
+      usage_count: number;
+      valid_from: string;
+      valid_until: string;
+    } | undefined;
+
+    if (!voucher) {
+      throw new BadRequestError('Invalid or expired voucher code');
+    }
+
+    // Check validity period
+    const now = new Date();
+    const validFrom = new Date(voucher.valid_from);
+    const validUntil = new Date(voucher.valid_until);
+
+    if (now < validFrom || now > validUntil) {
+      throw new BadRequestError('Voucher is not valid at this time');
+    }
+
+    // Check usage limit
+    if (voucher.usage_count >= voucher.usage_limit) {
+      throw new BadRequestError('Voucher usage limit reached');
+    }
+
+    // Check if user already used this voucher
+    const existingUsage = db.prepare(`
+      SELECT id FROM voucher_usage WHERE voucher_id = ? AND user_id = ?
+    `).get(voucher.id, req.user!.userId);
+
+    if (existingUsage) {
+      throw new BadRequestError('You have already used this voucher');
+    }
+
+    // Get wallet
+    const wallet = db.prepare('SELECT * FROM wallets WHERE user_id = ?').get(req.user!.userId) as WalletRow | undefined;
+
+    if (!wallet) {
+      throw new NotFoundError('Wallet not found');
+    }
+
+    // Record voucher usage
+    db.prepare(`
+      INSERT INTO voucher_usage (id, voucher_id, user_id, used_at)
+      VALUES (?, ?, ?, datetime('now'))
+    `).run(uuidv4(), voucher.id, req.user!.userId);
+
+    // Increment usage count
+    db.prepare(`
+      UPDATE vouchers SET usage_count = usage_count + 1, updated_at = datetime('now')
+      WHERE id = ?
+    `).run(voucher.id);
+
+    // Add balance to wallet
+    db.prepare(`
+      UPDATE wallets SET balance = balance + ?, updated_at = datetime('now')
+      WHERE user_id = ?
+    `).run(voucher.amount, req.user!.userId);
+
+    // Create transaction record
+    const txId = `VCH-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    db.prepare(`
+      INSERT INTO transactions (id, tx_id, user_id, amount, type, status, description)
+      VALUES (?, ?, ?, ?, 'topup', 'completed', ?)
+    `).run(uuidv4(), txId, req.user!.userId, voucher.amount, `Voucher redeemed: ${voucher.name}`);
+
+    // Log audit
+    db.prepare(`
+      INSERT INTO audit_logs (id, timestamp, action, actor_id, actor_type, target_type, target_id, description, metadata)
+      VALUES (?, datetime('now'), ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      uuidv4(),
+      'VOUCHER_REDEEMED',
+      req.user!.userId,
+      req.user!.userType,
+      'voucher',
+      voucher.id,
+      `Redeemed voucher ${voucher.name} for ${voucher.amount.toLocaleString()} KRW`,
+      JSON.stringify({ voucherCode: code, amount: voucher.amount })
+    );
+
+    const updatedWallet = db.prepare('SELECT balance FROM wallets WHERE user_id = ?').get(req.user!.userId) as { balance: number };
+
+    res.json({
+      success: true,
+      data: {
+        voucherName: voucher.name,
+        amount: voucher.amount,
+        newBalance: updatedWallet.balance,
+        message: `Successfully redeemed ${voucher.name}`,
+      },
+    });
+  } catch (error) {
+    if (error instanceof BadRequestError || error instanceof NotFoundError || error instanceof ValidationError) {
+      res.status(error.statusCode).json({ success: false, error: { code: error.code, message: error.message } });
+      return;
+    }
+    console.error('Redeem voucher error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to redeem voucher' } });
+  }
+});
+
+/**
  * GET /api/wallet/limits
  * Get wallet charge limits and usage
  */
