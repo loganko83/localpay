@@ -1,3 +1,8 @@
+/**
+ * Admin Login Screen
+ * Backend-integrated authentication for admin users
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button, Toggle } from '../../components/common';
@@ -5,40 +10,34 @@ import { useAuthStore } from '../../store';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login, setUserType } = useAuthStore();
+  const { loginWithCredentials, isLoading, error: authError, clearError } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    setLocalError('');
+    clearError();
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    if (email && password) {
-      const mockAdmin = {
-        id: 'admin-1',
-        name: 'System Admin',
-        email: email,
-        role: 'super_admin' as const,
-        permissions: ['manage_users', 'manage_merchants', 'issue_vouchers', 'process_settlements', 'view_analytics', 'system_config'] as ('manage_users' | 'manage_merchants' | 'issue_vouchers' | 'process_settlements' | 'view_analytics' | 'system_config')[],
-        lastLoginAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      };
-
-      setUserType('admin');
-      login(mockAdmin, 'admin');
-      navigate('/admin');
-    } else {
-      setError('자격 증명을 입력해주세요');
+    if (!email || !password) {
+      setLocalError('Please enter your credentials');
+      return;
     }
 
-    setIsLoading(false);
+    const success = await loginWithCredentials({
+      email,
+      password,
+      userType: 'admin',
+    });
+
+    if (success) {
+      navigate('/admin');
+    }
   };
+
+  const error = localError || authError;
 
   return (
     <div className="flex-1 flex flex-col justify-center p-6">
@@ -47,37 +46,39 @@ const Login: React.FC = () => {
         <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-primary-dark mb-4">
           <span className="material-symbols-outlined text-white text-4xl">admin_panel_settings</span>
         </div>
-        <h1 className="text-2xl font-bold text-white mb-1">관리자 포털</h1>
-        <p className="text-text-secondary">LocalPay 플랫폼 관리</p>
+        <h1 className="text-2xl font-bold text-white mb-1">Admin Portal</h1>
+        <p className="text-text-secondary">LocalPay Platform Management</p>
       </div>
 
       {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-4">
         <Input
-          label="관리자 이메일"
+          label="Admin Email"
           type="email"
           icon="mail"
-          placeholder="이메일을 입력하세요"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={error && !email ? 'Email is required' : undefined}
         />
 
         <Input
-          label="비밀번호"
+          label="Password"
           type="password"
           icon="lock"
-          placeholder="비밀번호를 입력하세요"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={error && !password ? 'Password is required' : undefined}
         />
 
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
             <Toggle checked={rememberMe} onChange={setRememberMe} size="sm" />
-            <span className="text-sm text-text-secondary">로그인 상태 유지</span>
+            <span className="text-sm text-text-secondary">Remember me</span>
           </label>
           <button type="button" className="text-sm text-primary hover:underline">
-            비밀번호 찾기
+            Forgot password?
           </button>
         </div>
 
@@ -92,7 +93,7 @@ const Login: React.FC = () => {
           size="lg"
           loading={isLoading}
         >
-          관리자 포털 로그인
+          Login to Admin Portal
         </Button>
       </form>
 
@@ -101,10 +102,10 @@ const Login: React.FC = () => {
         <div className="flex items-start gap-3">
           <span className="material-symbols-outlined text-yellow-500">warning</span>
           <div>
-            <p className="text-sm font-medium text-white">보안 안내</p>
+            <p className="text-sm font-medium text-white">Security Notice</p>
             <p className="text-xs text-text-secondary mt-1">
-              제한된 영역입니다. 모든 활동이 기록되고 모니터링됩니다.
-              무단 접근은 금지되어 있습니다.
+              This is a restricted area. All activities are logged and monitored.
+              Unauthorized access is prohibited.
             </p>
           </div>
         </div>
@@ -115,7 +116,7 @@ const Login: React.FC = () => {
         onClick={() => navigate('/')}
         className="mt-6 text-center text-text-muted text-sm hover:text-text-secondary transition-colors"
       >
-        ← 앱 선택으로 돌아가기
+        &larr; Back to app selection
       </button>
     </div>
   );

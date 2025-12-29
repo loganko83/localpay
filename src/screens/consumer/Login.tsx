@@ -1,13 +1,17 @@
+/**
+ * Consumer Login Screen
+ * Backend-integrated authentication for consumer users
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button, Toggle } from '../../components/common';
 import { useAuthStore } from '../../store';
-
 import { theme } from '../../styles/theme';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { loginWithCredentials, isLoading: authLoading, error: authError, clearError } = useAuthStore();
+  const { loginWithCredentials, isLoading, error: authError, clearError } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -26,11 +30,11 @@ const Login: React.FC = () => {
     const success = await loginWithCredentials({
       email,
       password,
-      userType: 'merchant',
+      userType: 'consumer',
     });
 
     if (success) {
-      navigate('/merchant');
+      navigate('/consumer');
     }
   };
 
@@ -43,58 +47,58 @@ const Login: React.FC = () => {
         <div
           className="inline-flex items-center justify-center h-20 w-20 rounded-2xl mb-4"
           style={{
-            background: `linear-gradient(135deg, ${theme.accent}, #d63447)`
+            background: `linear-gradient(135deg, ${theme.accent}, #c41e2a)`
           }}
         >
           <span
             className="material-symbols-outlined text-4xl"
-            style={{ color: theme.text }}
+            style={{ color: '#fff' }}
           >
-            storefront
+            account_balance_wallet
           </span>
         </div>
         <h1
           className="text-2xl font-bold mb-1"
           style={{ color: theme.text }}
         >
-          가맹점 포털
+          LocalPay Wallet
         </h1>
-        <p style={{ color: theme.textSecondary }}>LocalPay로 매장을 관리하세요</p>
+        <p style={{ color: theme.textSecondary }}>Login to manage your prepaid balance</p>
       </div>
 
       {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-4">
         <Input
-          label="이메일 또는 가맹점 ID"
+          label="Email or Phone"
           type="email"
           icon="mail"
-          placeholder="이메일을 입력하세요"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          error={error && !email ? '이메일을 입력해주세요' : undefined}
+          error={error && !email ? 'Email is required' : undefined}
         />
 
         <Input
-          label="비밀번호"
+          label="Password"
           type="password"
           icon="lock"
-          placeholder="비밀번호를 입력하세요"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          error={error && !password ? '비밀번호를 입력해주세요' : undefined}
+          error={error && !password ? 'Password is required' : undefined}
         />
 
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
             <Toggle checked={rememberMe} onChange={setRememberMe} size="sm" />
-            <span className="text-sm" style={{ color: theme.textSecondary }}>로그인 상태 유지</span>
+            <span className="text-sm" style={{ color: theme.textSecondary }}>Remember me</span>
           </label>
           <button
             type="button"
             className="text-sm hover:underline"
             style={{ color: theme.accent }}
           >
-            비밀번호 찾기
+            Forgot password?
           </button>
         </div>
 
@@ -107,9 +111,9 @@ const Login: React.FC = () => {
           variant="primary"
           fullWidth
           size="lg"
-          loading={authLoading}
+          loading={isLoading}
         >
-          로그인
+          Login
         </Button>
       </form>
 
@@ -122,19 +126,19 @@ const Login: React.FC = () => {
           onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
         >
           <span className="material-symbols-outlined">fingerprint</span>
-          <span className="text-sm">생체인증으로 로그인</span>
+          <span className="text-sm">Login with biometrics</span>
         </button>
       </div>
 
       {/* Register Link */}
       <div className="mt-8 text-center">
         <p className="text-sm" style={{ color: theme.textSecondary }}>
-          계정이 없으신가요?{' '}
+          Don't have an account?{' '}
           <button
             className="hover:underline"
             style={{ color: theme.accent }}
           >
-            가맹점 계정 신청
+            Sign up
           </button>
         </p>
       </div>
@@ -147,7 +151,7 @@ const Login: React.FC = () => {
         onMouseEnter={(e) => e.currentTarget.style.color = theme.textSecondary}
         onMouseLeave={(e) => e.currentTarget.style.color = theme.textMuted}
       >
-        ← 앱 선택으로 돌아가기
+        ← Back to app selection
       </button>
     </div>
   );

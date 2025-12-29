@@ -9,12 +9,15 @@ import { applyTheme } from './styles/themes';
 import { initializeDemoData } from './services';
 import './styles/index.css';
 
+// Initialize auth from stored session
+useAuthStore.getState().initialize();
+
 // Apply initial theme
 const initialUserType = useAuthStore.getState().userType;
 applyTheme(initialUserType);
 
-// Initialize demo data for development
-if (import.meta.env.DEV) {
+// Initialize demo data only if using mock data
+if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
   initializeDemoData().then(() => {
     console.log('[App] Demo data ready');
   }).catch((error) => {

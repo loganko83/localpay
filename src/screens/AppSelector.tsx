@@ -40,7 +40,7 @@ const AppSelector: React.FC = () => {
     } else if (type === 'admin') {
       navigate('/admin/login');
     } else {
-      navigate('/consumer');
+      navigate('/consumer/login');
     }
   };
 

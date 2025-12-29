@@ -7,6 +7,7 @@ import { AdminLayout as WebAdminLayout } from '../components/admin';
 const AppSelector = React.lazy(() => import('../screens/AppSelector'));
 
 // Consumer screens
+const ConsumerLogin = React.lazy(() => import('../screens/consumer/Login'));
 const ConsumerHome = React.lazy(() => import('../screens/consumer/Home'));
 const ConsumerWallet = React.lazy(() => import('../screens/consumer/Wallet'));
 const ConsumerScan = React.lazy(() => import('../screens/consumer/Scan'));
@@ -118,6 +119,16 @@ export const router = createBrowserRouter(
     },
 
     // Consumer Routes
+    {
+      path: '/consumer/login',
+      element: (
+        <Layout>
+          <React.Suspense fallback={<LoadingFallback />}>
+            <ConsumerLogin />
+          </React.Suspense>
+        </Layout>
+      ),
+    },
     {
       path: '/consumer',
       element: <ConsumerLayout />,
