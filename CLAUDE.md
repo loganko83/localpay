@@ -51,12 +51,22 @@ See `.speckit/constitution.md` for full regulatory details.
 
 ## Commands
 
+### Frontend (React + Vite)
 ```bash
 npm install          # Install dependencies
 npm run dev          # Start dev server (port 3003)
 npm run build        # TypeScript check + Vite production build
 npm run lint         # TypeScript type checking (tsc --noEmit)
 npm run preview      # Preview production build
+```
+
+### Backend (Express + SQLite)
+```bash
+cd server
+npm install          # Install server dependencies
+npm run dev          # Start dev server with hot reload (tsx watch)
+npm run build        # Compile TypeScript to dist/
+npm run start        # Run compiled server (port 8080)
 ```
 
 ### E2E Testing (Playwright)
@@ -68,53 +78,72 @@ npx playwright test screens.spec.ts    # Single test file
 
 ---
 
+## Deployment
+
+- **Frontend**: https://trendy.storydot.kr/localpay/
+- **API**: https://trendy.storydot.kr/localpay/api/
+- **Server**: PM2 process `localpay-api` on port 8080
+- **Nginx**: Proxies `/localpay/api/*` to backend
+
+### Test Accounts
+| Type | Email | Password |
+|------|-------|----------|
+| Consumer | user@localpay.kr | user123 |
+| Merchant | merchant@localpay.kr | merchant123 |
+| Admin | admin@localpay.kr | admin123 |
+
+---
+
 ## Architecture
 
 ### Tech Stack
-React 19 + TypeScript 5.8 + Vite 6 + Zustand + TanStack Query + Recharts + ethers.js
+- **Frontend**: React 19 + TypeScript 5.8 + Vite 6 + Zustand + TanStack Query + Recharts
+- **Backend**: Express + TypeScript + better-sqlite3 + JWT + bcryptjs
 
-### Three-Layout System
+### Frontend Structure (`src/`)
 
-1. **ConsumerLayout** / **MerchantLayout** (`src/components/layout/`)
-   - Mobile-first (max-width: 448px)
-   - BottomNav with role-specific tabs
-   - Lazy-loaded screens with Suspense
+| Directory | Purpose |
+|-----------|---------|
+| `components/common/` | Reusable UI (Button, Card, Input, Modal, Toggle) |
+| `components/layout/` | ConsumerLayout, MerchantLayout with BottomNav |
+| `components/admin/` | AdminLayout with sidebar navigation |
+| `screens/{consumer,merchant,admin}/` | Role-specific screens (lazy-loaded) |
+| `services/` | Business logic and API clients |
+| `store/` | Zustand stores (auth, wallet, transaction, toast) |
+| `router/` | Route configuration with lazy loading |
 
-2. **AdminLayout** (`src/components/admin/`)
-   - Web-first responsive design
-   - Collapsible sidebar navigation
-   - TopBar with search and notifications
+### Backend Structure (`server/src/`)
 
-### Service Layer (`src/services/`)
+| File | Purpose |
+|------|---------|
+| `index.ts` | Express app setup, middleware, route mounting |
+| `db/index.ts` | SQLite initialization, schema, seed data |
+| `routes/auth.ts` | Login, logout, token refresh |
+| `routes/wallet.ts` | Balance, charge, redeem vouchers |
+| `routes/transactions.ts` | Payments, refunds, history |
+| `routes/merchants.ts` | Merchant CRUD, dashboard, settlements |
+| `routes/admin.ts` | Admin dashboard, audit logs, vouchers |
+| `middleware/auth.ts` | JWT authentication, role guards |
 
-| Layer | Services |
-|-------|----------|
-| **Blockchain** | `blockchain/xphere.ts` (Xphere EVM), `blockchain/auditAnchor.ts` (Merkle proofs) |
-| **Identity** | `did/client.ts` (DID-BaaS), `identity.ts` (VC management) |
-| **Compliance** | `fds/detector.ts` (Fraud Detection), `aml/screening.ts` (KoFIU AML) |
-| **Core** | `bankAPI.ts` (IBK integration), `policyEngine.ts` (spending rules) |
-| **Phase 6-11** | `programmableMoney.ts`, `carbonPoints.ts`, `touristWallet.ts`, etc. |
+### API Endpoints
 
-### State Management (`src/store/`)
-- `authStore.ts` - User authentication state
-- `walletStore.ts` - Balance display and bank API sync
-- `transactionStore.ts` - Transaction history
-- `toastStore.ts` - UI notifications
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/login` | Authenticate user |
+| GET | `/api/wallet/balance` | Get wallet balance |
+| POST | `/api/wallet/charge` | Top-up wallet |
+| POST | `/api/wallet/redeem` | Redeem voucher code |
+| GET | `/api/transactions` | Transaction history |
+| POST | `/api/transactions/payment` | Make payment |
+| POST | `/api/transactions/refund` | Request refund |
+| GET | `/api/merchants` | List merchants |
+| GET | `/api/merchants/dashboard` | Merchant stats |
+| GET | `/api/admin/audit-logs` | Audit log history |
 
 ### Blockchain Integration
 - **Xphere**: EVM Layer1 (chainId: 20250217, RPC: https://en-bkk.x-phere.com)
 - **Tamsa Explorer**: https://xp.tamsa.io
 - **DID-BaaS**: https://trendy.storydot.kr/did-baas/api/v1
-
----
-
-## Environment Variables
-
-```env
-VITE_XPHERE_RPC_URL=https://en-bkk.x-phere.com
-VITE_XPHERE_EXPLORER_URL=https://xp.tamsa.io
-VITE_DID_BAAS_URL=https://trendy.storydot.kr/did-baas/api/v1
-```
 
 ---
 
