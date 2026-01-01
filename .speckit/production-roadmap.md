@@ -246,32 +246,34 @@ This roadmap covers all improvements needed to make LocalPay production-ready.
 
 ---
 
-## Sprint 34: Missing Features (P2)
+## Sprint 34: Missing Features (P2) - COMPLETED
 
 **Goal**: Complete all missing functionality
 
-### 34.1 Password Management
-- [ ] Password reset request API
-- [ ] Password reset confirmation API
-- [ ] Password change API
-- [ ] Password strength validation
+### 34.1 Password Management (Already Implemented)
+- [x] Password reset request API
+- [x] Password reset confirmation API
+- [x] Password change API
+- [x] Password strength validation (min 8 chars)
 
 ### 34.2 Two-Factor Authentication
-- [ ] TOTP setup endpoint
-- [ ] TOTP verification endpoint
-- [ ] Backup codes generation
-- [ ] 2FA disable endpoint
+- [x] TOTP setup endpoint (QR code generation)
+- [x] TOTP verification endpoint
+- [x] Backup codes generation (10 codes)
+- [x] 2FA disable endpoint
+- [x] Backup codes regeneration
 
 ### 34.3 Export Features
-- [ ] Transaction export (CSV/Excel)
-- [ ] Report generation (PDF)
-- [ ] Data export for GDPR
+- [x] Transaction export (CSV)
+- [x] Report generation (PDF)
+- [x] Data export for GDPR
+- [x] Settlement report generation
 
 ### 34.4 Webhook System
-- [ ] Webhook registration API
-- [ ] Webhook event types
-- [ ] Webhook delivery system
-- [ ] Webhook retry logic
+- [x] Webhook registration API
+- [x] Webhook event types (10 types)
+- [x] Webhook delivery system
+- [x] Webhook retry logic (3 retries)
 
 ---
 

@@ -38,6 +38,9 @@ import securityRoutes from './routes/security.js';
 import databaseRoutes from './routes/database.js';
 import externalRoutes from './routes/external.js';
 import cacheRoutes from './routes/cache.js';
+import twoFactorRoutes from './routes/twoFactor.js';
+import exportRoutes from './routes/export.js';
+import webhookRoutes from './routes/webhooks.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initCaches } from './services/cache.js';
 import { requestLogger } from './middleware/requestLogger.js';
@@ -145,6 +148,9 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/admin/database', databaseRoutes);
 app.use('/api/admin/cache', cacheRoutes);
+app.use('/api/auth/2fa', twoFactorRoutes);
+app.use('/api/export', exportRoutes);
+app.use('/api/webhooks', webhookRoutes);
 app.use('/api/external', externalRoutes);
 
 // Error handling

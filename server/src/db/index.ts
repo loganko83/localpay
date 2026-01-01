@@ -982,6 +982,56 @@ function createTables(): void {
     )
   `);
 
+  // Two-Factor Authentication table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS two_factor_auth (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL UNIQUE REFERENCES users(id),
+      secret TEXT NOT NULL,
+      backup_codes TEXT NOT NULL,
+      enabled INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Webhooks table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS webhooks (
+      id TEXT PRIMARY KEY,
+      merchant_id TEXT NOT NULL REFERENCES merchants(id),
+      url TEXT NOT NULL,
+      secret TEXT NOT NULL,
+      events TEXT NOT NULL,
+      enabled INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Webhook deliveries table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS webhook_deliveries (
+      id TEXT PRIMARY KEY,
+      webhook_id TEXT NOT NULL REFERENCES webhooks(id),
+      event TEXT NOT NULL,
+      payload TEXT NOT NULL,
+      status_code INTEGER,
+      success INTEGER DEFAULT 0,
+      error TEXT,
+      duration INTEGER,
+      attempt INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Add two_factor_enabled column to users if not exists
+  try {
+    db.exec(`ALTER TABLE users ADD COLUMN two_factor_enabled INTEGER DEFAULT 0`);
+  } catch {
+    // Column already exists
+  }
+
   // Create indexes
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -1029,6 +1079,9 @@ function createTables(): void {
     CREATE INDEX IF NOT EXISTS idx_security_events_severity ON security_events(severity);
     CREATE INDEX IF NOT EXISTS idx_ip_blocks_ip ON ip_blocks(ip_address);
     CREATE INDEX IF NOT EXISTS idx_api_keys_status ON api_keys(status);
+    CREATE INDEX IF NOT EXISTS idx_two_factor_auth_user ON two_factor_auth(user_id);
+    CREATE INDEX IF NOT EXISTS idx_webhooks_merchant ON webhooks(merchant_id);
+    CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_webhook ON webhook_deliveries(webhook_id);
   `);
 }
 
