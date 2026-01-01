@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 
@@ -36,7 +37,9 @@ import notificationRoutes from './routes/notifications.js';
 import securityRoutes from './routes/security.js';
 import databaseRoutes from './routes/database.js';
 import externalRoutes from './routes/external.js';
+import cacheRoutes from './routes/cache.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { initCaches } from './services/cache.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.js';
@@ -51,6 +54,17 @@ const PORT = process.env.PORT || 8080;
 
 // Security middleware
 app.use(helmet());
+
+// Response compression
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  threshold: 1024, // Only compress responses > 1KB
+}));
 
 // CORS configuration - allow any localhost port in development
 const corsOrigins = process.env.CORS_ORIGIN
@@ -130,6 +144,7 @@ app.use('/api/identity', identityRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/admin/database', databaseRoutes);
+app.use('/api/admin/cache', cacheRoutes);
 app.use('/api/external', externalRoutes);
 
 // Error handling
@@ -146,6 +161,10 @@ async function start() {
     // Initialize SQLite database
     await initDatabase();
     logger.info('Database initialized');
+
+    // Initialize cache namespaces
+    initCaches();
+    logger.info('Cache initialized');
 
     app.listen(PORT, () => {
       logger.info(`LocalPay Server running on port ${PORT}`);
