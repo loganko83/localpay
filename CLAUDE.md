@@ -117,28 +117,62 @@ npx playwright test screens.spec.ts    # Single test file
 | File | Purpose |
 |------|---------|
 | `index.ts` | Express app setup, middleware, route mounting |
-| `db/index.ts` | SQLite initialization, schema, seed data |
-| `routes/auth.ts` | Login, logout, token refresh |
-| `routes/wallet.ts` | Balance, charge, redeem vouchers |
-| `routes/transactions.ts` | Payments, refunds, history |
-| `routes/merchants.ts` | Merchant CRUD, dashboard, settlements |
-| `routes/admin.ts` | Admin dashboard, audit logs, vouchers |
-| `middleware/auth.ts` | JWT authentication, role guards |
+| `db/index.ts` | SQLite initialization, schema (40+ tables), seed data |
+| `middleware/auth.ts` | JWT authentication, role guards (`requireUserType`) |
 
-### API Endpoints
+**Route Modules (23 files):**
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/login` | Authenticate user |
-| GET | `/api/wallet/balance` | Get wallet balance |
-| POST | `/api/wallet/charge` | Top-up wallet |
-| POST | `/api/wallet/redeem` | Redeem voucher code |
-| GET | `/api/transactions` | Transaction history |
-| POST | `/api/transactions/payment` | Make payment |
-| POST | `/api/transactions/refund` | Request refund |
-| GET | `/api/merchants` | List merchants |
-| GET | `/api/merchants/dashboard` | Merchant stats |
-| GET | `/api/admin/audit-logs` | Audit log history |
+| Category | Routes | Description |
+|----------|--------|-------------|
+| Core | `auth`, `wallet`, `transactions`, `users` | Authentication, balance, payments |
+| Business | `merchants`, `admin`, `settlements` | Merchant ops, admin dashboard |
+| Loyalty | `loyalty`, `coupons`, `carbon` | Points, offers, ESG rewards |
+| Compliance | `compliance`, `security`, `identity` | FDS/AML, DID/VC, API keys |
+| Services | `welfare`, `credit`, `donations` | Corporate benefits, credit scoring |
+| Operations | `delivery`, `tourist`, `employees` | Delivery, tourism, staff management |
+| Blockchain | `tokens`, `blockchain`, `traceability` | Token lifecycle, audit anchoring |
+| System | `notifications` | Push notifications, device tokens |
+
+### Authentication & Authorization
+
+```typescript
+// JWT payload structure
+{
+  userId: string,
+  userType: 'consumer' | 'merchant' | 'admin',
+  email: string,
+  merchantId?: string,  // Only for merchant users
+  iat: number,
+  exp: number
+}
+
+// Role-based route protection
+router.post('/refund', authenticate, requireUserType('merchant'), ...)
+router.get('/dashboard', authenticate, requireUserType('admin'), ...)
+```
+
+### Core API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/login` | None | Returns JWT token + user data |
+| GET | `/api/wallet/balance` | Consumer | Current balance, limits |
+| POST | `/api/wallet/redeem` | Consumer | Redeem voucher code |
+| POST | `/api/transactions/payment` | Consumer | Pay to merchant |
+| POST | `/api/transactions/refund` | Merchant | Refund a payment |
+| GET | `/api/merchants/dashboard` | Merchant | Sales stats, recent txns |
+| POST | `/api/admin/vouchers` | Admin | Create voucher codes |
+| GET | `/api/admin/dashboard` | Admin | Platform statistics |
+
+### Database Schema (Key Tables)
+
+```
+users, wallets, merchants, transactions, vouchers, voucher_usage,
+audit_logs, loyalty_points, carbon_points, welfare_allocations,
+merchant_credit_scores, delivery_orders, donation_campaigns,
+programmable_tokens, blockchain_blocks, user_dids, verifiable_credentials,
+notifications, device_tokens, security_events, api_keys, ip_blocks
+```
 
 ### Blockchain Integration
 - **Xphere**: EVM Layer1 (chainId: 20250217, RPC: https://en-bkk.x-phere.com)
@@ -182,3 +216,37 @@ Routes defined in `src/router/index.tsx`. All screens are lazy-loaded.
 - Korean text only in user-facing strings
 - Path alias: `@/*` maps to `src/`
 - Icons: Material Symbols (class="material-symbols-outlined")
+
+---
+
+## Important Implementation Details
+
+### Frontend Base Path
+Router configured with `basename: '/localpay'` for production deployment:
+```typescript
+// src/router/index.tsx
+createBrowserRouter(routes, { basename: '/localpay' })
+```
+
+### API Validation Pattern
+All routes use express-validator:
+```typescript
+router.post('/endpoint', authenticate, [
+  body('field').notEmpty().withMessage('Required'),
+  body('amount').isInt({ min: 100 }),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) throw new ValidationError('Validation failed');
+  // ...
+});
+```
+
+### Transaction Flow
+1. Consumer: `POST /api/transactions/payment` → deducts balance
+2. Merchant: `POST /api/transactions/refund` with `originalTransactionId` → restores balance
+3. All transactions create audit_logs entries automatically
+
+### Voucher Flow
+1. Admin: `POST /api/admin/vouchers` with `{name, code, amount, type, usageLimit, validFrom, validUntil}`
+2. Consumer: `POST /api/wallet/redeem` with `{code}` → adds to balance
+3. Duplicate redemption blocked per user

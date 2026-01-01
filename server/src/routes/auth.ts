@@ -364,4 +364,210 @@ router.post('/refresh', authenticate, async (req: AuthenticatedRequest, res: Res
   }
 });
 
+/**
+ * POST /api/auth/password-reset-request
+ * Request password reset email
+ */
+router.post('/password-reset-request', [
+  body('email').isEmail().withMessage('Invalid email format'),
+], async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new ValidationError('Validation failed', { errors: errors.array() });
+    }
+
+    const { email } = req.body;
+    const db = getDb();
+
+    // Find user
+    const user = db.prepare('SELECT id, name, email FROM users WHERE email = ?').get(email) as { id: string; name: string; email: string } | undefined;
+
+    // Always return success to prevent email enumeration
+    if (!user) {
+      res.json({
+        success: true,
+        message: 'If the email exists, a reset link will be sent',
+      });
+      return;
+    }
+
+    // Generate reset token
+    const resetToken = uuidv4();
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes
+
+    // Store reset token
+    db.prepare(`
+      INSERT INTO password_reset_tokens (id, user_id, token, expires_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(user_id) DO UPDATE SET token = ?, expires_at = ?, created_at = datetime('now')
+    `).run(uuidv4(), user.id, resetToken, expiresAt, resetToken, expiresAt);
+
+    // Log audit event
+    db.prepare(`
+      INSERT INTO audit_logs (id, timestamp, action, actor_id, actor_type, target_type, target_id, description, ip_address)
+      VALUES (?, datetime('now'), ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      uuidv4(),
+      'PASSWORD_RESET_REQUESTED',
+      user.id,
+      'consumer',
+      'user',
+      user.id,
+      `Password reset requested for ${email}`,
+      req.ip
+    );
+
+    // TODO: Send email with reset link
+    // In production: await emailService.sendPasswordReset(user.email, user.name, resetToken);
+    console.log(`[Auth] Password reset token for ${email}: ${resetToken}`);
+
+    res.json({
+      success: true,
+      message: 'If the email exists, a reset link will be sent',
+      // Only include token in development for testing
+      ...(process.env.NODE_ENV !== 'production' && { resetToken }),
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(error.statusCode).json({ success: false, error: { code: error.code, message: error.message } });
+      return;
+    }
+    console.error('Password reset request error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to process request' } });
+  }
+});
+
+/**
+ * POST /api/auth/password-reset
+ * Reset password with token
+ */
+router.post('/password-reset', [
+  body('token').notEmpty().withMessage('Reset token is required'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+], async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new ValidationError('Validation failed', { errors: errors.array() });
+    }
+
+    const { token, password } = req.body;
+    const db = getDb();
+
+    // Find valid reset token
+    const resetRequest = db.prepare(`
+      SELECT user_id FROM password_reset_tokens
+      WHERE token = ? AND expires_at > datetime('now') AND used = 0
+    `).get(token) as { user_id: string } | undefined;
+
+    if (!resetRequest) {
+      throw new BadRequestError('Invalid or expired reset token');
+    }
+
+    // Hash new password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Update password
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, resetRequest.user_id);
+
+    // Mark token as used
+    db.prepare('UPDATE password_reset_tokens SET used = 1 WHERE token = ?').run(token);
+
+    // Invalidate all sessions for security
+    db.prepare('UPDATE sessions SET is_active = 0 WHERE user_id = ?').run(resetRequest.user_id);
+
+    // Log audit event
+    db.prepare(`
+      INSERT INTO audit_logs (id, timestamp, action, actor_id, actor_type, target_type, target_id, description, ip_address)
+      VALUES (?, datetime('now'), ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      uuidv4(),
+      'PASSWORD_RESET_COMPLETED',
+      resetRequest.user_id,
+      'consumer',
+      'user',
+      resetRequest.user_id,
+      'Password was reset successfully',
+      req.ip
+    );
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully. Please login with your new password.',
+    });
+  } catch (error) {
+    if (error instanceof BadRequestError || error instanceof ValidationError) {
+      res.status(error.statusCode).json({ success: false, error: { code: error.code, message: error.message } });
+      return;
+    }
+    console.error('Password reset error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to reset password' } });
+  }
+});
+
+/**
+ * POST /api/auth/change-password
+ * Change password for authenticated user
+ */
+router.post('/change-password', authenticate, [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),
+], async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new ValidationError('Validation failed', { errors: errors.array() });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const db = getDb();
+
+    // Get user
+    const user = db.prepare('SELECT password_hash FROM users WHERE id = ?').get(req.user!.userId) as { password_hash: string } | undefined;
+    if (!user) {
+      throw new UnauthorizedError('User not found');
+    }
+
+    // Verify current password
+    const validPassword = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!validPassword) {
+      throw new UnauthorizedError('Current password is incorrect');
+    }
+
+    // Hash new password
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, req.user!.userId);
+
+    // Log audit event
+    db.prepare(`
+      INSERT INTO audit_logs (id, timestamp, action, actor_id, actor_type, target_type, target_id, description, ip_address)
+      VALUES (?, datetime('now'), ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      uuidv4(),
+      'PASSWORD_CHANGED',
+      req.user!.userId,
+      req.user!.userType,
+      'user',
+      req.user!.userId,
+      'Password changed by user',
+      req.ip
+    );
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully',
+    });
+  } catch (error) {
+    if (error instanceof UnauthorizedError || error instanceof ValidationError) {
+      res.status(error.statusCode).json({ success: false, error: { code: error.code, message: error.message } });
+      return;
+    }
+    console.error('Password change error:', error);
+    res.status(500).json({ success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to change password' } });
+  }
+});
+
 export default router;

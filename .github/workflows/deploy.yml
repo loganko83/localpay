@@ -1,0 +1,87 @@
+# Production Deployment Workflow
+# Deploys to trendy.storydot.kr server
+
+name: Deploy
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Build Frontend
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          VITE_API_URL: /localpay/api
+
+      # Build Backend
+      - name: Install backend dependencies
+        run: cd server && npm ci
+
+      - name: Build backend
+        run: cd server && npm run build
+
+      # Deploy via SSH
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H trendy.storydot.kr >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        run: |
+          # Sync frontend build
+          rsync -avz --delete ./dist/ ubuntu@trendy.storydot.kr:/mnt/storage/localpay/dist/
+
+          # Sync backend
+          rsync -avz --delete ./server/dist/ ubuntu@trendy.storydot.kr:/mnt/storage/localpay/server/dist/
+          rsync -avz ./server/package*.json ubuntu@trendy.storydot.kr:/mnt/storage/localpay/server/
+
+          # Install production dependencies and restart
+          ssh ubuntu@trendy.storydot.kr << 'EOF'
+            cd /mnt/storage/localpay/server
+            npm ci --production
+            pm2 restart localpay-api || pm2 start dist/index.js --name localpay-api
+          EOF
+
+      - name: Verify deployment
+        run: |
+          sleep 5
+          curl -f https://trendy.storydot.kr/localpay/api/health || exit 1
+          echo "Deployment successful!"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "Deployment failed! Check the logs."

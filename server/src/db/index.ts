@@ -5,6 +5,7 @@
 
 import Database from 'better-sqlite3';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 
 const DB_PATH = process.env.DB_PATH || path.join(process.cwd(), 'data/localpay.db');
 
@@ -193,6 +194,31 @@ function createTables(): void {
       last_active_at TEXT,
       is_active INTEGER DEFAULT 1,
       created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Password reset tokens table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id),
+      token TEXT UNIQUE NOT NULL,
+      expires_at TEXT NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(user_id)
+    )
+  `);
+
+  // Login attempts table (for account lockout)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS login_attempts (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      ip_address TEXT,
+      success INTEGER NOT NULL,
+      user_agent TEXT,
+      attempted_at TEXT DEFAULT (datetime('now'))
     )
   `);
 
@@ -1013,7 +1039,6 @@ function seedInitialData(): void {
     console.log('Seeding initial data...');
 
     // Create demo admin user
-    const bcrypt = require('bcryptjs');
     const adminPasswordHash = bcrypt.hashSync('admin123', 10);
 
     db.prepare(`

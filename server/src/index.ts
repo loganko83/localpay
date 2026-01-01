@@ -36,6 +36,10 @@ import notificationRoutes from './routes/notifications.js';
 import securityRoutes from './routes/security.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger.js';
+import healthRoutes from './routes/health.js';
+import logger from './config/logger.js';
 
 // Load environment variables
 dotenv.config();
@@ -84,10 +88,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 app.use(requestLogger);
 
-// Health check
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+// Health & Metrics Routes
+app.use('/', healthRoutes);
+
+// Swagger API Documentation
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'LocalPay API Documentation',
+}));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -133,14 +141,15 @@ async function start() {
   try {
     // Initialize SQLite database
     await initDatabase();
-    console.log('Database initialized');
+    logger.info('Database initialized');
 
     app.listen(PORT, () => {
-      console.log(`LocalPay Server running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`LocalPay Server running on port ${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`Swagger docs: http://localhost:${PORT}/api/docs`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
 }
