@@ -169,27 +169,27 @@ This roadmap covers all improvements needed to make LocalPay production-ready.
 
 ---
 
-## Sprint 31: Database & Backup (P1)
+## Sprint 31: Database & Backup (P1) - COMPLETED
 
 **Goal**: Data safety and reliability
 
 ### 31.1 Backup System
-- [ ] Create SQLite backup script
-- [ ] Configure scheduled backups
-- [ ] Implement backup rotation
-- [ ] Add backup verification
+- [x] Create SQLite backup script
+- [x] Configure scheduled backups (npm scripts)
+- [x] Implement backup rotation
+- [x] Add backup verification
 
 ### 31.2 Database Optimization
-- [ ] Review and optimize indexes
-- [ ] Add query performance logging
-- [ ] Implement connection management
-- [ ] Add database maintenance scripts
+- [x] Review and optimize indexes
+- [x] Add query performance logging (via logger)
+- [x] Implement connection management
+- [x] Add database maintenance scripts (VACUUM, ANALYZE)
 
 ### 31.3 Data Migration
-- [ ] Create migration system
-- [ ] Add migration versioning
-- [ ] Create rollback capability
-- [ ] Add migration documentation
+- [x] Create migration system
+- [x] Add migration versioning
+- [x] Create rollback capability
+- [x] Add migration documentation (sample migration file)
 
 ---
 

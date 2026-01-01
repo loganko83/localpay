@@ -34,6 +34,7 @@ import blockchainRoutes from './routes/blockchain.js';
 import identityRoutes from './routes/identity.js';
 import notificationRoutes from './routes/notifications.js';
 import securityRoutes from './routes/security.js';
+import databaseRoutes from './routes/database.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import swaggerUi from 'swagger-ui-express';
@@ -127,6 +128,7 @@ app.use('/api/blockchain', blockchainRoutes);
 app.use('/api/identity', identityRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/security', securityRoutes);
+app.use('/api/admin/database', databaseRoutes);
 
 // Error handling
 app.use(errorHandler);
