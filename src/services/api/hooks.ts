@@ -330,6 +330,314 @@ export function useAdminDashboardStats() {
   });
 }
 
+// ==================== Auth & User Hooks ====================
+
+import { authService, type LoginRequest, type RegisterRequest, type AuthUser } from './authService';
+import { walletService, type WalletBalance, type ChargeRequest, type ChargeResponse } from './walletService';
+import { transactionService, type TransactionFilters, type TransactionListResponse, type PaymentRequest, type PaymentResponse } from './transactionService';
+import { merchantService, type MerchantDashboard, type MerchantTransactionFilters, type MerchantTransactionListResponse } from './merchantService';
+import { twoFactorService, type TwoFactorStatus, type TwoFactorSetupResponse } from './twoFactorService';
+import { notificationService, type NotificationListResponse, type NotificationPreferences } from './notificationService';
+import { webhookService, type Webhook, type WebhookCreateRequest, type WebhookDelivery } from './webhookService';
+
+/**
+ * Hook for login
+ */
+export function useLogin() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: LoginRequest) => authService.login(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+    },
+  });
+}
+
+/**
+ * Hook for register
+ */
+export function useRegister() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: RegisterRequest) => authService.register(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
+  });
+}
+
+/**
+ * Hook for logout
+ */
+export function useLogout() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => authService.logout(),
+    onSuccess: () => {
+      queryClient.clear();
+    },
+  });
+}
+
+/**
+ * Hook for current user
+ */
+export function useCurrentUser() {
+  return useQuery<AuthUser | null>({
+    queryKey: ['auth', 'me'],
+    queryFn: () => authService.getCurrentUser(),
+    staleTime: 60000,
+    retry: false,
+  });
+}
+
+// ==================== Wallet Hooks ====================
+
+/**
+ * Hook for wallet balance
+ */
+export function useWalletBalance() {
+  return useQuery<WalletBalance>({
+    queryKey: ['wallet', 'balance'],
+    queryFn: () => walletService.getBalance(),
+    refetchInterval: 30000,
+    staleTime: 10000,
+  });
+}
+
+/**
+ * Hook for wallet charge
+ */
+export function useWalletCharge() {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChargeResponse, Error, ChargeRequest>({
+    mutationFn: (request) => walletService.charge(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    },
+  });
+}
+
+// ==================== Transaction Hooks ====================
+
+/**
+ * Hook for transaction history (backend API)
+ */
+export function useBackendTransactions(filters?: TransactionFilters) {
+  return useQuery<TransactionListResponse>({
+    queryKey: ['backend-transactions', filters],
+    queryFn: () => transactionService.getTransactions(filters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for payment (backend API)
+ */
+export function useBackendPayment() {
+  const queryClient = useQueryClient();
+
+  return useMutation<PaymentResponse, Error, PaymentRequest>({
+    mutationFn: (request) => transactionService.requestPayment(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['backend-transactions'] });
+    },
+  });
+}
+
+// ==================== Merchant Hooks ====================
+
+/**
+ * Hook for merchant dashboard (backend API)
+ */
+export function useBackendMerchantDashboard() {
+  return useQuery<MerchantDashboard>({
+    queryKey: ['merchant', 'dashboard'],
+    queryFn: () => merchantService.getDashboard(),
+    refetchInterval: 60000,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for merchant transactions
+ */
+export function useMerchantTransactions(filters?: MerchantTransactionFilters) {
+  return useQuery<MerchantTransactionListResponse>({
+    queryKey: ['merchant', 'transactions', filters],
+    queryFn: () => merchantService.getTransactions(filters),
+    staleTime: 30000,
+  });
+}
+
+// ==================== Two-Factor Auth Hooks ====================
+
+/**
+ * Hook for 2FA status
+ */
+export function useTwoFactorStatus() {
+  return useQuery<TwoFactorStatus>({
+    queryKey: ['auth', '2fa', 'status'],
+    queryFn: () => twoFactorService.getStatus(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for 2FA setup
+ */
+export function useTwoFactorSetup() {
+  const queryClient = useQueryClient();
+
+  return useMutation<TwoFactorSetupResponse, Error, void>({
+    mutationFn: () => twoFactorService.setup(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', '2fa'] });
+    },
+  });
+}
+
+/**
+ * Hook for 2FA verify
+ */
+export function useTwoFactorVerify() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (token: string) => twoFactorService.verify({ token }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', '2fa'] });
+    },
+  });
+}
+
+/**
+ * Hook for 2FA disable
+ */
+export function useTwoFactorDisable() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: { password: string; token?: string }) => twoFactorService.disable(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', '2fa'] });
+    },
+  });
+}
+
+// ==================== Notification Hooks ====================
+
+/**
+ * Hook for notifications
+ */
+export function useNotifications(page: number = 1, size: number = 20) {
+  return useQuery<NotificationListResponse>({
+    queryKey: ['notifications', page, size],
+    queryFn: () => notificationService.getNotifications(page, size),
+    refetchInterval: 30000,
+    staleTime: 10000,
+  });
+}
+
+/**
+ * Hook for unread notification count
+ */
+export function useUnreadNotificationCount() {
+  return useQuery<{ count: number }>({
+    queryKey: ['notifications', 'unread'],
+    queryFn: () => notificationService.getUnreadCount(),
+    refetchInterval: 15000,
+    staleTime: 5000,
+  });
+}
+
+/**
+ * Hook for notification preferences
+ */
+export function useNotificationPreferences() {
+  return useQuery<NotificationPreferences>({
+    queryKey: ['notifications', 'preferences'],
+    queryFn: () => notificationService.getPreferences(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for updating notification preferences
+ */
+export function useUpdateNotificationPreferences() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (preferences: Partial<NotificationPreferences>) =>
+      notificationService.updatePreferences(preferences),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications', 'preferences'] });
+    },
+  });
+}
+
+// ==================== Webhook Hooks ====================
+
+/**
+ * Hook for webhooks list
+ */
+export function useWebhooks() {
+  return useQuery<Webhook[]>({
+    queryKey: ['webhooks'],
+    queryFn: () => webhookService.listWebhooks(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for creating webhook
+ */
+export function useCreateWebhook() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: WebhookCreateRequest) => webhookService.createWebhook(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['webhooks'] });
+    },
+  });
+}
+
+/**
+ * Hook for deleting webhook
+ */
+export function useDeleteWebhook() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (webhookId: string) => webhookService.deleteWebhook(webhookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['webhooks'] });
+    },
+  });
+}
+
+/**
+ * Hook for webhook deliveries
+ */
+export function useWebhookDeliveries(webhookId: string) {
+  return useQuery<WebhookDelivery[]>({
+    queryKey: ['webhooks', webhookId, 'deliveries'],
+    queryFn: () => webhookService.getDeliveries(webhookId),
+    enabled: !!webhookId,
+    staleTime: 30000,
+  });
+}
+
 export default {
   // Blockchain
   useNetworkStatus,
@@ -352,4 +660,33 @@ export default {
   // Metrics
   usePlatformMetrics,
   useAdminDashboardStats,
+  // Auth
+  useLogin,
+  useRegister,
+  useLogout,
+  useCurrentUser,
+  // Wallet
+  useWalletBalance,
+  useWalletCharge,
+  // Transactions (backend)
+  useBackendTransactions,
+  useBackendPayment,
+  // Merchant (backend)
+  useBackendMerchantDashboard,
+  useMerchantTransactions,
+  // 2FA
+  useTwoFactorStatus,
+  useTwoFactorSetup,
+  useTwoFactorVerify,
+  useTwoFactorDisable,
+  // Notifications
+  useNotifications,
+  useUnreadNotificationCount,
+  useNotificationPreferences,
+  useUpdateNotificationPreferences,
+  // Webhooks
+  useWebhooks,
+  useCreateWebhook,
+  useDeleteWebhook,
+  useWebhookDeliveries,
 };
