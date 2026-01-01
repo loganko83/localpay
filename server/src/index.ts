@@ -35,6 +35,7 @@ import identityRoutes from './routes/identity.js';
 import notificationRoutes from './routes/notifications.js';
 import securityRoutes from './routes/security.js';
 import databaseRoutes from './routes/database.js';
+import externalRoutes from './routes/external.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import swaggerUi from 'swagger-ui-express';
@@ -129,6 +130,7 @@ app.use('/api/identity', identityRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/admin/database', databaseRoutes);
+app.use('/api/external', externalRoutes);
 
 // Error handling
 app.use(errorHandler);

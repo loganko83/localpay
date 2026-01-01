@@ -193,33 +193,33 @@ This roadmap covers all improvements needed to make LocalPay production-ready.
 
 ---
 
-## Sprint 32: External Service Integration (P2)
+## Sprint 32: External Service Integration (P2) - COMPLETED
 
 **Goal**: Connect to real external services
 
 ### 32.1 Push Notifications
-- [ ] Integrate Firebase Cloud Messaging (FCM)
-- [ ] Add FCM configuration
-- [ ] Implement push notification sender
-- [ ] Add notification templates
+- [x] Integrate Firebase Cloud Messaging (FCM)
+- [x] Add FCM configuration
+- [x] Implement push notification sender
+- [x] Add notification templates
 
 ### 32.2 Email Service
-- [ ] Choose email provider (SES/SendGrid)
-- [ ] Create email service
-- [ ] Add email templates
-- [ ] Implement email verification
+- [x] Choose email provider (SES/SendGrid/SMTP)
+- [x] Create email service
+- [x] Add email templates (welcome, verification, reset, receipt)
+- [x] Implement email verification
 
 ### 32.3 SMS Service
-- [ ] Choose SMS provider
-- [ ] Create SMS service
-- [ ] Add SMS templates
-- [ ] Implement phone verification
+- [x] Choose SMS provider (Aligo/Ncloud/Twilio)
+- [x] Create SMS service
+- [x] Add SMS templates
+- [x] Implement phone verification
 
 ### 32.4 File Upload
-- [ ] Configure S3 or local storage
-- [ ] Create file upload middleware
-- [ ] Add file validation
-- [ ] Implement image processing
+- [x] Configure S3 or local storage
+- [x] Create file upload middleware (multer)
+- [x] Add file validation
+- [x] Implement avatar/document upload
 
 ---
 
