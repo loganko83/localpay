@@ -66,7 +66,7 @@ export interface MerchantTransactionListResponse {
   totalPages: number;
 }
 
-export interface Settlement {
+export interface MerchantSettlement {
   id: string;
   amount: number;
   transactionCount: number;
@@ -79,8 +79,8 @@ export interface Settlement {
   createdAt: string;
 }
 
-export interface SettlementListResponse {
-  settlements: Settlement[];
+export interface MerchantSettlementListResponse {
+  settlements: MerchantSettlement[];
   page: number;
   size: number;
   totalElements: number;
@@ -151,15 +151,15 @@ class MerchantService {
   /**
    * Get settlements
    */
-  async getSettlements(page: number = 1, size: number = 10): Promise<SettlementListResponse> {
-    return backendApiClient.get<SettlementListResponse>(`/settlements?page=${page}&size=${size}`);
+  async getSettlements(page: number = 1, size: number = 10): Promise<MerchantSettlementListResponse> {
+    return backendApiClient.get<MerchantSettlementListResponse>(`/settlements?page=${page}&size=${size}`);
   }
 
   /**
    * Get settlement details
    */
-  async getSettlement(settlementId: string): Promise<Settlement> {
-    return backendApiClient.get<Settlement>(`/settlements/${settlementId}`);
+  async getSettlement(settlementId: string): Promise<MerchantSettlement> {
+    return backendApiClient.get<MerchantSettlement>(`/settlements/${settlementId}`);
   }
 
   /**

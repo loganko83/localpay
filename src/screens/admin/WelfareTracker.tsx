@@ -12,164 +12,19 @@ import {
   AreaChart,
   Area,
 } from 'recharts';
+import { useWelfarePrograms, useWelfareDistributions, useWelfareStats, useWelfareImpact } from '../../services/api';
+import type { WelfareProgram, WelfareDistribution } from '../../services/api';
 
-interface WelfareProgram {
-  id: string;
-  name: string;
-  category: 'youth' | 'senior' | 'disability' | 'culture' | 'education' | 'emergency';
-  budget: number;
-  distributed: number;
-  beneficiaries: number;
-  utilizationRate: number;
-  status: 'active' | 'paused' | 'completed';
-  startDate: Date;
-  endDate: Date;
-  verificationRequired: boolean;
-}
+type ProgramCategory = 'youth' | 'senior' | 'disability' | 'culture' | 'education' | 'housing' | 'medical';
 
-interface Distribution {
-  id: string;
-  programId: string;
-  programName: string;
-  beneficiaryId: string;
-  beneficiaryName: string;
-  amount: number;
-  distributedAt: Date;
-  usedAmount: number;
-  status: 'distributed' | 'partially_used' | 'fully_used' | 'expired';
-  didVerified: boolean;
-  txHash?: string;
-}
-
-const mockPrograms: WelfareProgram[] = [
-  {
-    id: 'WF-001',
-    name: '청년 취업 지원',
-    category: 'youth',
-    budget: 5000000000,
-    distributed: 3250000000,
-    beneficiaries: 12500,
-    utilizationRate: 78.5,
-    status: 'active',
-    startDate: new Date('2024-01-01'),
-    endDate: new Date('2024-12-31'),
-    verificationRequired: true,
-  },
-  {
-    id: 'WF-002',
-    name: '노인 월 생활 지원',
-    category: 'senior',
-    budget: 8000000000,
-    distributed: 7200000000,
-    beneficiaries: 45000,
-    utilizationRate: 92.3,
-    status: 'active',
-    startDate: new Date('2024-01-01'),
-    endDate: new Date('2024-12-31'),
-    verificationRequired: true,
-  },
-  {
-    id: 'WF-003',
-    name: '문화 체험 바우처',
-    category: 'culture',
-    budget: 2000000000,
-    distributed: 1800000000,
-    beneficiaries: 8500,
-    utilizationRate: 65.2,
-    status: 'active',
-    startDate: new Date('2024-03-01'),
-    endDate: new Date('2024-12-31'),
-    verificationRequired: false,
-  },
-  {
-    id: 'WF-004',
-    name: '교육 지원금',
-    category: 'education',
-    budget: 3000000000,
-    distributed: 2400000000,
-    beneficiaries: 6200,
-    utilizationRate: 88.1,
-    status: 'active',
-    startDate: new Date('2024-02-01'),
-    endDate: new Date('2024-12-31'),
-    verificationRequired: true,
-  },
-  {
-    id: 'WF-005',
-    name: '장애인 생활 지원금',
-    category: 'disability',
-    budget: 4500000000,
-    distributed: 4100000000,
-    beneficiaries: 15800,
-    utilizationRate: 95.4,
-    status: 'active',
-    startDate: new Date('2024-01-01'),
-    endDate: new Date('2024-12-31'),
-    verificationRequired: true,
-  },
-];
-
-const mockDistributions: Distribution[] = [
-  {
-    id: 'DIST-001',
-    programId: 'WF-001',
-    programName: '청년 취업 지원',
-    beneficiaryId: 'U-44521',
-    beneficiaryName: '김민준',
-    amount: 500000,
-    distributedAt: new Date(Date.now() - 86400000),
-    usedAmount: 320000,
-    status: 'partially_used',
-    didVerified: true,
-    txHash: '0x8f2a...4e91',
-  },
-  {
-    id: 'DIST-002',
-    programId: 'WF-002',
-    programName: '노인 월 생활 지원',
-    beneficiaryId: 'U-88234',
-    beneficiaryName: '박영수',
-    amount: 200000,
-    distributedAt: new Date(Date.now() - 172800000),
-    usedAmount: 200000,
-    status: 'fully_used',
-    didVerified: true,
-    txHash: '0x3c1b...7f22',
-  },
-  {
-    id: 'DIST-003',
-    programId: 'WF-003',
-    programName: '문화 체험 바우처',
-    beneficiaryId: 'U-55612',
-    beneficiaryName: '이수진',
-    amount: 150000,
-    distributedAt: new Date(Date.now() - 259200000),
-    usedAmount: 0,
-    status: 'distributed',
-    didVerified: false,
-  },
-  {
-    id: 'DIST-004',
-    programId: 'WF-004',
-    programName: '교육 지원금',
-    beneficiaryId: 'U-33109',
-    beneficiaryName: '최지혜',
-    amount: 800000,
-    distributedAt: new Date(Date.now() - 604800000),
-    usedAmount: 800000,
-    status: 'fully_used',
-    didVerified: true,
-    txHash: '0x9d4e...2a83',
-  },
-];
-
-const categoryColors: Record<WelfareProgram['category'], string> = {
+const categoryColors: Record<ProgramCategory, string> = {
   youth: '#3b82f6',
   senior: '#22c55e',
   disability: '#8b5cf6',
   culture: '#ec4899',
   education: '#f59e0b',
-  emergency: '#ef4444',
+  housing: '#06b6d4',
+  medical: '#ef4444',
 };
 
 const monthlyData = [
@@ -187,21 +42,29 @@ const WelfareTracker: React.FC = () => {
     'programs'
   );
 
-  const totalBudget = mockPrograms.reduce((sum, p) => sum + p.budget, 0);
-  const totalDistributed = mockPrograms.reduce((sum, p) => sum + p.distributed, 0);
-  const totalBeneficiaries = mockPrograms.reduce((sum, p) => sum + p.beneficiaries, 0);
-  const avgUtilization =
-    mockPrograms.reduce((sum, p) => sum + p.utilizationRate, 0) / mockPrograms.length;
+  // API hooks
+  const { data: programsData, isLoading: programsLoading } = useWelfarePrograms();
+  const { data: distributionsData, isLoading: distributionsLoading } = useWelfareDistributions();
+  const { data: stats } = useWelfareStats();
+  const { data: impact } = useWelfareImpact();
+
+  const programs = programsData?.programs ?? [];
+  const distributions = distributionsData?.distributions ?? [];
+
+  const totalBudget = stats?.totalBudget ?? programs.reduce((sum, p) => sum + p.budget, 0);
+  const totalDistributed = stats?.totalSpent ?? programs.reduce((sum, p) => sum + p.spent, 0);
+  const totalBeneficiaries = stats?.totalBeneficiaries ?? 0;
+  const avgUtilization = stats?.utilizationRate ?? 0;
 
   const categoryData = Object.entries(
-    mockPrograms.reduce((acc, p) => {
-      acc[p.category] = (acc[p.category] || 0) + p.distributed;
+    programs.reduce((acc, p) => {
+      acc[p.type] = (acc[p.type] || 0) + p.spent;
       return acc;
     }, {} as Record<string, number>)
   ).map(([category, value]) => ({
     name: category.charAt(0).toUpperCase() + category.slice(1),
     value: value / 1000000000,
-    color: categoryColors[category as WelfareProgram['category']],
+    color: categoryColors[category as ProgramCategory] || '#64748b',
   }));
 
   const formatCurrency = (value: number) => {
@@ -395,168 +258,151 @@ const WelfareTracker: React.FC = () => {
       {/* Programs Tab */}
       {selectedTab === 'programs' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mockPrograms.map((program) => (
-            <div
-              key={program.id}
-              onClick={() => setSelectedProgram(program)}
-              className="bg-gray-900/50 border border-white/5 rounded-xl p-5 hover:bg-gray-800/50 transition-colors cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div
-                  className="px-2 py-1 rounded text-xs font-medium capitalize"
-                  style={{
-                    backgroundColor: `${categoryColors[program.category]}20`,
-                    color: categoryColors[program.category],
-                  }}
-                >
-                  {program.category}
-                </div>
-                {program.verificationRequired && (
-                  <span className="material-symbols-outlined text-green-500 text-[18px]">
-                    verified_user
-                  </span>
-                )}
-              </div>
-              <h4 className="text-white font-medium mb-2">{program.name}</h4>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-gray-500">배분 진행률</span>
-                    <span className="text-white">
-                      {((program.distributed / program.budget) * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${(program.distributed / program.budget) * 100}%`,
-                        backgroundColor: categoryColors[program.category],
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400">수혜자</span>
-                  <span className="text-white">{program.beneficiaries.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400">활용률</span>
-                  <span
-                    className={
-                      program.utilizationRate >= 80
-                        ? 'text-green-500'
-                        : program.utilizationRate >= 50
-                        ? 'text-yellow-500'
-                        : 'text-red-500'
-                    }
-                  >
-                    {program.utilizationRate}%
-                  </span>
-                </div>
-              </div>
+          {programsLoading ? (
+            <div className="col-span-full flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
-          ))}
+          ) : programs.length === 0 ? (
+            <div className="col-span-full text-center py-12 text-gray-400">
+              등록된 프로그램이 없습니다
+            </div>
+          ) : programs.map((program) => {
+            const utilizationRate = program.budget > 0 ? (program.spent / program.budget) * 100 : 0;
+            return (
+              <div
+                key={program.id}
+                onClick={() => setSelectedProgram(program)}
+                className="bg-gray-900/50 border border-white/5 rounded-xl p-5 hover:bg-gray-800/50 transition-colors cursor-pointer"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div
+                    className="px-2 py-1 rounded text-xs font-medium capitalize"
+                    style={{
+                      backgroundColor: `${categoryColors[program.type as ProgramCategory] || '#64748b'}20`,
+                      color: categoryColors[program.type as ProgramCategory] || '#64748b',
+                    }}
+                  >
+                    {program.type}
+                  </div>
+                  {program.status === 'active' && (
+                    <span className="material-symbols-outlined text-green-500 text-[18px]">
+                      verified_user
+                    </span>
+                  )}
+                </div>
+                <h4 className="text-white font-medium mb-2">{program.name}</h4>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-500">배분 진행률</span>
+                      <span className="text-white">
+                        {utilizationRate.toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${Math.min(utilizationRate, 100)}%`,
+                          backgroundColor: categoryColors[program.type as ProgramCategory] || '#64748b',
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">수혜자</span>
+                    <span className="text-white">{program.beneficiaryCount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">예산</span>
+                    <span className="text-white">{formatCurrency(program.budget)}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
       {/* Distributions Tab */}
       {selectedTab === 'distributions' && (
         <div className="bg-gray-900/50 border border-white/5 rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    ID
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    프로그램
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    수혜자
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    금액
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    사용액
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    상태
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    DID
-                  </th>
-                  <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
-                    블록체인
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {mockDistributions.map((dist) => (
-                  <tr key={dist.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4">
-                      <span className="text-white font-mono text-sm">{dist.id}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-gray-300 text-sm">{dist.programName}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="text-white text-sm">{dist.beneficiaryName}</p>
-                        <p className="text-gray-500 text-xs">{dist.beneficiaryId}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-white text-sm">
-                        {dist.amount.toLocaleString()} KRW
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-gray-400 text-sm">
-                        {dist.usedAmount.toLocaleString()} KRW
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <DistributionStatusBadge status={dist.status} />
-                    </td>
-                    <td className="px-6 py-4">
-                      {dist.didVerified ? (
-                        <span className="text-green-500 flex items-center gap-1 text-sm">
-                          <span className="material-symbols-outlined text-[16px]">
-                            verified
-                          </span>
-                          검증됨
-                        </span>
-                      ) : (
-                        <span className="text-yellow-500 flex items-center gap-1 text-sm">
-                          <span className="material-symbols-outlined text-[16px]">
-                            pending
-                          </span>
-                          대기 중
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      {dist.txHash ? (
-                        <a
-                          href={`https://xp.tamsa.io/tx/${dist.txHash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline text-sm font-mono"
-                        >
-                          {dist.txHash}
-                        </a>
-                      ) : (
-                        <span className="text-gray-500 text-sm">-</span>
-                      )}
-                    </td>
+          {distributionsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : distributions.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              배분 내역이 없습니다
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/5">
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      ID
+                    </th>
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      프로그램
+                    </th>
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      수혜자
+                    </th>
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      금액
+                    </th>
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      상태
+                    </th>
+                    <th className="text-left text-gray-400 text-xs font-medium uppercase px-6 py-4">
+                      블록체인
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {distributions.map((dist) => (
+                    <tr key={dist.id} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4">
+                        <span className="text-white font-mono text-sm">{dist.id.substring(0, 8)}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-300 text-sm">{dist.programName || 'N/A'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="text-white text-sm">{dist.beneficiaryName || 'Unknown'}</p>
+                          <p className="text-gray-500 text-xs">{dist.beneficiaryId}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-white text-sm">
+                          {dist.amount.toLocaleString()} KRW
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <DistributionStatusBadge status={dist.status} />
+                      </td>
+                      <td className="px-6 py-4">
+                        {dist.blockchainHash ? (
+                          <a
+                            href={`https://xp.tamsa.io/tx/${dist.blockchainHash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline text-sm font-mono"
+                          >
+                            {dist.blockchainHash.substring(0, 10)}...
+                          </a>
+                        ) : (
+                          <span className="text-gray-500 text-sm">-</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 
@@ -567,7 +413,7 @@ const WelfareTracker: React.FC = () => {
             <h3 className="text-white font-semibold mb-4">프로그램 활용률</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={mockPrograms} layout="vertical">
+                <BarChart data={programs.map(p => ({ ...p, utilizationRate: p.budget > 0 ? (p.spent / p.budget) * 100 : 0 }))} layout="vertical">
                   <XAxis type="number" domain={[0, 100]} hide />
                   <YAxis
                     type="category"
@@ -583,7 +429,7 @@ const WelfareTracker: React.FC = () => {
                       borderColor: '#334155',
                       borderRadius: 8,
                     }}
-                    formatter={(value) => [`${value}%`, '활용률']}
+                    formatter={(value) => [`${Number(value).toFixed(1)}%`, '활용률']}
                   />
                   <Bar dataKey="utilizationRate" fill="#22c55e" radius={[0, 4, 4, 0]} />
                 </BarChart>
@@ -596,26 +442,26 @@ const WelfareTracker: React.FC = () => {
             <div className="space-y-4">
               <ImpactMetric
                 label="경제 승수효과"
-                value="1.8배"
+                value={`${impact?.economicMultiplier?.toFixed(1) ?? '1.8'}배`}
                 description="지역 내 소비 증폭 효과"
                 trend="+0.2"
               />
               <ImpactMetric
                 label="자금 잔류율"
-                value="94.2%"
+                value={`${impact?.capitalRetention?.toFixed(1) ?? '94.2'}%`}
                 description="지역 경제 내 잔류 자금"
                 trend="+2.1"
               />
               <ImpactMetric
-                label="DID 검증률"
-                value="87.5%"
-                description="신원 검증 완료 수혜자"
+                label="일자리 창출"
+                value={`${impact?.jobsCreated?.toLocaleString() ?? '0'}개`}
+                description="복지 프로그램 관련 일자리"
                 trend="+5.3"
               />
               <ImpactMetric
-                label="블록체인 앵커링"
-                value="99.8%"
-                description="온체인 기록 거래"
+                label="총 배분율"
+                value={`${avgUtilization.toFixed(1)}%`}
+                description="전체 예산 대비 배분"
                 trend="+0.1"
               />
             </div>
@@ -632,13 +478,13 @@ const WelfareTracker: React.FC = () => {
                 <div
                   className="px-2 py-1 rounded text-xs font-medium capitalize"
                   style={{
-                    backgroundColor: `${categoryColors[selectedProgram.category]}20`,
-                    color: categoryColors[selectedProgram.category],
+                    backgroundColor: `${categoryColors[selectedProgram.type as ProgramCategory] || '#64748b'}20`,
+                    color: categoryColors[selectedProgram.type as ProgramCategory] || '#64748b',
                   }}
                 >
-                  {selectedProgram.category}
+                  {selectedProgram.type}
                 </div>
-                <span className="text-white font-semibold">{selectedProgram.id}</span>
+                <span className="text-white font-semibold">{selectedProgram.id.substring(0, 8)}</span>
               </div>
               <button
                 onClick={() => setSelectedProgram(null)}
@@ -658,23 +504,23 @@ const WelfareTracker: React.FC = () => {
                 />
                 <InfoCard
                   label="배분액"
-                  value={`${formatCurrency(selectedProgram.distributed)} 원`}
+                  value={`${formatCurrency(selectedProgram.spent)} 원`}
                 />
                 <InfoCard
                   label="수혜자"
-                  value={selectedProgram.beneficiaries.toLocaleString()}
+                  value={selectedProgram.beneficiaryCount.toLocaleString()}
                 />
                 <InfoCard
                   label="활용률"
-                  value={`${selectedProgram.utilizationRate}%`}
+                  value={`${selectedProgram.budget > 0 ? ((selectedProgram.spent / selectedProgram.budget) * 100).toFixed(1) : 0}%`}
                 />
                 <InfoCard
                   label="시작일"
-                  value={selectedProgram.startDate.toLocaleDateString()}
+                  value={selectedProgram.startDate ? new Date(selectedProgram.startDate).toLocaleDateString() : 'N/A'}
                 />
                 <InfoCard
                   label="종료일"
-                  value={selectedProgram.endDate.toLocaleDateString()}
+                  value={selectedProgram.endDate ? new Date(selectedProgram.endDate).toLocaleDateString() : 'N/A'}
                 />
               </div>
 
@@ -684,32 +530,18 @@ const WelfareTracker: React.FC = () => {
                   <div
                     className="h-full rounded-full transition-all"
                     style={{
-                      width: `${(selectedProgram.distributed / selectedProgram.budget) * 100}%`,
-                      backgroundColor: categoryColors[selectedProgram.category],
+                      width: `${Math.min(selectedProgram.budget > 0 ? (selectedProgram.spent / selectedProgram.budget) * 100 : 0, 100)}%`,
+                      backgroundColor: categoryColors[selectedProgram.type as ProgramCategory] || '#64748b',
                     }}
                   />
                 </div>
                 <p className="text-gray-400 text-sm mt-2">
-                  {((selectedProgram.distributed / selectedProgram.budget) * 100).toFixed(1)}%
+                  {selectedProgram.budget > 0 ? ((selectedProgram.spent / selectedProgram.budget) * 100).toFixed(1) : 0}%
                   배분 완료
                 </p>
               </div>
 
               <div className="flex items-center gap-4">
-                <div
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                    selectedProgram.verificationRequired
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'bg-gray-500/20 text-gray-400'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
-                  <span className="text-sm">
-                    {selectedProgram.verificationRequired
-                      ? 'DID 검증 필수'
-                      : '검증 불필요'}
-                  </span>
-                </div>
                 <div
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
                     selectedProgram.status === 'active'
@@ -763,17 +595,18 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, icon, color, su
   </div>
 );
 
-const DistributionStatusBadge: React.FC<{ status: Distribution['status'] }> = ({ status }) => {
-  const styles: Record<Distribution['status'], string> = {
-    distributed: 'bg-blue-500/20 text-blue-400',
-    partially_used: 'bg-yellow-500/20 text-yellow-400',
-    fully_used: 'bg-green-500/20 text-green-400',
-    expired: 'bg-red-500/20 text-red-400',
+type DistributionStatus = WelfareDistribution['status'];
+
+const DistributionStatusBadge: React.FC<{ status: DistributionStatus }> = ({ status }) => {
+  const styles: Record<DistributionStatus, string> = {
+    pending: 'bg-yellow-500/20 text-yellow-400',
+    completed: 'bg-green-500/20 text-green-400',
+    failed: 'bg-red-500/20 text-red-400',
   };
 
   return (
     <span className={`px-2 py-1 rounded text-xs font-medium capitalize ${styles[status]}`}>
-      {status.replace('_', ' ')}
+      {status}
     </span>
   );
 };
