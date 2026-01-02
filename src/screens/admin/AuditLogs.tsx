@@ -1,111 +1,9 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Button, Input } from '../../components/common';
+import { useAuditLogs, useAdminDashboard } from '../../services/api';
 import { AuditLogEntry, AuditActionType } from '../../types';
 import { theme } from '../../styles/theme';
-
-// Mock audit log data
-const mockAuditLogs: AuditLogEntry[] = [
-  {
-    id: 'audit-001',
-    timestamp: new Date().toISOString(),
-    action: 'PAYMENT_COMPLETED',
-    actorId: 'user-123',
-    actorType: 'consumer',
-    actorDid: 'did:xphere:user123',
-    targetType: 'transaction',
-    targetId: 'txn-456',
-    description: 'Payment of 50,000 KRW completed at Jeonju Bibimbap',
-    metadata: { merchantId: 'm1', amount: 50000 },
-    blockchainHash: 'BC-a1b2c3d4e5f6',
-    blockNumber: 12345678,
-    transactionHash: '0xabc123...',
-    signature: 'sig:user123:1234567890',
-    signedBy: 'did:xphere:user123',
-    verified: true,
-    verifiedAt: new Date().toISOString(),
-  },
-  {
-    id: 'audit-002',
-    timestamp: new Date(Date.now() - 300000).toISOString(),
-    action: 'MERCHANT_VERIFIED',
-    actorId: 'admin-001',
-    actorType: 'admin',
-    actorDid: 'did:xphere:admin001',
-    targetType: 'merchant',
-    targetId: 'm-789',
-    description: 'Merchant "Jeonju Coffee" verified by administrator',
-    previousState: { status: 'pending' },
-    newState: { status: 'verified' },
-    blockchainHash: 'BC-f6e5d4c3b2a1',
-    blockNumber: 12345677,
-    signature: 'sig:admin001:1234567891',
-    signedBy: 'did:xphere:admin001',
-    verified: true,
-    verifiedAt: new Date(Date.now() - 300000).toISOString(),
-  },
-  {
-    id: 'audit-003',
-    timestamp: new Date(Date.now() - 600000).toISOString(),
-    action: 'POLICY_UPDATED',
-    actorId: 'admin-002',
-    actorType: 'admin',
-    actorDid: 'did:xphere:admin002',
-    targetType: 'policy',
-    targetId: 'pol-001',
-    description: 'Charge limit policy updated: daily limit changed from 500,000 to 1,000,000 KRW',
-    previousState: { dailyLimit: 500000 },
-    newState: { dailyLimit: 1000000 },
-    blockchainHash: 'BC-123abc456def',
-    blockNumber: 12345676,
-    signature: 'sig:admin002:1234567892',
-    signedBy: 'did:xphere:admin002',
-    verified: true,
-  },
-  {
-    id: 'audit-004',
-    timestamp: new Date(Date.now() - 900000).toISOString(),
-    action: 'SECURITY_ALERT',
-    actorId: 'system',
-    actorType: 'admin',
-    targetType: 'security',
-    targetId: 'alert-001',
-    description: 'Suspicious login attempt detected from unknown IP',
-    metadata: { ipAddress: '192.168.1.100', attempts: 5 },
-    blockchainHash: 'BC-sec789xyz',
-    verified: true,
-  },
-  {
-    id: 'audit-005',
-    timestamp: new Date(Date.now() - 1800000).toISOString(),
-    action: 'BALANCE_CHARGED',
-    actorId: 'user-456',
-    actorType: 'consumer',
-    actorDid: 'did:xphere:user456',
-    targetType: 'wallet',
-    targetId: 'wallet-456',
-    description: 'Balance charged: 100,000 KRW from linked bank account',
-    metadata: { amount: 100000, bankCode: '004', method: 'bank_transfer' },
-    blockchainHash: 'BC-charge123',
-    blockNumber: 12345675,
-    verified: true,
-  },
-  {
-    id: 'audit-006',
-    timestamp: new Date(Date.now() - 3600000).toISOString(),
-    action: 'USER_KYC_VERIFIED',
-    actorId: 'user-789',
-    actorType: 'consumer',
-    actorDid: 'did:xphere:user789',
-    targetType: 'user',
-    targetId: 'user-789',
-    description: 'KYC verification completed via DID credential',
-    metadata: { verificationMethod: 'DID_VC', credentialType: 'RESIDENT' },
-    blockchainHash: 'BC-kyc456abc',
-    blockNumber: 12345674,
-    verified: false, // Pending verification
-  },
-];
 
 const actionTypeLabels: Record<AuditActionType, string> = {
   USER_REGISTERED: '사용자 등록',
@@ -166,22 +64,26 @@ const getActionColor = (action: AuditActionType) => {
 };
 
 const AuditLogs: React.FC = () => {
-  const [logs] = useState<AuditLogEntry[]>(mockAuditLogs);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAction, setFilterAction] = useState<string>('all');
   const [selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null);
 
-  // Stats
-  const totalLogs = logs.length;
-  const verifiedLogs = logs.filter(l => l.verified).length;
+  const { data: auditData } = useAuditLogs({
+    page: 1,
+    size: 50,
+    action: filterAction === 'all' ? undefined : filterAction,
+  });
+  const { data: dashboardData } = useAdminDashboard();
+
+  const logs = auditData?.logs ?? [];
+
+  // Stats from dashboard
+  const totalLogs = dashboardData?.audit?.total ?? logs.length;
+  const todayLogs = dashboardData?.audit?.today ?? 0;
+  const verifiedPercentage = dashboardData?.audit?.verifiedPercentage ?? 0;
   const securityAlerts = logs.filter(l => l.action === 'SECURITY_ALERT').length;
-  const todayLogs = logs.filter(l => {
-    const logDate = new Date(l.timestamp).toDateString();
-    return logDate === new Date().toDateString();
-  }).length;
 
   const filteredLogs = logs.filter(log => {
-    if (filterAction !== 'all' && log.action !== filterAction) return false;
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       return (
@@ -221,7 +123,7 @@ const AuditLogs: React.FC = () => {
             </div>
             <div>
               <p className="text-xs text-text-secondary mb-1">검증됨</p>
-              <p className="text-xl font-bold text-green-500">{Math.round((verifiedLogs / totalLogs) * 100)}%</p>
+              <p className="text-xl font-bold text-green-500">{verifiedPercentage}%</p>
             </div>
             <div>
               <p className="text-xs text-text-secondary mb-1">경고</p>

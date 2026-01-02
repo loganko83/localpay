@@ -1,40 +1,53 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Input, Button } from '../../components/common';
+import { useAdminDashboard } from '../../services/api';
+import { merchantService } from '../../services/api';
+import { useQuery } from '@tanstack/react-query';
 import { theme } from '../../styles/theme';
-
-const mockMerchants = [
-  { id: '1', name: 'Jeonju Bibimbap', walletAddress: '0x1a2b...3c4d', status: 'active' as const, lastTx: '2 min ago', type: 'Restaurant' },
-  { id: '2', name: 'Jeonju Coffee', walletAddress: '0x5e6f...7g8h', status: 'pending' as const, lastTx: 'Pending', type: 'Cafe' },
-  { id: '3', name: 'Jeonju Hanok Mart', walletAddress: '0x9i0j...1k2l', status: 'active' as const, lastTx: '1 hour ago', type: 'Retail' },
-  { id: '4', name: 'Hanok Village Hotel', walletAddress: '0x3m4n...5o6p', status: 'suspended' as const, lastTx: '3 days ago', type: 'Hospitality' },
-  { id: '5', name: 'Jeonju Bakery', walletAddress: '0x7q8r...9s0t', status: 'pending' as const, lastTx: 'Pending', type: 'Food' },
-];
-
-const pendingApplications = [
-  { id: 'p1', name: 'New Cafe Hanok', businessNumber: '123-45-67890', appliedAt: '2 hours ago', documents: 3 },
-  { id: 'p2', name: 'Jeonju Fish Market', businessNumber: '234-56-78901', appliedAt: '5 hours ago', documents: 4 },
-];
 
 const Users: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'citizens' | 'merchants'>('merchants');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'active' | 'suspended'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { data: dashboardData } = useAdminDashboard();
+  const { data: merchantsData } = useQuery({
+    queryKey: ['merchants', 'list'],
+    queryFn: () => merchantService.listMerchants(),
+    staleTime: 30000,
+  });
+
+  const merchants = merchantsData ?? [];
+
   const stats = {
-    pending: 12,
-    active: 1204,
-    suspended: 5,
+    pending: dashboardData?.merchants?.pending ?? 0,
+    active: dashboardData?.merchants?.verified ?? 0,
+    suspended: 0,
   };
 
-  const filteredMerchants = mockMerchants.filter((m) => {
-    if (statusFilter !== 'all' && m.status !== statusFilter) return false;
+  // Filter merchants based on status and search
+  const filteredMerchants = merchants.filter((m) => {
+    const merchantStatus = m.isVerified ? 'active' : 'pending';
+    if (statusFilter !== 'all' && merchantStatus !== statusFilter) return false;
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      return m.name.toLowerCase().includes(query) || m.walletAddress.toLowerCase().includes(query);
+      return m.storeName.toLowerCase().includes(query) || m.businessNumber.toLowerCase().includes(query);
     }
     return true;
   });
+
+  // Pending applications (merchants not yet verified)
+  const pendingApplications = merchants
+    .filter(m => !m.isVerified)
+    .slice(0, 5)
+    .map(m => ({
+      id: m.id,
+      name: m.storeName,
+      businessNumber: m.businessNumber,
+      appliedAt: new Date(m.createdAt).toLocaleDateString('ko-KR'),
+      documents: 3,
+    }));
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -145,35 +158,42 @@ const Users: React.FC = () => {
           {activeTab === 'merchants' ? '등록된 가맹점' : '등록된 시민'}
         </h3>
         <div className="space-y-3">
-          {filteredMerchants.map((merchant) => (
-            <Card key={merchant.id} variant="transaction" padding="md">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-xl bg-surface-highlight flex items-center justify-center">
-                  <span className="material-symbols-outlined text-text-secondary">storefront</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-white truncate">{merchant.name}</p>
-                    <Badge variant={getStatusColor(merchant.status)} size="sm">
-                      {merchant.status}
-                    </Badge>
+          {filteredMerchants.map((merchant) => {
+            const status = merchant.isVerified ? 'active' : 'pending';
+            return (
+              <Card key={merchant.id} variant="transaction" padding="md">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-surface-highlight flex items-center justify-center">
+                    {merchant.imageUrl ? (
+                      <img src={merchant.imageUrl} alt={merchant.storeName} className="h-12 w-12 rounded-xl object-cover" />
+                    ) : (
+                      <span className="material-symbols-outlined text-text-secondary">storefront</span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-text-secondary font-mono">{merchant.walletAddress}</span>
-                    <button className="text-text-muted hover:text-white">
-                      <span className="material-symbols-outlined text-[14px]">content_copy</span>
-                    </button>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold text-white truncate">{merchant.storeName}</p>
+                      <Badge variant={getStatusColor(status)} size="sm">
+                        {status}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-text-secondary font-mono">{merchant.businessNumber}</span>
+                      <button className="text-text-muted hover:text-white">
+                        <span className="material-symbols-outlined text-[14px]">content_copy</span>
+                      </button>
+                    </div>
+                    <p className="text-xs text-text-muted mt-1">
+                      {merchant.category} • 등록일: {new Date(merchant.createdAt).toLocaleDateString('ko-KR')}
+                    </p>
                   </div>
-                  <p className="text-xs text-text-muted mt-1">
-                    {merchant.type} • 마지막 거래: {merchant.lastTx}
-                  </p>
+                  <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">
+                    <span className="material-symbols-outlined text-text-secondary">more_vert</span>
+                  </button>
                 </div>
-                <button className="p-2 rounded-full hover:bg-surface-highlight transition-colors">
-                  <span className="material-symbols-outlined text-text-secondary">more_vert</span>
-                </button>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>

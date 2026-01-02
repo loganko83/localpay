@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { xphereService, NetworkStatus, BlockInfo } from '../blockchain';
 import { didBaasClient, Did, VerifiableCredential } from '../did';
 import { anchorLog, verifyLog, AuditLogData, AnchorResult, VerificationResult } from '../blockchain/auditAnchor';
+import { adminService, type AuditLogFilters, type VoucherFilters } from './adminService';
 
 // ==================== Blockchain Hooks ====================
 
@@ -638,6 +639,84 @@ export function useWebhookDeliveries(webhookId: string) {
   });
 }
 
+// ==================== Admin Hooks ====================
+
+/**
+ * Hook for audit logs
+ */
+export function useAuditLogs(filters?: { page?: number; size?: number; action?: string }) {
+  return useQuery({
+    queryKey: ['admin', 'audit-logs', filters],
+    queryFn: () => adminService.getAuditLogs(filters as AuditLogFilters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for admin dashboard stats
+ */
+export function useAdminDashboard() {
+  return useQuery({
+    queryKey: ['admin', 'dashboard'],
+    queryFn: () => adminService.getDashboard(),
+    refetchInterval: 60000,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for admin vouchers
+ */
+export function useAdminVouchers(filters?: { page?: number; size?: number; status?: string }) {
+  return useQuery({
+    queryKey: ['admin', 'vouchers', filters],
+    queryFn: () => adminService.getVouchers(filters as VoucherFilters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for admin user stats
+ */
+export function useAdminUserStats() {
+  return useQuery({
+    queryKey: ['admin', 'stats', 'users'],
+    queryFn: () => adminService.getUserStats(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for verifying merchant
+ */
+export function useVerifyMerchant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (merchantId: string) => adminService.verifyMerchant(merchantId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin'] });
+      queryClient.invalidateQueries({ queryKey: ['merchants'] });
+    },
+  });
+}
+
+/**
+ * Hook for suspending merchant
+ */
+export function useSuspendMerchant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ merchantId, reason }: { merchantId: string; reason: string }) =>
+      adminService.suspendMerchant(merchantId, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin'] });
+      queryClient.invalidateQueries({ queryKey: ['merchants'] });
+    },
+  });
+}
+
 export default {
   // Blockchain
   useNetworkStatus,
@@ -689,4 +768,11 @@ export default {
   useCreateWebhook,
   useDeleteWebhook,
   useWebhookDeliveries,
+  // Admin
+  useAuditLogs,
+  useAdminDashboard,
+  useAdminVouchers,
+  useAdminUserStats,
+  useVerifyMerchant,
+  useSuspendMerchant,
 };
