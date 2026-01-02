@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWalletStore, useTransactionStore } from '../../store';
-import { TransactionType } from '../../types';
+import { useBackendTransactions } from '../../services/api';
 
 import { theme } from '../../styles/theme';
+
+type TransactionType = 'payment' | 'topup' | 'refund';
 
 const filterOptions: { label: string; value: TransactionType | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -14,9 +15,15 @@ const filterOptions: { label: string; value: TransactionType | 'all' }[] = [
 
 const History: React.FC = () => {
   const navigate = useNavigate();
-  useWalletStore();
-  const { transactions, setFilters } = useTransactionStore();
   const [activeFilter, setActiveFilter] = useState<TransactionType | 'all'>('all');
+
+  const { data: transactionsData } = useBackendTransactions({
+    page: 1,
+    size: 50,
+    type: activeFilter === 'all' ? undefined : activeFilter,
+  });
+
+  const transactions = transactionsData?.transactions ?? [];
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
@@ -24,16 +31,9 @@ const History: React.FC = () => {
 
   const handleFilterChange = (filter: TransactionType | 'all') => {
     setActiveFilter(filter);
-    if (filter === 'all') {
-      setFilters({ type: undefined });
-    } else {
-      setFilters({ type: filter });
-    }
   };
 
-  const filteredTransactions = activeFilter === 'all'
-    ? transactions
-    : transactions.filter(tx => tx.type === activeFilter);
+  const filteredTransactions = transactions;
 
   // Group transactions by date
   const groupedTransactions = filteredTransactions.reduce((groups, tx) => {

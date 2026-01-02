@@ -1,13 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWalletStore, useTransactionStore } from '../../store';
+import { useWalletBalance, useBackendTransactions } from '../../services/api';
 import { theme } from '../../styles/theme';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { wallet } = useWalletStore();
-  const { transactions } = useTransactionStore();
+  const { data: walletData, isLoading: walletLoading } = useWalletBalance();
+  const { data: transactionsData } = useBackendTransactions({ page: 1, size: 4 });
 
+  const balance = walletData?.balance ?? 0;
+  const transactions = transactionsData?.transactions ?? [];
   const recentTransactions = transactions.slice(0, 4);
 
   const formatAmount = (amount: number) => {
@@ -75,7 +77,7 @@ const Home: React.FC = () => {
             <div>
               <p style={{ color: theme.textSecondary }} className="text-sm mb-1">총 잔액</p>
               <h2 style={{ color: theme.text }} className="text-3xl font-bold">
-                {formatAmount(wallet?.balance || 150000)}
+                {walletLoading ? '...' : formatAmount(balance)}
               </h2>
               <p style={{ color: theme.textMuted }} className="text-sm mt-1">B코인</p>
             </div>
