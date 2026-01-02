@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWalletStore } from '../../store';
+import { useWalletBalance, useWalletCharge } from '../../services/api';
 
 import { theme } from '../../styles/theme';
 
@@ -13,10 +13,13 @@ const linkedAccounts = [
 
 const TopUp: React.FC = () => {
   const navigate = useNavigate();
-  const { wallet, updateBalance } = useWalletStore();
+  const { data: walletData } = useWalletBalance();
+  const chargeMutation = useWalletCharge();
   const [amount, setAmount] = useState('');
   const [selectedAccount, setSelectedAccount] = useState(linkedAccounts[0].id);
-  const [isProcessing, setIsProcessing] = useState(false);
+
+  const balance = walletData?.balance ?? 0;
+  const isProcessing = chargeMutation.isPending;
 
   const numericAmount = parseInt(amount.replace(/,/g, '')) || 0;
   const bonusRate = 0.05;
@@ -44,11 +47,12 @@ const TopUp: React.FC = () => {
   const handleTopUp = async () => {
     if (numericAmount < 1000) return;
 
-    setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    updateBalance(totalAmount);
-    setIsProcessing(false);
-    navigate('/consumer/wallet');
+    try {
+      await chargeMutation.mutateAsync({ amount: numericAmount });
+      navigate('/consumer/wallet');
+    } catch (error) {
+      console.error('TopUp failed:', error);
+    }
   };
 
   return (
@@ -72,7 +76,7 @@ const TopUp: React.FC = () => {
             <div>
               <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>현재 잔액</p>
               <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
-                {formatAmount(wallet?.balance || 0)} <span className="text-lg">P</span>
+                {formatAmount(balance)} <span className="text-lg">P</span>
               </h2>
             </div>
             <div

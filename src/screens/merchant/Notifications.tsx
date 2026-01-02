@@ -11,92 +11,42 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Button } from '../../components/common';
+import { useNotifications, useUnreadNotificationCount } from '../../services/api';
+import { notificationService } from '../../services/api';
 
 import { theme } from '../../styles/theme';
 
-interface Notification {
-  id: string;
-  type: 'payment' | 'settlement' | 'system' | 'promo';
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-  data?: Record<string, unknown>;
-}
-
-const mockNotifications: Notification[] = [
-  {
-    id: 'notif-001',
-    type: 'payment',
-    title: '결제 수신',
-    message: '고객 #8821로부터 25,000 P를 받았습니다',
-    timestamp: new Date(Date.now() - 300000).toISOString(),
-    read: false,
-    data: { amount: 25000, customerId: '8821' },
-  },
-  {
-    id: 'notif-002',
-    type: 'payment',
-    title: '결제 수신',
-    message: '고객 #4102로부터 12,500 P를 받았습니다',
-    timestamp: new Date(Date.now() - 900000).toISOString(),
-    read: false,
-    data: { amount: 12500, customerId: '4102' },
-  },
-  {
-    id: 'notif-003',
-    type: 'settlement',
-    title: '정산 완료',
-    message: '일일 정산금 850,000 P가 은행 계좌로 이체되었습니다',
-    timestamp: new Date(Date.now() - 3600000).toISOString(),
-    read: true,
-    data: { amount: 850000 },
-  },
-  {
-    id: 'notif-004',
-    type: 'system',
-    title: '시스템 점검',
-    message: '12월 28일 오전 2:00 - 4:00 KST 정기 점검 예정. 결제 처리가 일시적으로 중단됩니다.',
-    timestamp: new Date(Date.now() - 7200000).toISOString(),
-    read: true,
-  },
-  {
-    id: 'notif-005',
-    type: 'promo',
-    title: '전주 겨울 축제',
-    message: 'LocalPay 겨울 축제 프로모션에 참여하세요! 10% 캐시백 제공으로 더 많은 고객을 유치하세요.',
-    timestamp: new Date(Date.now() - 86400000).toISOString(),
-    read: true,
-  },
-  {
-    id: 'notif-006',
-    type: 'payment',
-    title: '환불 요청',
-    message: '고객 #9931이 8,000 P 환불을 요청했습니다. 검토 후 응답해주세요.',
-    timestamp: new Date(Date.now() - 172800000).toISOString(),
-    read: true,
-    data: { amount: 8000, customerId: '9931' },
-  },
-];
+type NotificationType = 'payment' | 'settlement' | 'system' | 'promo' | 'refund' | 'voucher' | 'security' | 'promotion';
 
 const Notifications: React.FC = () => {
-  const [notifications, setNotifications] = useState(mockNotifications);
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'payment' | 'settlement' | 'system' | 'promo'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | NotificationType>('all');
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const { data: notificationsData, refetch } = useNotifications(1, 50);
+  const { data: unreadData } = useUnreadNotificationCount();
+
+  const notifications = notificationsData?.notifications ?? [];
+  const unreadCount = unreadData?.count ?? 0;
 
   const filteredNotifications = notifications.filter(
     n => selectedFilter === 'all' || n.type === selectedFilter
   );
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+  const markAsRead = async (id: string) => {
+    try {
+      await notificationService.markAsRead(id);
+      refetch();
+    } catch (error) {
+      console.error('Failed to mark as read:', error);
+    }
   };
 
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  const markAllAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      refetch();
+    } catch (error) {
+      console.error('Failed to mark all as read:', error);
+    }
   };
 
   const getTypeIcon = (type: string) => {
@@ -119,8 +69,8 @@ const Notifications: React.FC = () => {
     }
   };
 
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp);
+  const formatTime = (createdAt: string) => {
+    const date = new Date(createdAt);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / 60000);
@@ -263,7 +213,7 @@ const Notifications: React.FC = () => {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {formatTime(notification.timestamp)}
+                      {formatTime(notification.createdAt)}
                     </span>
                   </div>
                   <p
@@ -277,7 +227,7 @@ const Notifications: React.FC = () => {
                       overflow: 'hidden',
                     }}
                   >
-                    {notification.message}
+                    {notification.body}
                   </p>
                 </div>
                 {!notification.read && (

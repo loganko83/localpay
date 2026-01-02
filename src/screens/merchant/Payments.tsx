@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Input, Button } from '../../components/common';
-import { useTransactionStore } from '../../store';
-import { TransactionStatus } from '../../types';
+import { useMerchantTransactions } from '../../services/api';
 
 import { theme } from '../../styles/theme';
+
+type TransactionStatus = 'completed' | 'pending' | 'failed';
 
 const statusFilters: { label: string; value: TransactionStatus | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -14,10 +15,17 @@ const statusFilters: { label: string; value: TransactionStatus | 'all' }[] = [
 ];
 
 const Payments: React.FC = () => {
-  const { transactions } = useTransactionStore();
   const [activeStatus, setActiveStatus] = useState<TransactionStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('today');
+
+  const { data: transactionsData } = useMerchantTransactions({
+    page: 1,
+    size: 50,
+    status: activeStatus === 'all' ? undefined : activeStatus,
+  });
+
+  const transactions = transactionsData?.transactions ?? [];
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
@@ -29,7 +37,7 @@ const Payments: React.FC = () => {
       const query = searchQuery.toLowerCase();
       return (
         tx.customerName?.toLowerCase().includes(query) ||
-        tx.txId.toLowerCase().includes(query)
+        tx.id.toLowerCase().includes(query)
       );
     }
     return true;
@@ -221,7 +229,7 @@ const Payments: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: `1px solid ${theme.border}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: theme.textMuted }}>
                 <span className="material-symbols-outlined text-[14px]">tag</span>
-                <span style={{ fontFamily: 'monospace' }}>{tx.txId}</span>
+                <span style={{ fontFamily: 'monospace' }}>{tx.id}</span>
                 <button
                   style={{
                     color: theme.textSecondary,

@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store';
+import { useCurrentUser, useLogout } from '../../services/api';
 
 import { theme } from '../../styles/theme';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { logout: storeLogout } = useAuthStore();
+  const { data: userData } = useCurrentUser();
+  const logoutMutation = useLogout();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
 
-  const handleLogout = () => {
-    logout();
+  const userName = userData?.name || 'User';
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+    } catch {
+      // Ignore logout errors
+    }
+    storeLogout();
     navigate('/');
   };
 
@@ -98,7 +108,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <h2 className="text-xl font-bold" style={{ color: theme.text }}>김지민</h2>
+            <h2 className="text-xl font-bold" style={{ color: theme.text }}>{userName}</h2>
             <p className="text-sm mb-3" style={{ color: theme.textMuted }}>부산 시민</p>
 
             <button

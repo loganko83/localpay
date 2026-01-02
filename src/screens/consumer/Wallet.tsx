@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWalletStore, useTransactionStore } from '../../store';
+import { useWalletBalance, useBackendTransactions } from '../../services/api';
 import { programmableMoneyService, type ProgrammableToken, type PolicyFundType } from '../../services/programmableMoney';
 import { theme } from '../../styles/theme';
 
-
+// Mock cards for now - TODO: fetch from API
+const mockCards = [
+  { id: '1', name: 'IBK 체크카드', type: 'bank', lastFour: '4402' },
+];
 
 const Wallet: React.FC = () => {
   const navigate = useNavigate();
-  const { wallet, cards } = useWalletStore();
-  const { transactions } = useTransactionStore();
+  const { data: walletData } = useWalletBalance();
+  const { data: transactionsData } = useBackendTransactions({ page: 1, size: 4 });
+
+  const balance = walletData?.balance ?? 0;
+  const cards = mockCards;
+  const transactions = transactionsData?.transactions ?? [];
   const [, setActiveCardIndex] = useState(0);
   const [programmableTokens, setProgrammableTokens] = useState<ProgrammableToken[]>([]);
 
   const recentTransactions = transactions.slice(0, 4);
 
   useEffect(() => {
-    if (wallet?.userId) {
-      const tokens = programmableMoneyService.getUserTokens(wallet.userId);
-      setProgrammableTokens(tokens);
-    }
-  }, [wallet?.userId]);
+    // Load programmable tokens for demo
+    const tokens = programmableMoneyService.getUserTokens('user-1');
+    setProgrammableTokens(tokens);
+  }, []);
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
@@ -84,7 +90,7 @@ const Wallet: React.FC = () => {
       <div className="flex flex-col items-center pt-6 pb-4 px-5">
         <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>총 잔액</p>
         <h1 className="text-4xl font-bold tracking-tight" style={{ color: theme.text }}>
-          {formatAmount(wallet?.balance || 150000)}
+          {formatAmount(balance)}
         </h1>
         <p className="text-sm mt-1" style={{ color: theme.textMuted }}>B코인</p>
       </div>
@@ -111,7 +117,7 @@ const Wallet: React.FC = () => {
               <span className="material-symbols-outlined text-3xl opacity-80">account_balance_wallet</span>
             </div>
             <div>
-              <p className="text-2xl font-bold tracking-widest mb-1">{formatAmount(wallet?.balance || 150000)}</p>
+              <p className="text-2xl font-bold tracking-widest mb-1">{formatAmount(balance)}</p>
               <p className="font-mono text-sm opacity-80">0x12...8A92</p>
             </div>
           </div>
