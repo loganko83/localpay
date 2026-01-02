@@ -1,100 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RegionalCoupon } from '../../types';
+import { useCoupons, useCouponStats, useClaimCoupon, type Coupon } from '../../services/api';
 
 import { theme } from '../../styles/theme';
-
-// Mock regional coupons
-const mockCoupons: RegionalCoupon[] = [
-  {
-    id: 'coup-001',
-    name: '10% 할인',
-    description: '한옥마을 참여 음식점에서 10% 할인',
-    merchantId: 'm-001',
-    merchantName: '전주 비빔밥 본가',
-    discountType: 'percentage',
-    discountValue: 10,
-    minPurchase: 20000,
-    maxDiscount: 5000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    usageLimit: 1000,
-    usedCount: 456,
-    category: 'food',
-    region: 'jeonju',
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=400',
-  },
-  {
-    id: 'coup-002',
-    name: '5,000원 할인',
-    description: '전통 공예품 구매 시 정액 할인',
-    merchantName: '한옥 공예방',
-    discountType: 'fixed',
-    discountValue: 5000,
-    minPurchase: 30000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    usageLimit: 500,
-    usedCount: 123,
-    category: 'retail',
-    region: 'jeonju',
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400',
-  },
-  {
-    id: 'coup-003',
-    name: '청년 15% 할인',
-    description: '인증된 청년(19-34세) 대상 특별 할인',
-    discountType: 'percentage',
-    discountValue: 15,
-    minPurchase: 10000,
-    maxDiscount: 10000,
-    validFrom: '2024-03-01',
-    validUntil: '2024-12-31',
-    usageLimit: 2000,
-    usedCount: 890,
-    category: 'all',
-    region: 'jeonju',
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400',
-  },
-  {
-    id: 'coup-004',
-    name: '전통시장',
-    description: '전주 전통시장 7% 캐시백',
-    discountType: 'percentage',
-    discountValue: 7,
-    minPurchase: 5000,
-    maxDiscount: 3000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    usageLimit: 5000,
-    usedCount: 2341,
-    category: 'market',
-    region: 'jeonju',
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400',
-  },
-  {
-    id: 'coup-005',
-    name: '문화체험',
-    description: '전주 문화체험센터 20% 할인',
-    merchantName: '한옥 체험센터',
-    discountType: 'percentage',
-    discountValue: 20,
-    minPurchase: 15000,
-    maxDiscount: 8000,
-    validFrom: '2024-06-01',
-    validUntil: '2024-12-31',
-    usageLimit: 300,
-    usedCount: 287,
-    category: 'culture',
-    region: 'jeonju',
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1545893835-abaa50cbe628?w=400',
-  },
-];
 
 const categories = [
   { id: 'all', label: '전체', icon: 'apps' },
@@ -107,30 +15,55 @@ const categories = [
 const Coupons: React.FC = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCoupon, setSelectedCoupon] = useState<RegionalCoupon | null>(null);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+
+  // Fetch coupons from API
+  const { data: couponsData } = useCoupons({
+    category: selectedCategory === 'all' ? undefined : selectedCategory,
+    limit: 50,
+  });
+  const { data: statsData } = useCouponStats();
+  const claimMutation = useClaimCoupon();
+
+  const coupons = couponsData?.coupons ?? [];
+  const stats = statsData ?? { available: 0, used: 0, expired: 0, totalSaved: 0 };
 
   const filteredCoupons = useMemo(() => {
-    if (selectedCategory === 'all') return mockCoupons;
-    return mockCoupons.filter(c => c.category === selectedCategory);
-  }, [selectedCategory]);
+    return coupons;
+  }, [coupons]);
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
   };
 
-  const getDiscountDisplay = (coupon: RegionalCoupon) => {
+  const getDiscountDisplay = (coupon: Coupon) => {
     if (coupon.discountType === 'percentage') {
       return `${coupon.discountValue}%`;
     }
     return `${formatAmount(coupon.discountValue)}원`;
   };
 
-  const getRemainingCount = (coupon: RegionalCoupon) => {
-    return coupon.usageLimit - coupon.usedCount;
+  const getRemainingCount = (coupon: Coupon) => {
+    return coupon.remainingCount ?? 0;
   };
 
-  const getUsagePercentage = (coupon: RegionalCoupon) => {
-    return Math.round((coupon.usedCount / coupon.usageLimit) * 100);
+  const getUsagePercentage = (coupon: Coupon) => {
+    // Calculate from remainingCount if available
+    if (coupon.remainingCount !== null && coupon.remainingCount !== undefined) {
+      // Estimate based on typical 1000 limit
+      return Math.max(0, 100 - Math.round((coupon.remainingCount / 1000) * 100));
+    }
+    return 50; // Default
+  };
+
+  const handleClaimCoupon = async () => {
+    if (!selectedCoupon || selectedCoupon.claimed) return;
+    try {
+      await claimMutation.mutateAsync(selectedCoupon.id);
+      setSelectedCoupon(null);
+    } catch (error) {
+      console.error('Failed to claim coupon:', error);
+    }
   };
 
   return (
@@ -153,7 +86,7 @@ const Coupons: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-sm mb-1" style={{ color: theme.textSecondary }}>사용 가능 쿠폰</p>
-              <h2 className="text-2xl font-bold" style={{ color: theme.text }}>3</h2>
+              <h2 className="text-2xl font-bold" style={{ color: theme.text }}>{stats.available}</h2>
             </div>
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center"
@@ -164,11 +97,11 @@ const Coupons: React.FC = () => {
           </div>
           <div className="flex gap-4 pt-4" style={{ borderTop: `1px solid ${theme.border}` }}>
             <div className="flex-1 text-center">
-              <p className="text-lg font-bold" style={{ color: theme.text }}>12</p>
+              <p className="text-lg font-bold" style={{ color: theme.text }}>{stats.used}</p>
               <p className="text-xs" style={{ color: theme.textSecondary }}>사용함</p>
             </div>
             <div className="flex-1 text-center" style={{ borderLeft: `1px solid ${theme.border}` }}>
-              <p className="text-lg font-bold" style={{ color: theme.accent }}>15,000</p>
+              <p className="text-lg font-bold" style={{ color: theme.accent }}>{formatAmount(stats.totalSaved)}</p>
               <p className="text-xs" style={{ color: theme.textSecondary }}>절약 (원)</p>
             </div>
           </div>
@@ -208,7 +141,7 @@ const Coupons: React.FC = () => {
             {/* Coupon Header with Image */}
             <div className="relative h-32 overflow-hidden">
               <img
-                src={coupon.imageUrl}
+                src={coupon.imageUrl || 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=400'}
                 alt={coupon.name}
                 className="w-full h-full object-cover"
               />
@@ -263,7 +196,7 @@ const Coupons: React.FC = () => {
                   />
                 </div>
                 <div className="flex justify-between mt-1 text-[10px]" style={{ color: theme.textMuted }}>
-                  <span>{coupon.usedCount}명 사용</span>
+                  <span>{coupon.claimed ? '받은 쿠폰' : '받지 않음'}</span>
                   <span>{getRemainingCount(coupon)}개 남음</span>
                 </div>
               </div>
@@ -282,7 +215,7 @@ const Coupons: React.FC = () => {
             {/* Modal Header Image */}
             <div className="relative h-48 flex-shrink-0">
               <img
-                src={selectedCoupon.imageUrl}
+                src={selectedCoupon.imageUrl || 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=400'}
                 alt={selectedCoupon.name}
                 className="w-full h-full object-cover"
               />
@@ -340,10 +273,10 @@ const Coupons: React.FC = () => {
                     {new Date(selectedCoupon.validUntil).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
-                {selectedCoupon.merchantName && (
+                {selectedCoupon.merchant?.name && (
                   <div className="flex justify-between">
                     <span className="text-sm" style={{ color: theme.textSecondary }}>가맹점</span>
-                    <span style={{ color: theme.accent }}>{selectedCoupon.merchantName}</span>
+                    <span style={{ color: theme.accent }}>{selectedCoupon.merchant.name}</span>
                   </div>
                 )}
               </div>
@@ -353,7 +286,7 @@ const Coupons: React.FC = () => {
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm" style={{ color: theme.textSecondary }}>남은 수량</span>
                   <span className="text-lg font-bold" style={{ color: theme.accent }}>
-                    {getRemainingCount(selectedCoupon)} / {selectedCoupon.usageLimit}
+                    {getRemainingCount(selectedCoupon)}개
                   </span>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: theme.cardHover }}>
@@ -374,17 +307,29 @@ const Coupons: React.FC = () => {
 
             {/* Modal Footer */}
             <div className="p-5 flex-shrink-0" style={{ borderTop: `1px solid ${theme.border}` }}>
-              <button
-                className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2"
-                style={{ background: theme.accent }}
-                onClick={() => {
-                  setSelectedCoupon(null);
-                  navigate('/consumer/scan');
-                }}
-              >
-                <span className="material-symbols-outlined">qr_code_scanner</span>
-                쿠폰 사용하기
-              </button>
+              {selectedCoupon.claimed ? (
+                <button
+                  className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2"
+                  style={{ background: theme.accent }}
+                  onClick={() => {
+                    setSelectedCoupon(null);
+                    navigate('/consumer/scan');
+                  }}
+                >
+                  <span className="material-symbols-outlined">qr_code_scanner</span>
+                  쿠폰 사용하기
+                </button>
+              ) : (
+                <button
+                  className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2"
+                  style={{ background: theme.accent, opacity: claimMutation.isPending ? 0.7 : 1 }}
+                  onClick={handleClaimCoupon}
+                  disabled={claimMutation.isPending}
+                >
+                  <span className="material-symbols-outlined">download</span>
+                  {claimMutation.isPending ? '받는 중...' : '쿠폰 받기'}
+                </button>
+              )}
             </div>
           </div>
         </div>

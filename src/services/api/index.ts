@@ -20,6 +20,8 @@ export { twoFactorService } from './twoFactorService';
 export { exportService } from './exportService';
 export { webhookService } from './webhookService';
 export { notificationService } from './notificationService';
+export { couponService } from './couponService';
+export { employeeService } from './employeeService';
 
 // Re-export types
 export type * from './authService';
@@ -30,3 +32,5 @@ export type * from './twoFactorService';
 export type * from './exportService';
 export type * from './webhookService';
 export type * from './notificationService';
+export type * from './couponService';
+export type * from './employeeService';

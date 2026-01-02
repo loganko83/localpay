@@ -1,83 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWalletStore } from '../../store';
+import { useOffers, useWalletBalance } from '../../services/api';
 
 import { theme } from '../../styles/theme';
 
 const categories = ['전체', '음식', '카페', '쇼핑', '뷰티', '엔터테인먼트'];
 
-const hotDeals = [
-  {
-    id: '1',
-    title: '10% 캐시백',
-    subtitle: '서면 전 음식점',
-    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600',
-    validUntil: '2024-12-31',
-  },
-  {
-    id: '2',
-    title: '포인트 2배',
-    subtitle: '주말 쇼핑 혜택',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=600',
-    validUntil: '2024-12-25',
-  },
-];
-
-const nearbyOffers = [
-  {
-    id: '1',
-    merchantName: '스타벅스 해운대점',
-    category: '카페',
-    distance: '150m',
-    offerType: 'cashback',
-    offerValue: '5%',
-    imageUrl: 'https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=200',
-    expiresIn: '3일 후',
-  },
-  {
-    id: '2',
-    merchantName: '올리브영',
-    category: '뷰티',
-    distance: '300m',
-    offerType: 'coupon',
-    offerValue: '5,000원 할인',
-    imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=200',
-    expiresIn: '7일 후',
-  },
-  {
-    id: '3',
-    merchantName: 'CGV 영화관',
-    category: '엔터테인먼트',
-    distance: '500m',
-    offerType: 'discount',
-    offerValue: '20%',
-    imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=200',
-    expiresIn: '5일 후',
-  },
-  {
-    id: '4',
-    merchantName: '파리바게뜨',
-    category: '음식',
-    distance: '200m',
-    offerType: 'cashback',
-    offerValue: '3%',
-    imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=200',
-    expiresIn: '10일 후',
-  },
-];
-
 const Offers: React.FC = () => {
   const navigate = useNavigate();
-  const { wallet } = useWalletStore();
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('전체');
+
+  // Fetch offers and wallet balance from API
+  const { data: offersData } = useOffers(1, 50);
+  const { data: walletData } = useWalletBalance();
+
+  const offers = offersData?.offers ?? [];
+  const balance = walletData?.balance ?? 0;
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
   };
 
-  const filteredOffers = activeCategory === '전체'
-    ? nearbyOffers
-    : nearbyOffers.filter(offer => offer.category === activeCategory);
+  // Filter offers - for now show all since offers don't have category in API
+  const filteredOffers = offers;
 
   const getOfferBadgeStyle = (offerType: string) => {
     switch (offerType) {
@@ -102,7 +47,7 @@ const Offers: React.FC = () => {
         </div>
         <div className="px-3 py-1.5 rounded-full" style={{ background: theme.accentSoft }}>
           <span className="text-sm font-bold" style={{ color: theme.accent }}>
-            {formatAmount(wallet?.balance || 0)} B
+            {formatAmount(balance)} B
           </span>
         </div>
       </div>
@@ -110,14 +55,15 @@ const Offers: React.FC = () => {
       {/* Hot Deals Carousel */}
       <div className="mb-6">
         <div className="flex gap-4 px-5 overflow-x-auto no-scrollbar">
-          {hotDeals.map((deal) => (
+          {offers.slice(0, 3).map((offer) => (
             <div
-              key={deal.id}
+              key={offer.id}
               className="flex-shrink-0 w-72 h-40 rounded-2xl overflow-hidden relative"
+              onClick={() => navigate(`/consumer/merchant/${offer.merchant?.id || offer.id}`)}
             >
               <img
-                src={deal.image}
-                alt={deal.title}
+                src={offer.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}
+                alt={offer.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -128,8 +74,8 @@ const Offers: React.FC = () => {
                 >
                   HOT
                 </span>
-                <h3 className="text-lg font-bold text-white mt-2">{deal.title}</h3>
-                <p className="text-sm text-white/80">{deal.subtitle}</p>
+                <h3 className="text-lg font-bold text-white mt-2">{offer.title}</h3>
+                <p className="text-sm text-white/80">{offer.merchant?.name || offer.description}</p>
               </div>
             </div>
           ))}
@@ -160,53 +106,63 @@ const Offers: React.FC = () => {
       <div className="px-5">
         <h3 className="text-sm font-bold mb-3" style={{ color: theme.text }}>근처 혜택</h3>
         <div className="space-y-3">
-          {filteredOffers.map((offer) => (
-            <button
-              key={offer.id}
-              onClick={() => navigate(`/consumer/merchant/${offer.id}`)}
-              className="w-full rounded-xl p-3 text-left"
-              style={{ background: theme.card, border: `1px solid ${theme.border}` }}
-            >
-              <div className="flex gap-3">
-                <div className="h-20 w-20 rounded-xl overflow-hidden flex-shrink-0">
-                  <img
-                    src={offer.imageUrl}
-                    alt={offer.merchantName}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h4 className="text-sm font-bold truncate" style={{ color: theme.text }}>
-                        {offer.merchantName}
-                      </h4>
-                      <p className="text-xs" style={{ color: theme.textSecondary }}>
-                        {offer.category} • {offer.distance}
-                      </p>
+          {filteredOffers.map((offer) => {
+            const offerType = offer.discountType || 'discount';
+            const offerValue = offer.discountValue
+              ? (offer.discountType === 'percentage' ? `${offer.discountValue}%` : `${formatAmount(offer.discountValue)}원`)
+              : '혜택';
+            const expiresText = offer.validUntil
+              ? new Date(offer.validUntil).toLocaleDateString('ko-KR')
+              : '상시';
+
+            return (
+              <button
+                key={offer.id}
+                onClick={() => navigate(`/consumer/merchant/${offer.merchant?.id || offer.id}`)}
+                className="w-full rounded-xl p-3 text-left"
+                style={{ background: theme.card, border: `1px solid ${theme.border}` }}
+              >
+                <div className="flex gap-3">
+                  <div className="h-20 w-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <img
+                      src={offer.imageUrl || offer.merchant?.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200'}
+                      alt={offer.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h4 className="text-sm font-bold truncate" style={{ color: theme.text }}>
+                          {offer.merchant?.name || offer.title}
+                        </h4>
+                        <p className="text-xs" style={{ color: theme.textSecondary }}>
+                          {offer.title}
+                        </p>
+                      </div>
+                      <span
+                        className="text-xs font-bold px-2 py-1 rounded"
+                        style={getOfferBadgeStyle(offerType)}
+                      >
+                        {offerValue}
+                      </span>
                     </div>
-                    <span
-                      className="text-xs font-bold px-2 py-1 rounded"
-                      style={getOfferBadgeStyle(offer.offerType)}
-                    >
-                      {offer.offerValue}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs" style={{ color: theme.textMuted }}>
-                      {offer.expiresIn} 만료
-                    </span>
-                    <span
-                      className="text-xs font-bold px-3 py-1.5 rounded-lg"
-                      style={{ background: theme.accent, color: '#fff' }}
-                    >
-                      {offer.offerType === 'coupon' ? '쿠폰 받기' : '방문하기'}
-                    </span>
+                    <div className="flex items-center justify-between mt-3">
+                      <span className="text-xs" style={{ color: theme.textMuted }}>
+                        {expiresText} 까지
+                      </span>
+                      <span
+                        className="text-xs font-bold px-3 py-1.5 rounded-lg"
+                        style={{ background: theme.accent, color: '#fff' }}
+                      >
+                        방문하기
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

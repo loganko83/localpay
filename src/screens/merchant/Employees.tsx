@@ -1,91 +1,39 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout';
 import { Card, Badge, Button, Input, Modal } from '../../components/common';
-import { Employee } from '../../types';
+import { useEmployees, useInviteEmployee, type Employee } from '../../services/api';
 
 import { theme } from '../../styles/theme';
-
-const mockEmployees: Employee[] = [
-  {
-    id: '1',
-    merchantId: 'merchant-1',
-    name: 'Kim Min-jun',
-    email: 'minjun@store42.com',
-    phone: '010-1234-5678',
-    role: 'manager',
-    permissions: ['full_access'],
-    status: 'active',
-    lastActiveAt: new Date().toISOString(),
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100',
-    createdAt: '2024-01-15',
-  },
-  {
-    id: '2',
-    merchantId: 'merchant-1',
-    name: 'Park Soo-yeon',
-    email: 'sooyeon@store42.com',
-    role: 'cashier',
-    permissions: ['pos_only'],
-    status: 'active',
-    lastActiveAt: new Date(Date.now() - 3600000).toISOString(),
-    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100',
-    createdAt: '2024-02-20',
-  },
-  {
-    id: '3',
-    merchantId: 'merchant-1',
-    name: 'Lee Jae-hoon',
-    email: 'jaehoon@store42.com',
-    role: 'cashier',
-    permissions: ['pos_only'],
-    status: 'pending',
-    createdAt: '2024-03-10',
-  },
-  {
-    id: '4',
-    merchantId: 'merchant-1',
-    name: 'Choi Yuna',
-    email: 'yuna@store42.com',
-    role: 'cashier',
-    permissions: ['pos_only', 'view_reports'],
-    status: 'active',
-    lastActiveAt: new Date(Date.now() - 86400000).toISOString(),
-    createdAt: '2024-01-20',
-  },
-  {
-    id: '5',
-    merchantId: 'merchant-1',
-    name: 'Han Ji-min',
-    email: 'jimin@store42.com',
-    role: 'cashier',
-    permissions: ['pos_only'],
-    status: 'revoked',
-    createdAt: '2023-12-01',
-  },
-];
 
 const statusFilters = ['전체', '활성', '대기 중', '해제됨'];
 
 const Employees: React.FC = () => {
-  const [employees] = useState<Employee[]>(mockEmployees);
   const [activeFilter, setActiveFilter] = useState('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [newEmployeeName, setNewEmployeeName] = useState('');
+  const [newEmployeeEmail, setNewEmployeeEmail] = useState('');
+  const [newEmployeePhone, setNewEmployeePhone] = useState('');
+  const [newEmployeeRole, setNewEmployeeRole] = useState<'manager' | 'cashier'>('cashier');
 
-  const filteredEmployees = employees.filter((emp) => {
-    const statusMap: Record<string, string> = {
-      '전체': 'all',
-      '활성': 'active',
-      '대기 중': 'pending',
-      '해제됨': 'revoked'
-    };
-    if (activeFilter !== '전체' && emp.status !== statusMap[activeFilter]) return false;
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return emp.name.toLowerCase().includes(query) || emp.email.toLowerCase().includes(query);
-    }
-    return true;
+  // API hooks
+  const statusMap: Record<string, 'active' | 'pending' | 'revoked' | undefined> = {
+    '전체': undefined,
+    '활성': 'active',
+    '대기 중': 'pending',
+    '해제됨': 'revoked'
+  };
+
+  const { data: employeesData, isLoading } = useEmployees({
+    status: statusMap[activeFilter],
+    search: searchQuery || undefined,
   });
+  const inviteMutation = useInviteEmployee();
+
+  const employees = employeesData?.employees ?? [];
+  const counts = employeesData?.counts ?? { active: 0, pending: 0, revoked: 0, total: 0 };
+
+  const filteredEmployees = employees;
 
   const getStatusColor = (status: Employee['status']) => {
     switch (status) {
@@ -159,19 +107,19 @@ const Employees: React.FC = () => {
         <div className="grid grid-cols-3 gap-3">
           <Card padding="sm" className="text-center">
             <p className="text-2xl font-bold" style={{ color: theme.accent }}>
-              {employees.filter((e) => e.status === 'active').length}
+              {counts.active}
             </p>
             <p className="text-xs" style={{ color: theme.textSecondary }}>활성</p>
           </Card>
           <Card padding="sm" className="text-center">
             <p className="text-2xl font-bold" style={{ color: '#ffa502' }}>
-              {employees.filter((e) => e.status === 'pending').length}
+              {counts.pending}
             </p>
             <p className="text-xs" style={{ color: theme.textSecondary }}>대기 중</p>
           </Card>
           <Card padding="sm" className="text-center">
             <p className="text-2xl font-bold" style={{ color: theme.textMuted }}>
-              {employees.filter((e) => e.status === 'revoked').length}
+              {counts.revoked}
             </p>
             <p className="text-xs" style={{ color: theme.textSecondary }}>해제됨</p>
           </Card>
@@ -180,7 +128,16 @@ const Employees: React.FC = () => {
 
       {/* Employee List */}
       <div className="px-4 space-y-3">
-        {filteredEmployees.map((emp) => (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: theme.accent }}></div>
+          </div>
+        ) : filteredEmployees.length === 0 ? (
+          <Card padding="lg" className="text-center">
+            <span className="material-symbols-outlined text-4xl mb-2" style={{ color: theme.textMuted }}>group</span>
+            <p className="text-sm" style={{ color: theme.textSecondary }}>등록된 직원이 없습니다</p>
+          </Card>
+        ) : filteredEmployees.map((emp) => (
           <Card key={emp.id} variant="transaction" padding="md">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -213,7 +170,7 @@ const Employees: React.FC = () => {
                     {emp.status}
                   </Badge>
                 </div>
-                <p className="text-xs truncate" style={{ color: theme.textSecondary }}>{emp.email}</p>
+                <p className="text-xs truncate" style={{ color: theme.textSecondary }}>{emp.email || '-'}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xs" style={{ color: theme.textMuted }}>{getRoleLabel(emp.role)}</span>
                   <span style={{ color: theme.textMuted }}>•</span>
@@ -250,59 +207,69 @@ const Employees: React.FC = () => {
         title="팀원 추가"
       >
         <div className="space-y-4">
-          <Input label="이름" placeholder="직원 이름을 입력하세요" />
-          <Input label="이메일" type="email" placeholder="이메일 주소를 입력하세요" />
-          <Input label="전화번호" placeholder="010-0000-0000" />
+          <Input
+            label="이름"
+            placeholder="직원 이름을 입력하세요"
+            value={newEmployeeName}
+            onChange={(e) => setNewEmployeeName(e.target.value)}
+          />
+          <Input
+            label="이메일"
+            type="email"
+            placeholder="이메일 주소를 입력하세요"
+            value={newEmployeeEmail}
+            onChange={(e) => setNewEmployeeEmail(e.target.value)}
+          />
+          <Input
+            label="전화번호"
+            placeholder="010-0000-0000"
+            value={newEmployeePhone}
+            onChange={(e) => setNewEmployeePhone(e.target.value)}
+          />
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>역할</label>
             <div className="grid grid-cols-2 gap-2">
-              {['매니저', '캐셔'].map((role) => (
+              {[{ label: '매니저', value: 'manager' as const }, { label: '캐셔', value: 'cashier' as const }].map((role) => (
                 <button
-                  key={role}
+                  key={role.value}
+                  onClick={() => setNewEmployeeRole(role.value)}
                   className="p-3 rounded-xl text-sm font-medium transition-colors border"
                   style={{
-                    backgroundColor: theme.card,
-                    color: theme.text,
-                    borderColor: 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = theme.cardHover;
-                    e.currentTarget.style.borderColor = theme.accent;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = theme.card;
-                    e.currentTarget.style.borderColor = 'transparent';
+                    backgroundColor: newEmployeeRole === role.value ? theme.accentSoft : theme.card,
+                    color: newEmployeeRole === role.value ? theme.accent : theme.text,
+                    borderColor: newEmployeeRole === role.value ? theme.accent : 'transparent',
                   }}
                 >
-                  {role}
+                  {role.label}
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>권한</label>
-            <div className="space-y-2">
-              {['POS 전용', '리포트 보기', '전체 권한'].map((perm) => (
-                <label
-                  key={perm}
-                  className="flex items-center gap-3 p-3 rounded-xl cursor-pointer"
-                  style={{ backgroundColor: theme.card }}
-                >
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4"
-                    style={{ accentColor: theme.accent }}
-                  />
-                  <span className="text-sm" style={{ color: theme.text }}>{perm}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <Button variant="primary" fullWidth size="lg">
-            초대장 보내기
+          <Button
+            variant="primary"
+            fullWidth
+            size="lg"
+            disabled={!newEmployeeName || !newEmployeeEmail || inviteMutation.isPending}
+            onClick={async () => {
+              try {
+                await inviteMutation.mutateAsync({
+                  name: newEmployeeName,
+                  email: newEmployeeEmail,
+                  role: newEmployeeRole,
+                });
+                setShowAddModal(false);
+                setNewEmployeeName('');
+                setNewEmployeeEmail('');
+                setNewEmployeePhone('');
+                setNewEmployeeRole('cashier');
+              } catch (error) {
+                console.error('Failed to invite employee:', error);
+              }
+            }}
+          >
+            {inviteMutation.isPending ? '전송 중...' : '초대장 보내기'}
           </Button>
         </div>
       </Modal>

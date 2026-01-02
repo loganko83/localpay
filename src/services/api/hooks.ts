@@ -340,6 +340,8 @@ import { merchantService, type MerchantDashboard, type MerchantTransactionFilter
 import { twoFactorService, type TwoFactorStatus, type TwoFactorSetupResponse } from './twoFactorService';
 import { notificationService, type NotificationListResponse, type NotificationPreferences } from './notificationService';
 import { webhookService, type Webhook, type WebhookCreateRequest, type WebhookDelivery } from './webhookService';
+import { couponService, type CouponFilters, type CouponListResponse, type UserCouponListResponse, type OfferListResponse, type CouponDetail, type CouponStats } from './couponService';
+import { employeeService, type EmployeeFilters, type EmployeeListResponse, type Employee, type CreateEmployeeRequest, type UpdateEmployeeRequest, type InviteEmployeeRequest } from './employeeService';
 
 /**
  * Hook for login
@@ -475,6 +477,29 @@ export function useMerchantTransactions(filters?: MerchantTransactionFilters) {
   return useQuery<MerchantTransactionListResponse>({
     queryKey: ['merchant', 'transactions', filters],
     queryFn: () => merchantService.getTransactions(filters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for merchant detail (public)
+ */
+export function useMerchantDetail(merchantId: string | undefined) {
+  return useQuery({
+    queryKey: ['merchants', merchantId],
+    queryFn: () => merchantService.getMerchant(merchantId!),
+    enabled: !!merchantId,
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for merchants list
+ */
+export function useMerchantsList(filters?: { category?: string; search?: string }) {
+  return useQuery({
+    queryKey: ['merchants', 'list', filters],
+    queryFn: () => merchantService.listMerchants(filters),
     staleTime: 30000,
   });
 }
@@ -639,6 +664,204 @@ export function useWebhookDeliveries(webhookId: string) {
   });
 }
 
+// ==================== Coupon Hooks ====================
+
+/**
+ * Hook for available coupons
+ */
+export function useCoupons(filters?: CouponFilters) {
+  return useQuery<CouponListResponse>({
+    queryKey: ['coupons', filters],
+    queryFn: () => couponService.getCoupons(filters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for user's coupons
+ */
+export function useMyCoupons(status?: 'available' | 'used' | 'expired', page: number = 1) {
+  return useQuery<UserCouponListResponse>({
+    queryKey: ['coupons', 'my', status, page],
+    queryFn: () => couponService.getMyCoupons(status, page),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for coupon details
+ */
+export function useCouponDetail(couponId: string | undefined) {
+  return useQuery<CouponDetail>({
+    queryKey: ['coupons', couponId],
+    queryFn: () => couponService.getCoupon(couponId!),
+    enabled: !!couponId,
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for claiming a coupon
+ */
+export function useClaimCoupon() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (couponId: string) => couponService.claimCoupon(couponId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['coupons'] });
+    },
+  });
+}
+
+/**
+ * Hook for using a coupon
+ */
+export function useUseCoupon() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ userCouponId, purchaseAmount, transactionId }: { userCouponId: string; purchaseAmount: number; transactionId?: string }) =>
+      couponService.useCoupon(userCouponId, purchaseAmount, transactionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['coupons'] });
+    },
+  });
+}
+
+/**
+ * Hook for offers
+ */
+export function useOffers(page: number = 1, limit: number = 20) {
+  return useQuery<OfferListResponse>({
+    queryKey: ['offers', page, limit],
+    queryFn: () => couponService.getOffers(page, limit),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for coupon stats
+ */
+export function useCouponStats() {
+  return useQuery<CouponStats>({
+    queryKey: ['coupons', 'stats'],
+    queryFn: () => couponService.getCouponStats(),
+    staleTime: 60000,
+  });
+}
+
+// ==================== Employee Hooks ====================
+
+/**
+ * Hook for employee list
+ */
+export function useEmployees(filters?: EmployeeFilters) {
+  return useQuery<EmployeeListResponse>({
+    queryKey: ['employees', filters],
+    queryFn: () => employeeService.getEmployees(filters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for single employee
+ */
+export function useEmployee(employeeId: string | undefined) {
+  return useQuery<Employee>({
+    queryKey: ['employees', employeeId],
+    queryFn: () => employeeService.getEmployee(employeeId!),
+    enabled: !!employeeId,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for adding employee
+ */
+export function useAddEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateEmployeeRequest) => employeeService.addEmployee(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
+/**
+ * Hook for updating employee
+ */
+export function useUpdateEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ employeeId, data }: { employeeId: string; data: UpdateEmployeeRequest }) =>
+      employeeService.updateEmployee(employeeId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
+/**
+ * Hook for deleting employee
+ */
+export function useDeleteEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (employeeId: string) => employeeService.deleteEmployee(employeeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
+/**
+ * Hook for inviting employee
+ */
+export function useInviteEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: InviteEmployeeRequest) => employeeService.inviteEmployee(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
+/**
+ * Hook for revoking employee access
+ */
+export function useRevokeEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ employeeId, reason }: { employeeId: string; reason?: string }) =>
+      employeeService.revokeAccess(employeeId, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
+/**
+ * Hook for activating employee
+ */
+export function useActivateEmployee() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (employeeId: string) => employeeService.activateEmployee(employeeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
+}
+
 // ==================== Admin Hooks ====================
 
 /**
@@ -753,6 +976,8 @@ export default {
   // Merchant (backend)
   useBackendMerchantDashboard,
   useMerchantTransactions,
+  useMerchantDetail,
+  useMerchantsList,
   // 2FA
   useTwoFactorStatus,
   useTwoFactorSetup,
@@ -768,6 +993,23 @@ export default {
   useCreateWebhook,
   useDeleteWebhook,
   useWebhookDeliveries,
+  // Coupons
+  useCoupons,
+  useMyCoupons,
+  useCouponDetail,
+  useClaimCoupon,
+  useUseCoupon,
+  useOffers,
+  useCouponStats,
+  // Employees
+  useEmployees,
+  useEmployee,
+  useAddEmployee,
+  useUpdateEmployee,
+  useDeleteEmployee,
+  useInviteEmployee,
+  useRevokeEmployee,
+  useActivateEmployee,
   // Admin
   useAuditLogs,
   useAdminDashboard,

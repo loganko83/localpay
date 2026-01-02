@@ -87,22 +87,22 @@ export interface SettlementListResponse {
   totalPages: number;
 }
 
-export interface Employee {
+export interface MerchantEmployee {
   id: string;
   name: string;
   email?: string;
   phone?: string;
-  role: 'manager' | 'staff';
-  status: 'active' | 'inactive';
+  role: 'owner' | 'manager' | 'cashier';
+  status: 'active' | 'pending' | 'revoked';
   permissions: string[];
   createdAt: string;
 }
 
-export interface EmployeeCreateRequest {
+export interface MerchantEmployeeCreateRequest {
   name: string;
   email?: string;
   phone?: string;
-  role: 'manager' | 'staff';
+  role: 'manager' | 'cashier';
   permissions?: string[];
 }
 
@@ -165,22 +165,22 @@ class MerchantService {
   /**
    * Get employees
    */
-  async getEmployees(): Promise<Employee[]> {
-    return backendApiClient.get<Employee[]>('/employees');
+  async getEmployees(): Promise<MerchantEmployee[]> {
+    return backendApiClient.get<MerchantEmployee[]>('/employees');
   }
 
   /**
    * Add employee
    */
-  async addEmployee(data: EmployeeCreateRequest): Promise<Employee> {
-    return backendApiClient.post<Employee>('/employees', data);
+  async addEmployee(data: MerchantEmployeeCreateRequest): Promise<MerchantEmployee> {
+    return backendApiClient.post<MerchantEmployee>('/employees', data);
   }
 
   /**
    * Update employee
    */
-  async updateEmployee(employeeId: string, data: Partial<Employee>): Promise<Employee> {
-    return backendApiClient.patch<Employee>(`/employees/${employeeId}`, data);
+  async updateEmployee(employeeId: string, data: Partial<MerchantEmployee>): Promise<MerchantEmployee> {
+    return backendApiClient.patch<MerchantEmployee>(`/employees/${employeeId}`, data);
   }
 
   /**
